@@ -4,6 +4,10 @@ const db = require('./db/index');
 
 const app = express();
 
+const registerRouter = require('./routes/registration');
+
+app.use('/register', registerRouter);
+
 const PORT = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
