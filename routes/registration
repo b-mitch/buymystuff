@@ -1,10 +1,41 @@
 const express = require('express');
-const db = require('../')
+const db = require('../db/index');
+const bodyParser = require('body-parser');
 
 const registerRouter = express.Router();
 
-registerRouter.post('/', (require, res, next) => {
+registerRouter.use(bodyParser.json());
+registerRouter.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
+registerRouter.get('/', (req, res) => {
+  db.query('SELECT * FROM users', (error, results) => {
+    if (error) {
+      console.log('error')
+      throw error
+    }
+    console.log(results.rows)
+    res.status(200).json(results.rows)
+  })
+});
+
+registerRouter.post('/', (req, res, next) => {
+  let id = 4;
+  console.log(req.body);
+  const { first, last, username, email } = req.body;
+  const text = 'INSERT INTO users (id, first_name, last_name, username, email)VALUES($1, $2, $3, $4, $5) RETURNING *';
+  const values = [id, first, last, username, email]
+  db.query(text, values, (error, results) => {
+    if (error) {
+      console.log('error')
+      throw error
+    }
+    console.log(results.rows[0])
+    res.status(200).json(results.rows[0])
+  })
 })
 
 module.exports = registerRouter;
