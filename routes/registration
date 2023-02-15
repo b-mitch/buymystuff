@@ -23,11 +23,9 @@ registerRouter.get('/', (req, res) => {
 });
 
 registerRouter.post('/', (req, res, next) => {
-  let id = 4;
-  console.log(req.body);
   const { first, last, username, email } = req.body;
-  const text = 'INSERT INTO users (id, first_name, last_name, username, email)VALUES($1, $2, $3, $4, $5) RETURNING *';
-  const values = [id, first, last, username, email]
+  const text = 'INSERT INTO users (first_name, last_name, username, email)VALUES($1, $2, $3, $4) RETURNING *';
+  const values = [first, last, username, email]
   db.query(text, values, (error, results) => {
     if (error) {
       console.log('error')
