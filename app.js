@@ -55,6 +55,10 @@ passport.use(new LocalStrategy(
   })
 );
 
+app.get('/home', (req, res) => {
+    res.send('This is the home page');
+})
+
 app.get('/', (req, res) => {
   db.query('SELECT * FROM users', (error, results) => {
     if (error) {
@@ -66,7 +70,7 @@ app.get('/', (req, res) => {
   })
 });
 
-app.get('/profile', (req, res) => {
+app.get('/account', (req, res) => {
   res.render('Profile Page', { user: req.user });
 }); 
 
