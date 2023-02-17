@@ -10,9 +10,11 @@ const helper = require('./helpers');
 
 const registerRouter = require('./routes/registration');
 const loginRouter = require('./routes/login');
+const productsRouter = require('./routes/products')
 
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
+app.use('/products', productsRouter);
 
 const PORT = process.env.PORT || 8000;
 
