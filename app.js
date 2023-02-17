@@ -42,9 +42,7 @@ passport.deserializeUser((id, done) => {
     if(err) return done(err);
     done(null, user);
   })
-}
-  
-);
+});
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -56,8 +54,6 @@ passport.use(new LocalStrategy(
     });
   })
 );
-
-app.get('/', helper.findByUsername);
 
 app.get('/', (req, res) => {
   db.query('SELECT * FROM users', (error, results) => {

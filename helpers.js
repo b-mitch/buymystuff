@@ -1,18 +1,17 @@
 const db = require('./db/index');
 
-const findByUsername = async (username) => {
+const findByUsername = (req, res, next) => {
+  const { username } = req.body;
   const text = 'SELECT * FROM users WHERE username = $1'
   const values = [username];
-  return await db.query(text, values, (error, results) => {
+  db.query(text, values, (error, results) => {
     if (error) {
       console.log('error')
       throw error
     }
-    console.log(results.rows);
-    return results.rows;
+    res.status(200).send(results.rows);
   })
-//   console.log(results);
-//   return await results;
+  next();
 };
 
 const findById = (id, req, res) => {
