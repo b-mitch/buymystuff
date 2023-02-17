@@ -1,0 +1,45 @@
+const express = require('express');
+const db = require('../db/index');
+const bodyParser = require('body-parser');
+const bcrypt = require("bcrypt");
+
+const helper = require('../helpers');
+
+const loginRouter = express.Router();
+
+loginRouter.use(bodyParser.json());
+loginRouter.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+loginRouter.post("/", async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const selectText = 'SELECT * FROM users WHERE username = $1'
+    const values = [username];
+    await db.query(selectText, values, async (error, results) => {
+      if (error) {
+        console.log('error')
+        throw error
+        }
+      const user = results.rows[0];
+      if (!user) {
+        console.log("User does not exist!");
+        return res.redirect("login");
+      }
+      const matchedPassword = await bcrypt.compare(password, user.password);
+      if (!matchedPassword) {
+        res.status(401).send("Passwords did not match!");
+        return res.redirect("login");
+      }
+      res.status(200).send('Password matches!');
+    //   res.render("profile", { user });
+      })
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+        }
+});
+
+module.exports = loginRouter;
