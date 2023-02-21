@@ -6,15 +6,22 @@ const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
 
 const db = require('./db/index');
-const helper = require('./helpers');
 
 const registerRouter = require('./routes/registration');
 const loginRouter = require('./routes/login');
-const productsRouter = require('./routes/products')
+const productsRouter = require('./routes/products');
+const accountRouter = require('./routes/account');
+const cartRouter = require('./routes/cart');
+const checkoutRouter = require('./routes/checkout');
+const ordersRouter = require('./routes/orders');
 
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/products', productsRouter);
+app.use('/account', accountRouter);
+app.use('/cart', cartRouter);
+app.use('/checkout', checkoutRouter);
+app.use('/orders', ordersRouter);
 
 const PORT = process.env.PORT || 8000;
 
@@ -72,9 +79,9 @@ app.get('/', (req, res) => {
   })
 });
 
-app.get('/account', (req, res) => {
-  res.render('Profile Page', { user: req.user });
-}); 
+// app.get('/account', (req, res) => {
+//   res.render('Profile Page', { user: req.user });
+// }); 
 
 app.get('/logout', (req, res) => {
   req.logout();
@@ -84,3 +91,6 @@ app.get('/logout', (req, res) => {
 app.listen(PORT, () => {
   console.log('Server started successfully.');
 })
+
+
+//DELETE FROM users WHERE id IS NOT NULL;ALTER SEQUENCE users_id_seq RESTART WITH 1; to erase table and restart id serial in postgres
