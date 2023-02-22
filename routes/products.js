@@ -62,12 +62,14 @@ productsRouter.get('/:id', (req, res) => {
   })
 })
 
-productsRouter.post('/:id', (req, res) => {
+productsRouter.post('/:id', async (req, res) => {
   const productId = req.params.id;
-  const cartId = 1;
+  const userId = 1;
   const amount = req.body.amount;
+  const product = await db.query('select * from products where id = $1', [productId]);
+  const price = product.rows[0].price;
 
-  db.query('INSERT INTO products_carts (product_id, cart_id, amount)VALUES($1, $2, $3) RETURNING *', [productId, cartId, amount], (error, results) => {
+  await db.query('INSERT INTO carts (user_id, product_id, product_price, product_amount)VALUES($1, $2, $3, $4) RETURNING *', [userId, productId, price, amount], (error, results) => {
     if (error) {
     console.log('error')
     throw error

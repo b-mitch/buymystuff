@@ -1,7 +1,10 @@
 CREATE TABLE "orders" (
   "id" serial PRIMARY KEY,
-  "user_id" int,
-  "date" date NOT NULL
+  "user_id" int references users (id) NOT NULL,
+  "date" date NOT NULL,
+  "product_id" int references products(id) NOT NULL,
+  "product_price" money NOT NULL,
+  "product_amount" int NOT NULL
 );
 
 CREATE TABLE "users" (
@@ -23,33 +26,8 @@ CREATE TABLE "products" (
 
 CREATE TABLE "carts" (
   "id" serial PRIMARY KEY,
-  "user_id" int
+  "user_id" int references users (id) NOT NULL,
+  "product_id" int references products(id) NOT NULL,
+  "product_price" money NOT NULL,
+  "product_amount" int NOT NULL
 );
-
-ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "carts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-CREATE TABLE "products_orders" (
-  "product_id" int,
-  "order_id" int,
-  "amount" int,
-  PRIMARY KEY ("product_id", "order_id")
-);
-
-ALTER TABLE "products_orders" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
-
-ALTER TABLE "products_orders" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
-
-
-CREATE TABLE "products_carts" (
-  "product_id" int,
-  "cart_id" int,
-  "amount" int,
-  PRIMARY KEY ("product_id", "cart_id")
-);
-
-ALTER TABLE "products_carts" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
-
-ALTER TABLE "products_carts" ADD FOREIGN KEY ("cart_id") REFERENCES "carts" ("id");
-

@@ -11,41 +11,40 @@ cartRouter.use(
   })
 );
 
-cartRouter.get('/', (req, res) => {
-  const cartId = 1;
-  db.query('SELECT * FROM products_carts WHERE cart_id = $1', [cartId], (error, results) => {
-    if (error) {
-    console.log('error')
-    throw error
-    }
-    res.status(200).json(results.rows)
-  })
+cartRouter.get('/', async (req, res) => {
+  const userId = 1;
+  const results = await db.query('SELECT * FROM carts WHERE user_id = $1', [userId]);
+  const cart = results.rows;
+  const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userId]);
+  const total = totalObject.rows[0];
+  cart.push(total);
+  res.status(200).send(cart);
 });
 
 cartRouter.put('/', (req, res) => {
-  const cartId = 1;
+  const userId = 1;
   const productId = 3;
   const amount = req.body.amount;
 
-  db.query('UPDATE products_carts SET amount = $3 WHERE cart_id = $2 AND product_id = $1 RETURNING *', [productId, cartId, amount], (error, results) => {
+  db.query('UPDATE carts SET product_amount = $3 WHERE user_id = $2 AND product_id = $1 RETURNING *', [productId, userId, amount], (error, results) => {
     if (error) {
     console.log('error')
     throw error
     }
-    res.status(200).json(results.rows)
+    res.status(200).json(results.rows[0])
   })
 })
 
 cartRouter.delete('/', (req, res) => {
-  const cartId = 1;
+  const userId = 1;
   const productId = 3;
 
-  db.query('DELETE FROM products_carts WHERE cart_id = $2 AND product_id = $1', [productId, cartId], (error, results) => {
+  db.query('DELETE FROM carts WHERE user_id = $1 AND product_id = $2', [userId, productId], (error, results) => {
     if (error) {
     console.log('error')
     throw error
     }
-    res.status(204).send('product deleted from car');
+    res.status(204).send('product deleted from cart');
   })
 })
 
