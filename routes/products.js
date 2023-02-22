@@ -62,10 +62,10 @@ productsRouter.get('/:id', (req, res) => {
   })
 })
 
-productsRouter.put('/:id', (req, res) => {
+productsRouter.post('/:id', (req, res) => {
   const productId = req.params.id;
   const cartId = 1;
-  const amount = 40;
+  const amount = req.body.amount;
 
   db.query('INSERT INTO products_carts (product_id, cart_id, amount)VALUES($1, $2, $3) RETURNING *', [productId, cartId, amount], (error, results) => {
     if (error) {
