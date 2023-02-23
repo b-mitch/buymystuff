@@ -1,11 +1,3 @@
-CREATE TABLE "orders" (
-  "id" serial PRIMARY KEY,
-  "user_id" int references users (id) NOT NULL,
-  "date" date NOT NULL,
-  "product_id" int references products(id) NOT NULL,
-  "product_price" money NOT NULL,
-  "product_amount" int NOT NULL
-);
 
 CREATE TABLE "users" (
   "id" serial PRIMARY KEY,
@@ -24,8 +16,15 @@ CREATE TABLE "products" (
   "inventory" int NOT NULL
 );
 
+CREATE TABLE "orders" (
+  "user_id" int references users (id) NOT NULL,
+  "date" date NOT NULL,
+  "product_id" int references products(id) NOT NULL,
+  "product_price" money NOT NULL,
+  "product_amount" int NOT NULL
+);
+
 CREATE TABLE "carts" (
-  "id" serial PRIMARY KEY,
   "user_id" int references users (id) NOT NULL,
   "product_id" int references products(id) NOT NULL,
   "product_price" money NOT NULL,
