@@ -35,15 +35,26 @@ checkoutRouter.put('/', async (req, res) => {
 
 checkoutRouter.post('/', async (req, res) => {
   const userId = req.session.user.id
-  const date = Date.now();
+  const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const select = await db.query('SELECT product_id, product_price, product_amount FROM carts WHERE user_id = $1', [userId]);
   const products = select.rows;
   let order = [];
   for (const item of products) {
-    const results = await db.query('INSERT INTO orders (user_id, date, product_id, product_price, product_amount) VALUES ($1, to_timestamp($2), $3, $4, $5) RETURNING *', [userId, date, item.product_id, item.product_price, item.product_amount]);
+    const results = await db.query('INSERT INTO orders (user_id, date, product_id, product_price, product_amount) VALUES ($1, $2, $3, $4, $5) RETURNING *', [userId, date, item.product_id, item.product_price, item.product_amount]);
     order.push(results.rows[0]);
     } 
   res.status(200).send(order);
+})
+
+checkoutRouter.delete('/', (req, res) => {
+  const userId = req.session.user.id;
+  db.query('DELETE FROM carts WHERE user_id = $1', [userId], (error, results) => {
+    if (error) {
+    console.log('error')
+    throw error
+    }
+    res.status(204).send('product deleted from cart');
+  })
 })
 
 

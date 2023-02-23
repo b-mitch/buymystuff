@@ -14,11 +14,12 @@ ordersRouter.use(
 ordersRouter.get('/', async (req, res) => {
   const userId = req.session.user.id;
   const results = await db.query('SELECT * FROM orders WHERE user_id = $1', [userId]);
-  const cart = results.rows;
-  const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userId]);
-  const total = totalObject.rows[0];
-  cart.push(total);
-  res.status(200).send(cart);
+  const orders = results.rows;
+  console.log(orders);
+  const totalObject = await db.query('SELECT date, SUM(product_amount*product_price) AS total FROM orders WHERE user_id = $1 GROUP BY date', [userId]);
+  const orderTotals = totalObject.rows
+  console.log(orderTotals);
+  res.status(200).send(orders);
 });
 
 module.exports = ordersRouter;
