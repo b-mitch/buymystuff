@@ -3,8 +3,6 @@ const db = require('../db/index');
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 
-const helper = require('../helpers');
-
 const loginRouter = express.Router();
 
 loginRouter.use(bodyParser.json());

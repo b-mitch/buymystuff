@@ -25,10 +25,6 @@ const passwordHasher = async (password, saltRounds) => {
   return null;
 }
 
-// registerRouter.post('/', (req, res, next) => {
-
-// })
-
 registerRouter.post('/', async (req, res, next) => {
   const { first, last, email, username, password } = req.body;
   try {
@@ -60,6 +56,5 @@ registerRouter.post('/', async (req, res, next) => {
   }
 });
 
-//ALTER SEQUENCE users_id_seq RESTART WITH 1; to restart id serial in postgres
 
 module.exports = registerRouter;
