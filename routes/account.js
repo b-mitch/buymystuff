@@ -3,6 +3,7 @@ const db = require('../db/index');
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 
+
 const accountRouter = express.Router();
 
 accountRouter.use(bodyParser.json());
@@ -24,7 +25,7 @@ const passwordHasher = async (password, saltRounds) => {
 }
 
 accountRouter.get('/', (req, res) => {
-  const id = 1;
+  const id = req.session.user.id;
   db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
     if (error) {
     console.log('error')
@@ -35,7 +36,7 @@ accountRouter.get('/', (req, res) => {
 })
 
 accountRouter.put('/details', async (req, res) => {
-  const id = 1;  
+  const id = req.session.user.id;  
   const { first, last, email, username } = req.body;
   let results;
   try {
@@ -58,7 +59,7 @@ accountRouter.put('/details', async (req, res) => {
 })
 
 accountRouter.put('/password', async (req, res) => {
-  const id = 1;
+  const id = req.session.user.id;
   const { password } = req.body;
   if(password) {
   const updateText = 'update users set password = $1 where id = $2 RETURNING *'
@@ -70,8 +71,8 @@ accountRouter.put('/password', async (req, res) => {
     throw error
     }
     res.status(200).json(results.rows[0])
-  }) 
-}
+    }) 
+  }
 })
 
 

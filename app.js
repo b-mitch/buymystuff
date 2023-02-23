@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+// const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
+const store = new session.MemoryStore();
 
 const db = require('./db/index');
 
@@ -15,6 +16,16 @@ const cartRouter = require('./routes/cart');
 const checkoutRouter = require('./routes/checkout');
 const ordersRouter = require('./routes/orders');
 
+app.use(
+  session({
+    secret: "secret-key",
+    cookie: { maxAge: 172800000, secure: false, sameSite: 'none' },
+    resave: false,
+    saveUninitialized: false,
+    store
+  })
+);
+
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/products', productsRouter);
@@ -25,14 +36,6 @@ app.use('/orders', ordersRouter);
 
 const PORT = process.env.PORT || 8000;
 
-app.use(
-  session({
-    secret: "secret-key",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -40,29 +43,29 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser((id, done) => {
-  findById(id, function(err, user) {
-    if(err) return done(err);
-    done(null, user);
-  })
-});
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
+// passport.deserializeUser((id, done) => {
+//   findById(id, function(err, user) {
+//     if(err) return done(err);
+//     done(null, user);
+//   })
+// });
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    db.users.findByUsername(username, (err, user) => {
-      if(err) return done(err);
-      if(!user) return done(null, false);
-      if(user.password != password) return done(null, false);
-      return done(null, user)
-    });
-  })
-);
+// passport.use(new LocalStrategy(
+//   function(username, password, done) {
+//     db.users.findByUsername(username, (err, user) => {
+//       if(err) return done(err);
+//       if(!user) return done(null, false);
+//       if(user.password != password) return done(null, false);
+//       return done(null, user)
+//     });
+//   })
+// );
 
 app.get('/home', (req, res) => {
     res.send('This is the home page');
@@ -78,10 +81,6 @@ app.get('/', (req, res) => {
     res.status(200).json(results.rows)
   })
 });
-
-// app.get('/account', (req, res) => {
-//   res.render('Profile Page', { user: req.user });
-// }); 
 
 app.get('/logout', (req, res) => {
   req.logout();

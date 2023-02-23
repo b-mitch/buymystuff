@@ -14,30 +14,32 @@ loginRouter.use(
 
 loginRouter.post("/", async (req, res) => {
   const { username, password } = req.body;
+  const selectText = 'SELECT * FROM users WHERE username = $1'
+  const values = [username];
   try {
-    const selectText = 'SELECT * FROM users WHERE username = $1'
-    const values = [username];
-    await db.query(selectText, values, async (error, results) => {
-      if (error) {
-        console.log('error')
-        throw error
-        }
-      const user = results.rows[0];
-      if (!user) {
-        console.log("User does not exist!");
-        return res.redirect("login");
-      }
-      const matchedPassword = await bcrypt.compare(password, user.password);
-      if (!matchedPassword) {
-        res.status(401).send("Passwords did not match!");
-        return res.redirect("login");
-      }
-      res.status(200).send('Password matches!');
-    //   res.render("profile", { user });
-      })
+    const results = await db.query(selectText, values);
+    const user = await results.rows[0];
+    const id = user.id;
+    if (!user) {
+      console.log("User does not exist!");
+      return res.redirect("login");
+    }
+    const matchedPassword = await bcrypt.compare(password, user.password);
+    if (!matchedPassword) {
+      res.status(401).send("Passwords did not match!");
+      return res.redirect("login");
+    }
+    console.log('Password matches!');
+    req.session.authenticated = true;
+    req.session.user = {
+      id,
+      username,
+      password
+    }
+    res.redirect("/account")  
     } catch (err) {
         res.status(500).json({ message: err.message });
-        }
+      }
 });
 
 module.exports = loginRouter;
