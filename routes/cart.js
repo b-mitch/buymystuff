@@ -12,7 +12,7 @@ cartRouter.use(
 );
 
 cartRouter.get('/', async (req, res) => {
-  const userId = 1;
+  const userId = req.session.user.id;
   const results = await db.query('SELECT * FROM carts WHERE user_id = $1', [userId]);
   const cart = results.rows;
   const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userId]);
@@ -22,10 +22,9 @@ cartRouter.get('/', async (req, res) => {
 });
 
 cartRouter.put('/', (req, res) => {
-  const userId = 1;
-  const productId = 3;
+  const userId = req.session.user.id;
+  const productId = 1;
   const amount = req.body.amount;
-
   db.query('UPDATE carts SET product_amount = $3 WHERE user_id = $2 AND product_id = $1 RETURNING *', [productId, userId, amount], (error, results) => {
     if (error) {
     console.log('error')
@@ -36,8 +35,8 @@ cartRouter.put('/', (req, res) => {
 })
 
 cartRouter.delete('/', (req, res) => {
-  const userId = 1;
-  const productId = 3;
+  const userId = req.session.user.id;
+  const productId = 2;
 
   db.query('DELETE FROM carts WHERE user_id = $1 AND product_id = $2', [userId, productId], (error, results) => {
     if (error) {

@@ -12,7 +12,7 @@ ordersRouter.use(
 );
 
 ordersRouter.get('/', async (req, res) => {
-  const userId = 1;
+  const userId = req.session.user.id;
   const results = await db.query('SELECT * FROM orders WHERE user_id = $1', [userId]);
   const cart = results.rows;
   const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userId]);

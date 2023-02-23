@@ -12,7 +12,7 @@ checkoutRouter.use(
 );
 
 checkoutRouter.get('/', async (req, res) => {
-  const userId = 1;
+  const userId = req.session.user.id;
   const results = await db.query('SELECT * FROM carts WHERE user_id = $1', [userId]);
   const cart = results.rows;
   const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userId]);
@@ -22,7 +22,7 @@ checkoutRouter.get('/', async (req, res) => {
 });
 
 checkoutRouter.put('/', async (req, res) => {
-  const userId = 1
+  const userId = req.session.user.id;
   const select = await db.query('SELECT product_id, product_amount FROM carts WHERE user_id = $1', [userId]);
   const productsArray = select.rows;
   let updatedProducts = [];
@@ -34,7 +34,7 @@ checkoutRouter.put('/', async (req, res) => {
 })
 
 checkoutRouter.post('/', async (req, res) => {
-  const userId = 1
+  const userId = req.session.user.id
   const date = Date.now();
   const select = await db.query('SELECT product_id, product_price, product_amount FROM carts WHERE user_id = $1', [userId]);
   const products = select.rows;
