@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: By My Shit
+  version: 3.0.0
+  description: Codecademy e-commerce project
+paths:
+  /home:
+    summary: home page
+  /login:
+    summary: login page
+    post:
+      summary: 'Verifies user credentials and starts user session '
+      description: >-
+        uses express-sessions to store user data and redirects to their account
+        page
+      operationId: post_login
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Login
+  /register:
+    summary: register new user page
+    post:
+      summary: Posts a new user to database
+      description: >-
+        Adds a new user to the user table in the BMS database with a hashed
+        password using bcrypt
+      operationId: post_register
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Register
+  /account:
+    summary: user account page
+    description: user must first login to access
+    get:
+      summary: Gets user data
+      description: Gets user data based on session data after use logs in
+      operationId: get_account
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Account
+  /account/details:
+    summary: make changes to user details
+    description: allows user to make changes to their non-password account details
+    put:
+      summary: Make changes to user info
+      description: >-
+        Sends a put request based on req.body to make changes to the user row in
+        the users table
+      operationId: put_details
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Account
+  /account/password:
+    summary: make changes to user password
+    description: allows user to change their password
+    put:
+      summary: Change password
+      description: Uses req.body to change user's password in the users database
+      operationId: put_password
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Account
+  /cart:
+    summary: Get and modify cart
+    description: user can see cart contents and modify them but must be logged in first
+    get:
+      summary: Get cart details
+      description: Shows user cart contents
+      operationId: get_cart
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Cart
+    put:
+      summary: Make changes to cart
+      description: >-
+        Allows user to make changes with req.body to the cart rows in the cart
+        table that are linked to their user id
+      operationId: put_cart
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Cart
+    delete:
+      summary: Delete a product from cart
+      description: >-
+        Allows deletion of product from the carts table via selecting a
+        product_id.
+      operationId: delete_cart
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Cart
+  /checkout:
+    summary: Get cart and make checkout related changes
+    description: >-
+      user is able to see cart and submit orders which posts to orders table,
+      deletes items from cart & alters product inventories
+    get:
+      summary: Get cart contents
+      description: Queries carts table to display carts rows the belong to the user
+      operationId: get_checkout
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Checkout
+    put:
+      summary: Put changes to product inventory
+      description: >-
+        Allows for the changing of product inventory in the products table when
+        an order is submitted
+      operationId: put_checkout
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Checkout
+    post:
+      summary: Post new order to orders table
+      description: Adds all items from the users cart to the orders table
+      operationId: post_checkout
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Checkout
+    delete:
+      summary: Delete cart
+      description: Deletes all items from the user's cart
+      operationId: delete_checkout
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Checkout
+  /orders:
+    summary: Get order history
+    description: retrieves order data from the orders table of the database
+    get:
+      summary: Get order data
+      description: Queries the orders table of the database based on user id
+      operationId: get_orders
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Orders
+  /products:
+    summary: Get all products and post new ones
+    get:
+      summary: Get all products
+      description: Queries entire products table of the database
+      operationId: get_products
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Products
+    post:
+      summary: Post new product
+      description: Adds new product to the products table
+      operationId: post_products
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Products
+  /products?category=hair:
+    summary: Get products filtered by category
+    get:
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: The category to filter products by
+      summary: Get product by category
+      description: Filters the products by the category column of the products table
+      operationId: get_products_by_category
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Products
+  /products/{id}:
+    summary: get products by id and post them to cart
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The product ID
+      summary: Get product by ID
+      description: Query database for product that matches req.params
+      operationId: get_product_by_id
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Products
+    post:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The product ID
+      summary: Post product to cart
+      description: >-
+        Inserts new row for the product in the carts table with user id and
+        amount
+      operationId: post_product_by_id
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - Products
