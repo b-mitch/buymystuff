@@ -26,7 +26,7 @@ loginRouter.post("/", async (req, res) => {
     }
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) {
-      res.status(401).send("Passwords did not match!");
+      console.log("Password did not match!");
       return res.redirect("login");
     }
     console.log('Password matches!');
