@@ -2,6 +2,8 @@ const express = require('express');
 const db = require('../db/index');
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
+const validator = require('validator');
+const { check, validationResult } = require('express-validator');
 
 
 const accountRouter = express.Router();
@@ -35,21 +37,31 @@ accountRouter.get('/', (req, res) => {
   })
 })
 
-accountRouter.put('/details', async (req, res) => {
+accountRouter.put('/details', [
+  check('email').isEmail()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
   const id = req.session.user.id;  
-  const { first, last, email, username } = req.body;
+  let { first, last, email, username } = req.body;
   let results;
   try {
     if(first) {
+    first = validator.escape(first); 
     results = await db.query('update users set first_name = $1 where id = $2 RETURNING *', [first, id]);
   }
-    if(last) {
+    if(last) { 
+      last = validator.escape(last); 
       results = await db.query('update users set last_name = $1 where id = $2 RETURNING *', [last, id]);
     }
     if(email) {
+      email = validator.escape(email);
       results = await db.query('update users set email = $1 where id = $2 RETURNING *', [email, id]);
     }
     if(username) {
+      username = validator.escape(username);
       results = await db.query('update users set username = $1 where id = $2 RETURNING *', [username, id]);
     }
     await res.status(200).json(results.rows[0])
@@ -58,9 +70,13 @@ accountRouter.put('/details', async (req, res) => {
   }
 })
 
-accountRouter.put('/password', async (req, res) => {
+accountRouter.put('/password', [check('password').isLength({ max: 20, min: 5 })], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+  return res.status(422).json({ errors: errors.array() });
+  }
   const id = req.session.user.id;
-  const { password } = req.body;
+  const password = validator.escape(req.body.password);
   if(password) {
   const updateText = 'update users set password = $1 where id = $2 RETURNING *'
   const hashedPassword = await passwordHasher(password, 10);

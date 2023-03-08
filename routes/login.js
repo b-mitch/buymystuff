@@ -2,6 +2,8 @@ const express = require('express');
 const db = require('../db/index');
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
+const validator = require('validator');
+const { check, validationResult } = require('express-validator');
 
 const loginRouter = express.Router();
 
@@ -12,8 +14,13 @@ loginRouter.use(
   })
 );
 
-loginRouter.post("/", async (req, res) => {
-  const { username, password } = req.body;
+loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+  return res.status(422).json({ errors: errors.array() });
+  }
+  const username = validator.escape(req.body.username);
+  const password = validator.escape(req.body.password);
   const selectText = 'SELECT * FROM users WHERE username = $1'
   const values = [username];
   try {
