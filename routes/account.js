@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const validator = require('validator');
 const { check, validationResult } = require('express-validator');
 const authenticateUser = require('../utils/auth')
+const decodeJWT = require('../utils/decodeJWT');
 
 
 const accountRouter = express.Router();
@@ -28,8 +29,9 @@ const passwordHasher = async (password, saltRounds) => {
 }
 
 accountRouter.get('/', authenticateUser, (req, res) => {
-  // const username = req.body;
-  console.log(req.body)
+  const token = req.headers.authorization;
+  const username = decodeJWT(token);
+  
   db.query('SELECT * FROM users WHERE username = $1', [username], (error, results) => {
     if (error) {
     console.log('error')

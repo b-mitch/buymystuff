@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const passport = require("passport");
 const session = require("express-session");
 const store = new session.MemoryStore();
+const logger = require('morgan');
+// const passport = require('passport');
+
 require('dotenv').config();
 const cors = require('cors');
 const helmet = require('helmet');
@@ -23,10 +25,19 @@ const ordersRouter = require('./routes/orders');
 
 const PORT = process.env.PORT || 4000;
 
-app.set("views", path.join(__dirname, "/views"));
-app.set("view engine", "ejs");
+
 
 app.use(cookieParser());
+
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(logger('dev'));
+app.use(cors());
+app.use(helmet());
 
 app.use(
   session({
@@ -39,6 +50,8 @@ app.use(
   })
 );
 
+// app.use(passport.initialize());
+
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/products', productsRouter);
@@ -47,20 +60,7 @@ app.use('/cart', cartRouter);
 app.use('/checkout', checkoutRouter);
 app.use('/orders', ordersRouter);
 
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
 
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-    optionsSuccessStatus: 200
-}))
-app.use(helmet());
 
 // const csrfMiddleware = csurf({
 //   cookie: {
@@ -72,8 +72,7 @@ app.use(helmet());
 
 // app.use(csrfMiddleware);
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 // passport.serializeUser((user, done) => {
 //   done(null, user.id);
