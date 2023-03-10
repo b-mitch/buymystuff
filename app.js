@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-// const passport = require("passport");
-// const LocalStrategy = require("passport-local").Strategy;
+const passport = require("passport");
 const session = require("express-session");
 const store = new session.MemoryStore();
 require('dotenv').config();
@@ -32,7 +31,7 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "secret-key",
-    cookie: { maxAge: 17280000000, 
+    cookie: { maxAge: 86400000, 
     httpOnly: true, secure: false, sameSite: 'none', path: "/" },
     resave: false,
     saveUninitialized: false,
@@ -73,8 +72,8 @@ app.use(helmet());
 
 // app.use(csrfMiddleware);
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // passport.serializeUser((user, done) => {
 //   done(null, user.id);

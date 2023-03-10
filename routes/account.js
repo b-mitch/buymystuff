@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const validator = require('validator');
 const { check, validationResult } = require('express-validator');
+const authenticateUser = require('../utils/auth')
 
 
 const accountRouter = express.Router();
@@ -26,9 +27,10 @@ const passwordHasher = async (password, saltRounds) => {
   return null;
 }
 
-accountRouter.get('/', (req, res) => {
-  const id = req.session.user.id;
-  db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+accountRouter.get('/', authenticateUser, (req, res) => {
+  // const username = req.body;
+  console.log(req.body)
+  db.query('SELECT * FROM users WHERE username = $1', [username], (error, results) => {
     if (error) {
     console.log('error')
     throw error

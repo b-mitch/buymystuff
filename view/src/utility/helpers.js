@@ -20,6 +20,17 @@ export function useToken() {
   }
 }
 
+export async function createUser(credentials) {
+    return fetch('/register' , {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.json());
+}
+
 export async function loginUser(credentials) {
   return fetch('/login' , {
     method: "POST",
@@ -28,5 +39,16 @@ export async function loginUser(credentials) {
     },
     body: JSON.stringify(credentials)
   })
-    .then(data => data.json())
+  .then(data => data.json())
+}
+
+export async function getUser (token) {
+  return fetch('/account', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    }
+  })
+  .then(data => data.json())
 }
