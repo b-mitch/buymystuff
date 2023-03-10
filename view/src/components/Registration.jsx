@@ -39,7 +39,7 @@ export default function Registration() {
     setSubmitted(false);
   };
  
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(false);
     setEmailError(false);
@@ -60,7 +60,7 @@ export default function Registration() {
     setEmailError(false);
     setPasswordError(false);
     setSubmitted(true);
-    fetch('/register' , {
+    const response = await fetch('/register' , {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -73,10 +73,7 @@ export default function Registration() {
         password: password
       })
     })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log(result)
-    })
+    return response.status;
   }
 
   const successMessage = () => {
