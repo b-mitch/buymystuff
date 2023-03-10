@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const validator = require('validator');
 const { check, validationResult } = require('express-validator');
+const generateToken = require('../utils/generateToken');
 
 const registerRouter = express.Router();
 
@@ -53,14 +54,12 @@ registerRouter.post('/', [
       const insertText = 'INSERT INTO users (first_name, last_name, email, username, password)VALUES($1, $2, $3, $4, $5) RETURNING *';
       const hashedPassword = await passwordHasher(password, 10);
       const values = await [first, last, email, username, hashedPassword];
-      await db.query(insertText, values, (error, results) => {
-        if (error) {
-        console.log('error')
-        throw error
-        }
-        res.status(200).json(results.rows[0])
+      let newUser = await db.query(insertText, values)
+      let newUsername = await newUser.rows[0].username;
+      const token = generateToken({ username: newUsername })
+      console.log(token)
+      return res.status(200).send({ error: false, token, message: "User created" })
       }) 
-    })
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

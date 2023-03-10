@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { createUser } from "../utility/helpers";
+import { useNavigate } from "react-router-dom";
 
-export default function Registration() {
+export default function Registration({ setToken }) {
+  const navigate = useNavigate();
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
   const [email, setEmail] = useState('');
@@ -60,20 +63,15 @@ export default function Registration() {
     setEmailError(false);
     setPasswordError(false);
     setSubmitted(true);
-    const response = await fetch('/register' , {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        first: first,
-        last: last,
-        email: email,
-        username: username,
-        password: password
-      })
+    const token = await createUser({
+      first: first,
+      last: last,
+      email: email,
+      username: username,
+      password: password
     })
-    return response.status;
+    setToken(token);
+    navigate("/");
   }
 
   const successMessage = () => {
