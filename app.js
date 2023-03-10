@@ -10,7 +10,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const csurf = require('csurf');
+// const csurf = require('csurf');
 
 const db = require('./db/index');
 
@@ -22,7 +22,7 @@ const cartRouter = require('./routes/cart');
 const checkoutRouter = require('./routes/checkout');
 const ordersRouter = require('./routes/orders');
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 4000;
 
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
@@ -32,8 +32,8 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "secret-key",
-    cookie: { maxAge: 172800000, 
-    httpOnly: true, secure: false, sameSite: 'none' },
+    cookie: { maxAge: 17280000000, 
+    httpOnly: true, secure: false, sameSite: 'none', path: "/" },
     resave: false,
     saveUninitialized: false,
     store
@@ -55,18 +55,23 @@ app.use(
   })
 );
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    optionsSuccessStatus: 200
+}))
 app.use(helmet());
 
-const csrfMiddleware = csurf({
-  cookie: {
-    maxAge: 3000,
-    secure: true,
-    sameSite: 'none'
-  }
-})
+// const csrfMiddleware = csurf({
+//   cookie: {
+//     maxAge: 3000,
+//     secure: true,
+//     sameSite: 'none'
+//   }
+// })
 
-app.use(csrfMiddleware);
+// app.use(csrfMiddleware);
 
 // app.use(passport.initialize());
 // app.use(passport.session());
