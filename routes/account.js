@@ -31,7 +31,6 @@ const passwordHasher = async (password, saltRounds) => {
 accountRouter.get('/', authenticateUser, (req, res) => {
   const token = req.headers.authorization;
   const username = decodeJWT(token);
-  
   db.query('SELECT * FROM users WHERE username = $1', [username], (error, results) => {
     if (error) {
     console.log('error')
