@@ -16,7 +16,7 @@ export default function Home({ token }) {
 
   return (
     <div className="home-container">
-      <h1>Welcome {first}!</h1>
+      <h1>Hey{first ? ` ${first}!` : "!"} Welcome to Buy My Shit!</h1>
       <p>All Products</p>
     </div>
   )

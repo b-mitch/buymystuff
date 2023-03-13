@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import { loginUser } from '../utility/helpers';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Login({ setToken }) {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -30,6 +32,7 @@ export default function Login({ setToken }) {
           password
       });
       setToken(token);
+      navigate("/");
     }
 
   const errorMessage = () => {

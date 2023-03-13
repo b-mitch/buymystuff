@@ -20,6 +20,13 @@ export function useToken() {
   }
 }
 
+export function useAuth() {
+  const token = sessionStorage.getItem("token");
+  if(token){
+    return true;
+  }
+}
+
 export async function createUser(credentials) {
     return fetch('/register' , {
     method: "POST",

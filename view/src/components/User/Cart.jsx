@@ -5,7 +5,7 @@ export default function Cart({ token }) {
   return (
     <div>
       <h1>Cart</h1>
-      <Link to='/account/checkout'>Checkout</Link>
+      <Link to='/checkout'>Checkout</Link>
     </div>
   )
 }

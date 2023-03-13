@@ -1,6 +1,8 @@
 import React from 'react';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
+import ProtectedRoutes from './components/User/ProtectedRoutes';
+import Nav from './components/Nav';
 import Registration from './components/Registration';
 import Login from './components/Login';
 import Home from './components/User/Home';
@@ -16,40 +18,32 @@ import { useToken } from './utility/helpers';
 function App () {
   const { token, setToken } = useToken();
 
-  if(!token) {
-    return (
-      <div>
-        <nav>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/register">Sign Up</NavLink>
-        </nav>
-        <Routes>
-          <Route 
-            path="/" 
-            element={<Login setToken={setToken} />} 
-          />
-          <Route exact path="/register" element={<Registration setToken={setToken} />} />
-        </Routes>
-      </div>
-    )
-  }
   return (
     <div>
-      <nav>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/account">Account</NavLink>
-        <NavLink to="/account/cart">Cart</NavLink>
-      </nav>
+      <Nav 
+        setToken={setToken}
+        token={token}
+      />
       <Routes>
+        <Route 
+            path="/login" 
+            element={<Login setToken={setToken} />} 
+          />
+        <Route 
+          exact path="/register"   
+          element={<Registration setToken={setToken} />} />
         <Route path="/" element={<Home token={token} />} />
-        <Route path="/account" element={<Account token={token} />} />
-        <Route path="/account/details" element={<Details token={token} />} />
-        <Route path="/account/orders" element={<Orders token={token} />} />
-        <Route path="/account/details/password" element={<Password token={token} />} />
-        <Route path="/account/details/edit" element={<Edit token={token} />} />
-        <Route path="/account/cart" element={<Cart token={token} />} />
-        <Route path="/account/checkout" element={<Checkout token={token} />} />
+        <Route element={<ProtectedRoutes token={token} />}>
+          <Route path="/account" element={<Account token={token} />} />
+          <Route path="/account/details" element={<Details token={token} />} />
+          <Route path="/account/orders" element={<Orders token={token} />} />
+          <Route path="/account/details/password" element={<Password token={token} />} />
+          <Route path="/account/details/edit" element={<Edit token={token} />} />
+          <Route path="/cart" element={<Cart token={token} />} />
+          <Route path="/checkout" element={<Checkout token={token} />} />
+        </Route>
       </Routes>
+
     </div>
   )
 }
