@@ -138,23 +138,23 @@ export default function Registration({ setToken }) {
       <form>
         <h3>Create your account</h3>
         <label for="first">
-          First Name: 
+          First name* 
           <input value={first} className="input" onChange={handleFirst} type="text" name="first"/>
         </label>
         <label for="last">
-          Last Name:
+          Last name*
           <input value={last} className="input" onChange={handleLast} type="text" name="last"/>
         </label>
         <label for="email">
-          Email:
+          Email*
           <input value={email} className="input" onChange={handleEmail} type="email" name="email"/>
         </label>
         <label for="username">
-          Username:
+          Username*
           <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>
         </label>
         <label for="password">
-          Password:
+          Password*
           <input value={password} className="input" onChange={handlePassword} type="text" name="password"/>
         </label>
         <button onClick={handleSubmit} className="btn" type="submit">Submit</button>

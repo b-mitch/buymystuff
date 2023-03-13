@@ -33,11 +33,17 @@ registerRouter.post('/', [
   if (!errors.isEmpty()) {
   return res.status(422).json({ errors: errors.array() });
   }
+
+  const selectObject = await db.query('SELECT COUNT(*) FROM users');
+  const totalUsers = Number(selectObject.rows[0].count);
+  const id = totalUsers+1;
+
   const first = validator.escape(req.body.first); 
   const last = validator.escape(req.body.last); 
   const email = validator.escape(req.body.email); 
   const username = validator.escape(req.body.username); 
-  const password = validator.escape(req.body.first);
+  const password = validator.escape(req.body.password);
+
   try {
     const selectText = 'SELECT * FROM users WHERE username = $1'
     const values = [username];
@@ -51,9 +57,9 @@ registerRouter.post('/', [
         console.log("User already exists!");
         return res.redirect("login");
       }
-      const insertText = 'INSERT INTO users (first_name, last_name, email, username, password)VALUES($1, $2, $3, $4, $5) RETURNING *';
+      const insertText = 'INSERT INTO users (id, first_name, last_name, email, username, password)VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
       const hashedPassword = await passwordHasher(password, 10);
-      const values = await [first, last, email, username, hashedPassword];
+      const values = await [id, first, last, email, username, hashedPassword];
       let newUser = await db.query(insertText, values)
       let newUsername = await newUser.rows[0].username;
       const token = generateToken({ username: newUsername })

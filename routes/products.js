@@ -27,10 +27,14 @@ productsRouter.get('/', (req, res) => {
   })
 });
 
-productsRouter.post('/', (req, res) => {
+productsRouter.post('/', async (req, res) => {
+  const selectObject = await db.query('SELECT COUNT(*) FROM users');
+  const totalUsers = Number(selectObject.rows[0].count);
+  const id = totalUsers+1;
+
   const { name, category, price, inventory } = req.body;
-  const text = 'INSERT INTO products (name, category, price, inventory)VALUES($1, $2, $3, $4) RETURNING *';
-  const values = [name, category, price, inventory];
+  const text = 'INSERT INTO products (id, name, category, price, inventory)VALUES($1, $2, $3, $4, $5) RETURNING *';
+  const values = [id, name, category, price, inventory];
   db.query(text, values, (error, results) => {
     if (error) {
     console.log('error')

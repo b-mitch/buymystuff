@@ -47,8 +47,13 @@ accountRouter.put('/details', [
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
-  const id = req.session.user.id;  
-  let { first, last, email, username } = req.body;
+
+  const token = req.headers.authorization;
+  const user = decodeJWT(token); 
+  const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+  const id = selectObject.rows[0].id;
+
+  let { first, last, email, username, address, city, state, zip } = req.body;
   let results;
   try {
     if(first) {
@@ -67,6 +72,22 @@ accountRouter.put('/details', [
       username = validator.escape(username);
       results = await db.query('update users set username = $1 where id = $2 RETURNING *', [username, id]);
     }
+    if(address) {
+      address = validator.escape(address);
+      results = await db.query('update users set address = $1 where id = $2 RETURNING *', [address, id]);
+    }
+    if(city) {
+      city = validator.escape(city);
+      results = await db.query('update users set city = $1 where id = $2 RETURNING *', [city, id]);
+    }
+    if(state) {
+      state = validator.escape(state);
+      results = await db.query('update users set state = $1 where id = $2 RETURNING *', [state, id]);
+    }
+    if(zip) {
+      zip = validator.escape(zip);
+      results = await db.query('update users set zip = $1 where id = $2 RETURNING *', [zip, id]);
+    }
     await res.status(200).json(results.rows[0])
   } catch (err) {
     return err.stack;
@@ -78,12 +99,24 @@ accountRouter.put('/password', [check('password').isLength({ max: 20, min: 5 })]
   if (!errors.isEmpty()) {
   return res.status(422).json({ errors: errors.array() });
   }
-  const id = req.session.user.id;
-  const password = validator.escape(req.body.password);
+
+  const token = req.headers.authorization;
+  const username = decodeJWT(token); 
+  const selectObject =  await db.query('SELECT * FROM users WHERE username = $1', [username]);
+  const user = selectObject.rows[0];
+  const currentPassword = req.body.currentPassword;
+  const password = req.body.password;
+
+  const matchedPassword = await bcrypt.compare(currentPassword, user.password);
+  if (!matchedPassword) {
+    console.log("Password did not match!");
+    return res.status(400).send({ error: true, message: "Invalid password"});
+  }
+
   if(password) {
-  const updateText = 'update users set password = $1 where id = $2 RETURNING *'
+  const updateText = 'update users set password = $1 where username = $2 RETURNING *'
   const hashedPassword = await passwordHasher(password, 10);
-  const values = await [hashedPassword, id];
+  const values = await [hashedPassword, username];
   await db.query(updateText, values, (error, results) => {
     if (error) {
     console.log('error')
