@@ -30,12 +30,12 @@ loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req, res
     const id = user.id;
     if (!user) {
       console.log("User does not exist!");
-      res.status(400).send({ error: true, message: "User does not exist"});
+      return res.status(400).send({ error: true, message: "User does not exist"});
     }
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) {
       console.log("Password did not match!");
-      res.status(400).send({ error: true, message: "Invalid password"});
+      return res.status(400).send({ error: true, message: "Invalid password"});
     }
     console.log('Password matches!');
     req.session.authenticated = true;
@@ -45,6 +45,7 @@ loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req, res
       password
     }
     const token = generateToken({ username: req.session.user.username })
+    console.log(token);
     return res.status(200).send({ error: false, token, message: "Logged in sucessfully" })
     } catch (err) {
         res.status(500).json({ message: err.message });

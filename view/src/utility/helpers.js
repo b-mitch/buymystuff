@@ -38,6 +38,30 @@ export async function createUser(credentials) {
   .then(data => data.json());
 }
 
+export async function updateDetails(token, credentials) {
+    return fetch('/account/details' , {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.json());
+}
+
+export async function updatePassword(token, credentials) {
+    return fetch('/account/password' , {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.json());
+}
+
 export async function loginUser(credentials) {
   return fetch('/login' , {
     method: "POST",
