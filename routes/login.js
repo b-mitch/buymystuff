@@ -45,7 +45,6 @@ loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req, res
       password
     }
     const token = generateToken({ username: req.session.user.username })
-    console.log(token);
     return res.status(200).send({ error: false, token, message: "Logged in sucessfully" })
     } catch (err) {
         res.status(500).json({ message: err.message });

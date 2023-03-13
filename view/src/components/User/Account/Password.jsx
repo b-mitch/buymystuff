@@ -48,7 +48,7 @@ export default function Password({ token }) {
         style={{
           display: updated ? '' : 'none',
         }}>
-        <h3>Details updated</h3>
+        <h3>Password updated</h3>
       </div>
     );
   };

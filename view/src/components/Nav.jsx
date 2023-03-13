@@ -1,13 +1,11 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-export default function Nav({ setToken, token }) {
-  const navigate = useNavigate();
+export default function Nav({ token }) {
 
   function removeToken() {
-    setToken(null);
     sessionStorage.removeItem("token");
-    navigate("/")
+    window.location.reload();
   }
 
   if(!token){

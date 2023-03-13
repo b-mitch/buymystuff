@@ -11,7 +11,8 @@ export function useToken() {
 
   const saveToken = userToken => {
     sessionStorage.setItem('token', JSON.stringify(userToken));
-    setToken(userToken.token);
+    console.log(userToken)
+    setToken(userToken);
   };
 
   return {
@@ -28,7 +29,7 @@ export function useAuth() {
 }
 
 export async function createUser(credentials) {
-    return fetch('/register' , {
+  return fetch('/register' , {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -39,11 +40,12 @@ export async function createUser(credentials) {
 }
 
 export async function updateDetails(token, credentials) {
-    return fetch('/account/details' , {
+  const jwt = token.token
+  return fetch('/account/details' , {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": token
+      "Authorization": jwt
     },
     body: JSON.stringify(credentials)
   })
@@ -51,11 +53,12 @@ export async function updateDetails(token, credentials) {
 }
 
 export async function updatePassword(token, credentials) {
-    return fetch('/account/password' , {
+  const jwt = token.token
+  return fetch('/account/password' , {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": token
+      "Authorization": jwt
     },
     body: JSON.stringify(credentials)
   })
@@ -74,11 +77,12 @@ export async function loginUser(credentials) {
 }
 
 export async function getUser (token) {
+  const jwt = token.token
   return fetch('/account', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": token
+      "Authorization": jwt
     }
   })
   .then(data => data.json())
