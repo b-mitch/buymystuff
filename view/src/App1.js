@@ -1,10 +1,11 @@
 import React from 'react';
-import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import ProtectedRoutes from './components/User/ProtectedRoutes';
+import ProtectedRoutes from './components/ProtectedRoutes';
+import Nav from './components/Nav';
 import Registration from './components/Registration';
 import Login from './components/Login';
-import Home from './components/User/Home';
+import Home from './components/Home';
 import Account from './components/User/Account/Account';
 import Details from "./components/User/Account/Details";
 import Orders from "./components/User/Account/Orders";
@@ -15,31 +16,14 @@ import Checkout from "./components/User/Checkout";
 import { useToken } from './utility/helpers';
 
 function App () {
-  const navigate = useNavigate();
   const { token, setToken } = useToken();
 
-  function removeToken() {
-    setToken(null);
-    // window.location.reload();
-    navigate("/")
-  }
-
-  if(!token){
-    return (
-      <div>
-      <nav>
-        <ul>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/login">Login</NavLink>
-          </li>
-          <li>
-            <NavLink to="/register">Sign Up</NavLink>
-          </li>
-        </ul>
-      </nav>
+  return (
+    <div>
+      <Nav 
+        setToken={setToken}
+        token={token}
+      />
       <Routes>
         <Route 
             path="/login" 
@@ -48,29 +32,10 @@ function App () {
         <Route 
           exact path="/register"   
           element={<Registration setToken={setToken} />} />
-        <Route exact path="/" element={<Home />} />
-      </Routes>
-      </div>
-    )
-  }
-  return (
-    <div>
-    <nav>
-      <ul>
-        <li>
-          <NavLink to="/">Home</NavLink>
-        </li>
-        <li>
-          <NavLink to="/account">Account</NavLink>
-        </li>
-        <li>
-          <NavLink to="/cart">Cart</NavLink>
-        </li>
-      </ul>
-      <button onClick={removeToken}>Log Out</button>
-    </nav>
-    <Routes>
-    <Route element={<ProtectedRoutes token={token} />}>
+        <Route path="/" element={<Home token={token} />} />
+        <Route path="/c/:id" element={<Categories />} />
+        <Route path="/product/:id" element={<Product />} />
+        <Route element={<ProtectedRoutes token={token} />}>
           <Route path="/account" element={<Account token={token} />} />
           <Route path="/account/details" element={<Details token={token} />} />
           <Route path="/account/orders" element={<Orders token={token} />} />
@@ -79,9 +44,9 @@ function App () {
           <Route path="/cart" element={<Cart token={token} />} />
           <Route path="/checkout" element={<Checkout token={token} />} />
         </Route>
-        <Route path="/" element={<Home token={token} />} />
       </Routes>
-      </div>
+
+    </div>
   )
 }
 
