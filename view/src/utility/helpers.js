@@ -12,7 +12,7 @@ export function useToken() {
   const saveToken = userToken => {
     sessionStorage.setItem('token', JSON.stringify(userToken));
     console.log(userToken)
-    setToken(userToken);
+    setToken(userToken.token);
   };
 
   return {
@@ -40,12 +40,14 @@ export async function createUser(credentials) {
 }
 
 export async function updateDetails(token, credentials) {
-  const jwt = token.token
+  if(!token){
+    return;
+  }
   return fetch('/account/details' , {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": jwt
+      "Authorization": token
     },
     body: JSON.stringify(credentials)
   })
@@ -53,12 +55,14 @@ export async function updateDetails(token, credentials) {
 }
 
 export async function updatePassword(token, credentials) {
-  const jwt = token.token
+  if(!token){
+    return;
+  }
   return fetch('/account/password' , {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": jwt
+      "Authorization": token
     },
     body: JSON.stringify(credentials)
   })
@@ -76,13 +80,45 @@ export async function loginUser(credentials) {
   .then(data => data.json())
 }
 
-export async function getUser (token) {
-  const jwt = token.token
+export async function getUser(token) {
+  if(!token){
+    return;
+  }
   return fetch('/account', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": jwt
+      "Authorization": token
+    }
+  })
+  .then(data => data.json())
+}
+
+export async function getProductsOfCategory(category) {
+  return fetch(`/products/c/${category}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(data => data.json())
+}
+
+export async function getProduct(product) {
+  return fetch(`/products/${product}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(data => data.json())
+}
+
+export async function getAllProducts() {
+  return fetch(`/products`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
     }
   })
   .then(data => data.json())

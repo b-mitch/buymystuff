@@ -22,15 +22,14 @@ productsRouter.get('/', (req, res) => {
       console.log('error')
       throw error
     }
-    console.log(results.rows)
     res.status(200).json(results.rows)
   })
 });
 
 productsRouter.post('/', async (req, res) => {
-  const selectObject = await db.query('SELECT COUNT(*) FROM users');
-  const totalUsers = Number(selectObject.rows[0].count);
-  const id = totalUsers+1;
+  const selectObject = await db.query('SELECT COUNT(*) FROM products');
+  const totalProducts = Number(selectObject.rows[0].count);
+  const id = totalProducts+1;
 
   const { name, category, price, inventory } = req.body;
   const text = 'INSERT INTO products (id, name, category, price, inventory)VALUES($1, $2, $3, $4, $5) RETURNING *';
@@ -44,20 +43,22 @@ productsRouter.post('/', async (req, res) => {
   });
 })
 
-productsRouter.get('/filter/:category', (req, res) => {
+productsRouter.get('/c/:category', (req, res) => {
   const category = req.params.category;
   db.query('SELECT * FROM products WHERE category = $1', [category], (error, results) => {
     if (error) {
     console.log('error')
     throw error
     }
-    res.status(200).json(results.rows[0])
+    res.status(200).json(results.rows)
   })
 })
 
-productsRouter.get('/:id', (req, res) => {
-  const id = req.params.id;
-  db.query('SELECT * FROM products WHERE id = $1', [id], (error, results) => {
+productsRouter.get('/:product', (req, res) => {
+  console.log(req.params)
+  const name = req.params.product;
+  console.log(name)
+  db.query('SELECT * FROM products WHERE name = $1', [name], (error, results) => {
     if (error) {
     console.log('error')
     throw error
