@@ -20,6 +20,32 @@ export function useToken() {
   }
 }
 
+export function useSearch() {
+  const getSearch = () => {
+    const searchString = sessionStorage.getItem('search');
+    const search = JSON.parse(searchString);
+    return search?.search
+  };
+
+  const [search, setSearch] = useState(getSearch({
+    search: {
+      query: '',
+      list: []
+    }
+    
+  }));
+
+  const saveSearch = userSearch => {
+    sessionStorage.setItem('search', JSON.stringify(userSearch));
+    setSearch(userSearch.search);
+  };
+
+  return {
+    setSearch: saveSearch,
+    search
+  }
+}
+
 export function addToCartLocal(item) {
   let cart = [];
   const currentCart = JSON.parse(localStorage.getItem('cart'))
@@ -168,7 +194,7 @@ export async function getProductPrice(product) {
 }
 
 export async function getAllProducts() {
-  return fetch(`/products`, {
+  return fetch('/products', {
     method: "GET",
     headers: {
       "Content-Type": "application/json"

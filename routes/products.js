@@ -14,11 +14,6 @@ productsRouter.use(
 );
 
 productsRouter.get('/', (req, res) => {
-  const category = req.query.category;
-  if(category){
-    res.redirect('/products/filter/' + category);
-    return;
-  }
   db.query('SELECT * FROM products', (error, results) => {
     if (error) {
       console.log('error')
@@ -33,7 +28,7 @@ productsRouter.post('/', async (req, res) => {
   const id = uuidv4();
 
   const { name, category, price, inventory } = req.body;
-  const text = 'INSERT INTO products (id, name, category, price, inventory)VALUES($1, $2, $3, $4, $5) RETURNING *';
+  const text = 'INSERT INTO products (id, name, category, price, inventory) VALUES($1, $2, $3, $4, $5) RETURNING *';
   const values = [id, name, category, price, inventory];
   db.query(text, values, (error, results) => {
     if (error) {
@@ -92,7 +87,7 @@ productsRouter.post('/:name', async (req, res) => {
 
   const id = uuidv4();;
 
-  await db.query('INSERT INTO carts (id, user_id, product_id, product_amount)VALUES($1, $2, $3, $4) RETURNING *', [id, userID, productID, amount], (error, results) => {
+  await db.query('INSERT INTO carts (id, user_id, product_id, amount)VALUES($1, $2, $3, $4) RETURNING *', [id, userID, productID, amount], (error, results) => {
     if (error) {
     console.log('error')
     throw error

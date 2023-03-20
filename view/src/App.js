@@ -16,15 +16,16 @@ import Returns from "./components/User/Account/Returns";
 import Password from "./components/User/Account/Password";
 import Cart from "./components/User/Cart";
 import Checkout from "./components/User/Checkout";
-import { useToken } from './utility/helpers';
+import { useToken, useSearch } from './utility/helpers';
 
 function App () {
   const navigate = useNavigate();
   const { token, setToken } = useToken();
-  const [search, setSearch] = useState({
-    query: '',
-    list: []
-  });
+  const { search, setSearch } = useSearch();
+  // const [search, setSearch] = useState({
+  //   query: '',
+  //   list: []
+  // });
 
   function handleLogOut() {
     sessionStorage.removeItem("token");
