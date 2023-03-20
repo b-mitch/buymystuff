@@ -11,13 +11,56 @@ export function useToken() {
 
   const saveToken = userToken => {
     sessionStorage.setItem('token', JSON.stringify(userToken));
-    console.log(userToken)
     setToken(userToken.token);
   };
 
   return {
     setToken: saveToken,
     token
+  }
+}
+
+export function addToCartLocal(item) {
+  let cart = [];
+  const currentCart = JSON.parse(localStorage.getItem('cart'))
+  if(!currentCart){
+    cart[0]=item;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    return cart
+  }
+  cart = currentCart || [];
+  cart.push(item);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  return cart;
+}
+
+export async function localCartTotal() {
+  console.log('fetching cart total')
+  const cart = JSON.parse(localStorage.getItem('cart'))
+  if(!cart) return localStorage.setItem('cart-total', {total: 0});
+  let stringPriceArray = [];
+  let price;
+  let amount;
+  let cost;
+  for (let item of cart) {
+    price = await getProductPrice(item.name);
+    price = Number(price).toFixed(2);
+    amount = item.amount;
+    cost = price*amount;
+    console.log(cost);
+    stringPriceArray.push(cost);
+  }
+  const priceArray = stringPriceArray.map(Number);
+  const total = priceArray.reduce((x, y) => x+y);
+  return total;
+}
+
+export async function addLocalCartToDB(token){
+  console.log('adding cart to DB')
+  const cart = JSON.parse(localStorage.getItem('cart'));
+  if(!cart) return;
+  for (let item of cart) {
+    await addToCartDB(item.name, token, item.amount)
   }
 }
 
@@ -108,6 +151,16 @@ export async function getProduct(product) {
   return fetch(`/products/${product}`, {
     method: "GET",
     headers: {
+      "Content-Type": "application/json",
+    }
+  })
+  .then(data => data.json())
+}
+
+export async function getProductPrice(product) {
+  return fetch(`/products/${product}/price`, {
+    method: "GET",
+    headers: {
       "Content-Type": "application/json"
     }
   })
@@ -123,3 +176,59 @@ export async function getAllProducts() {
   })
   .then(data => data.json())
 }
+
+export async function addToCartDB(product, token, amount) {
+  return fetch(`/products/${product}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({amount: amount})
+  })
+  .then(data => data.json());
+}
+
+export async function getCart(token) {
+  return fetch('/cart', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    }
+  })
+  .then(data => data.json())
+}
+
+export async function getCartTotal(token) {
+  return fetch('/cart/total', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    }
+  })
+  .then(data => data.json())
+}
+
+export async function updateCart(id, amount) {
+  return fetch(`/cart/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({amount: amount})
+  })
+  .then(data => data.json())
+}
+
+export async function deleteFromCartDB(id) {
+  return fetch(`/cart/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then(data => data.status)
+}
+

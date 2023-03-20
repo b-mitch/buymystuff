@@ -6,6 +6,7 @@ const SearchBar = ({ search, setSearch }) => {
   const navigate = useNavigate();
 
   const handleChange = async (e) => {
+    e.preventDefault();
     const products = await getAllProducts();
     const results = products.filter(product => {
       if (e.target.value === "")      return products

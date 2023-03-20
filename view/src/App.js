@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
+import { Routes, Route, NavLink, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home';
 import Registration from './components/Registration';
@@ -26,86 +26,84 @@ function App () {
     list: []
   });
 
-  function removeToken() {
+  function handleLogOut() {
     sessionStorage.removeItem("token");
     setToken({token: null});
     navigate("/")
   }
 
-  if(!token){
+  const NavBar = () => {
+    if(!token){
+      return (
+        <nav>
+          <ul>
+            <li>
+              <NavLink to="/">Home</NavLink>
+            </li>
+            <li>
+              <NavLink to="/login">Login</NavLink>
+            </li>
+            <li>
+              <NavLink to="/register">Sign Up</NavLink>
+            </li>
+            <li>
+              <NavLink to="/cart">Cart</NavLink>
+            </li>
+          </ul>
+        </nav>
+      )
+    }
     return (
-      <div>
       <nav>
         <ul>
           <li>
             <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/account">Account</NavLink>
           </li>
           <li>
-            <NavLink to="/register">Sign Up</NavLink>
+            <NavLink to="/cart">Cart</NavLink>
           </li>
         </ul>
+        <button onClick={handleLogOut}>Log Out</button>
       </nav>
-
-      <Routes>
-        <Route path="/" element={<Home token={token} setSearch={setSearch} search={search} />} />
-        <Route path="login" element={<Login setToken={setToken} />} />
-        <Route path="register" element={<Registration setToken={setToken} />} />
-        <Route path="/c/hair" element={<Hair />} />
-        <Route path="/c/face" element={<Face />} />
-        <Route path="/c/body" element={<Body />} />
-        <Route path="/product/:id" element={<Product search={search}/>} />
-        <Route element={<ProtectedRoutes token={token} />}>
-          <Route path="account" element={<Account token={token} />} />
-          <Route path="/account/details" element={<Details token={token} />} />
-          <Route path="/account/orders" element={<Orders token={token} />} />
-          <Route path="/account/password" element={<Password token={token} />} />
-          <Route path="/returns" element={<Returns />} />
-          <Route path="/cart" element={<Cart token={token} />} />
-          <Route path="/checkout" element={<Checkout token={token} />} />
-        </Route>
-      </Routes>
-      </div>
     )
   }
-  
-  return (
-    <div>
-    <nav>
-      <ul>
-        <li>
-          <NavLink to="/">Home</NavLink>
-        </li>
-        <li>
-          <NavLink to="/account">Account</NavLink>
-        </li>
-        <li>
-          <NavLink to="/cart">Cart</NavLink>
-        </li>
-      </ul>
-      <button onClick={removeToken}>Log Out</button>
-    </nav>
 
-    <Routes>
-      <Route path="/" element={<Home token={token} />} />
-      <Route path="/c/hair" element={<Hair />} />
-      <Route path="/c/face" element={<Face />} />
-      <Route path="/c/body" element={<Body />} />
-      <Route path="/product/:id" element={<Product />} />
-      <Route element={<ProtectedRoutes token={token} />}>
-        <Route path="/account" element={<Account token={token} />} />
-        <Route path="/account/details" element={<Details token={token} />} />
-        <Route path="/account/orders" element={<Orders token={token} />} />
-        <Route path="/account/password" element={<Password token={token} />} />
-        <Route path="/returns" element={<Returns />} />
-        <Route path="/cart" element={<Cart token={token} />} />
-        <Route path="/checkout" element={<Checkout token={token} />} />
-      </Route>
-    </Routes>
+  const Redirect = () => {
+    return token ? <Navigate to="/" /> : <Outlet />;
+  };
+
+    return (
+      <div>
+
+        <NavBar />
+
+        <Routes>
+          <Route path="/" element={<Home token={token} setSearch={setSearch} search={search} />} />
+          <Route element={<Redirect />}>
+            <Route path="/login" element={<Login setToken={setToken} />} />
+            <Route path="/register" element={<Registration setToken={setToken} />} />
+          </Route>
+          <Route path="/c/hair" element={<Hair />} />
+          <Route path="/c/face" element={<Face />} />
+          <Route path="/c/body" element={<Body />} />
+          <Route path="/product/:id" element={<Product search={search} token={token}/>} />
+          <Route path="/cart" element={<Cart token={token} />} />
+          <Route path="/checkout" element={<Checkout token={token} />} />
+          <Route element={<ProtectedRoutes token={token} />}>
+            <Route path="account" element={<Account token={token} />} />
+            <Route path="/account/details" element={<Details token={token} />} />
+            <Route path="/account/orders" element={<Orders token={token} />} />
+            <Route path="/account/password" element={<Password token={token} />} />
+            <Route path="/returns" element={<Returns />} />
+            <Route path="/cart" element={<Cart token={token} />} />
+            <Route path="/checkout" element={<Checkout token={token} />} />
+          </Route>
+        </Routes>
       </div>
-  )
+    )
 }
 
 export default App;

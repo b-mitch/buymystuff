@@ -1,6 +1,8 @@
 const express = require('express');
 const db = require('../db/index');
 const bodyParser = require('body-parser');
+const decodeJWT = require('../utils/decodeJWT');
+const { v4: uuidv4 } = require('uuid');
 
 const productsRouter = express.Router();
 
@@ -27,9 +29,8 @@ productsRouter.get('/', (req, res) => {
 });
 
 productsRouter.post('/', async (req, res) => {
-  const selectObject = await db.query('SELECT COUNT(*) FROM products');
-  const totalProducts = Number(selectObject.rows[0].count);
-  const id = totalProducts+1;
+
+  const id = uuidv4();
 
   const { name, category, price, inventory } = req.body;
   const text = 'INSERT INTO products (id, name, category, price, inventory)VALUES($1, $2, $3, $4, $5) RETURNING *';
@@ -55,9 +56,7 @@ productsRouter.get('/c/:category', (req, res) => {
 })
 
 productsRouter.get('/:product', (req, res) => {
-  console.log(req.params)
   const name = req.params.product;
-  console.log(name)
   db.query('SELECT * FROM products WHERE name = $1', [name], (error, results) => {
     if (error) {
     console.log('error')
@@ -67,14 +66,33 @@ productsRouter.get('/:product', (req, res) => {
   })
 })
 
-productsRouter.post('/:id', async (req, res) => {
-  const productId = req.params.id;
-  const userId = 1;
-  const amount = req.body.amount;
-  const product = await db.query('select * from products where id = $1', [productId]);
-  const price = product.rows[0].price;
+productsRouter.get('/:product/price', (req, res) => {
+  const name = req.params.product;
+  db.query('SELECT price FROM products WHERE name = $1', [name], (error, results) => {
+    if (error) {
+    console.log('error')
+    throw error
+    }
+    const price = results.rows[0].price.slice(1);
+    res.status(200).json(price);
+  })
+})
 
-  await db.query('INSERT INTO carts (user_id, product_id, product_price, product_amount)VALUES($1, $2, $3, $4) RETURNING *', [userId, productId, price, amount], (error, results) => {
+productsRouter.post('/:name', async (req, res) => {
+  const name = req.params.name;
+  const amount = req.body.amount;
+
+  const token = req.headers.authorization;
+  const user = decodeJWT(token); 
+  const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+  const userID = selectObject.rows[0].id;
+
+  const product = await db.query('select * from products where name = $1', [name]);
+  const productID = product.rows[0].id
+
+  const id = uuidv4();;
+
+  await db.query('INSERT INTO carts (id, user_id, product_id, product_amount)VALUES($1, $2, $3, $4) RETURNING *', [id, userID, productID, amount], (error, results) => {
     if (error) {
     console.log('error')
     throw error

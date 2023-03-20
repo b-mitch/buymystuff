@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import { loginUser } from '../utility/helpers';
+import { loginUser, addLocalCartToDB } from '../utility/helpers';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -32,6 +32,8 @@ export default function Login({ setToken }) {
           password
       });
       setToken(token);
+      addLocalCartToDB(JSON.parse(JSON.stringify(token.token)));
+      localStorage.removeItem("cart");
       navigate("/");
     }
 
