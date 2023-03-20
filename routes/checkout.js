@@ -38,9 +38,14 @@ checkoutRouter.post('/', async (req, res) => {
   const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const select = await db.query('SELECT product_id, product_price, product_amount FROM carts WHERE user_id = $1', [userId]);
   const products = select.rows;
+
+  const selectOrders = await db.query('SELECT COUNT(*) FROM orders');
+  const totalOrders = Number(selectOrders.rows[0].count);
+  const id = totalOrders+1;
+
   let order = [];
   for (const item of products) {
-    const results = await db.query('INSERT INTO orders (user_id, date, product_id, product_price, product_amount) VALUES ($1, $2, $3, $4, $5) RETURNING *', [userId, date, item.product_id, item.product_price, item.product_amount]);
+    const results = await db.query('INSERT INTO orders (id, user_id, date, product_id, product_price, product_amount) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [id, userId, date, item.product_id, item.product_price, item.product_amount]);
     order.push(results.rows[0]);
     } 
   res.status(200).send(order);
