@@ -9,12 +9,14 @@ const SearchBar = ({ search, setSearch }) => {
     e.preventDefault();
     const products = await getAllProducts();
     const results = products.filter(product => {
-      if (e.target.value === "")      return products
+      if (e.target.value === "")      return
       return product.name.toLowerCase().includes(e.target.value.toLowerCase()) || product.category.toLowerCase().includes(e.target.value.toLowerCase())  
     })
     setSearch({
-      query: e.target.value,
-      list: results
+      search: {
+        query: e.target.value,
+        list: results
+      }
     })
   }
 
@@ -25,7 +27,9 @@ const SearchBar = ({ search, setSearch }) => {
 
   const handleClick = (e) => {
     setSearch({
-      query: e.target.getAttribute('value')
+      search: {
+        query: e.target.getAttribute('value')
+      }
     })
   }
 
@@ -42,8 +46,8 @@ const SearchBar = ({ search, setSearch }) => {
         <button onClick={handleSearch} type="submit">Search</button>
     </form>
     <ul>
-      {(search.query === '' ? "" : search.list.map(product => {
-        return <li key={product.name}><Link value={product.name}onClick={handleClick} to={`/product/${product.name}`}>{product.name}</Link></li>
+      {(!search.list ? "" : search.list.map(product => {
+        return <li key={product.name.replace(/\s+/g, '')}><Link value={product.name}onClick={handleClick} to={`/product/${product.name.replace(/\s+/g, '')}`}>{product.name}</Link></li>
       }))}
     </ul>
     </div>

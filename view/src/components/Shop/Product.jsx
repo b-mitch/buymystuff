@@ -6,14 +6,15 @@ export default function Product({ search, token }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('fetching product data')
+      let newProductArray = []
       const newProduct = await 
       getProduct(search.query);
-      setProduct(newProduct);
+      newProductArray.push(newProduct);
+      setProduct(newProductArray);
     };
     
     fetchData();
-  }, [search.query])
+  }, [])
 
   const handleAdd = async () => {
     const item = {
@@ -26,10 +27,12 @@ export default function Product({ search, token }) {
     addToCartLocal(item);
   }
 
+  if(product.length===0) return;
+
   return (
     <div className="product-container" key={product}>
-      <p>{product.name} -- {product.price}</p>
-      <img src={`../img/${product.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product.name}`}/>
+      <p>{product[0].name} -- {product[0].price}</p>
+      <img src={`../img/${product[0].name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product[0].name}`}/>
       <button onClick={handleAdd} type="submit">Add to cart</button>
     </div>
   )
