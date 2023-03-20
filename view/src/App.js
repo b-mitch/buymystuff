@@ -22,10 +22,6 @@ function App () {
   const navigate = useNavigate();
   const { token, setToken } = useToken();
   const { search, setSearch } = useSearch();
-  // const [search, setSearch] = useState({
-  //   query: '',
-  //   list: []
-  // });
 
   function handleLogOut() {
     sessionStorage.removeItem("token");
@@ -87,9 +83,9 @@ function App () {
             <Route path="/login" element={<Login setToken={setToken} />} />
             <Route path="/register" element={<Registration setToken={setToken} />} />
           </Route>
-          <Route path="/c/hair" element={<Hair />} />
-          <Route path="/c/face" element={<Face />} />
-          <Route path="/c/body" element={<Body />} />
+          <Route path="/c/hair" element={<Hair setSearch={setSearch} />} />
+          <Route path="/c/face" element={<Face setSearch={setSearch} />} />
+          <Route path="/c/body" element={<Body setSearch={setSearch} />} />
           <Route path="/product/:id" element={<Product search={search} token={token}/>} />
           <Route path="/cart" element={<Cart token={token} />} />
           <Route path="/checkout" element={<Checkout token={token} />} />

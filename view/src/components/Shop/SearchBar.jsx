@@ -47,7 +47,7 @@ const SearchBar = ({ search, setSearch }) => {
     </form>
     <ul>
       {(!search.list ? "" : search.list.map(product => {
-        return <li key={product.name.replace(/\s+/g, '')}><Link value={product.name}onClick={handleClick} to={`/product/${product.name.replace(/\s+/g, '')}`}>{product.name}</Link></li>
+        return <li key={product.name.replace(/\s+/g, '')}><Link value={product.name} onClick={handleClick} to={`/product/${product.name.replace(/\s+/g, '')}`}>{product.name}</Link></li>
       }))}
     </ul>
     </div>
