@@ -73,7 +73,6 @@ export async function localCartTotal() {
     price = Number(price).toFixed(2);
     amount = item.amount;
     cost = price*amount;
-    console.log(cost);
     stringPriceArray.push(cost);
   }
   const priceArray = stringPriceArray.map(Number);
@@ -85,8 +84,12 @@ export async function addLocalCartToDB(token){
   console.log('adding cart to DB')
   const cart = JSON.parse(localStorage.getItem('cart'));
   if(!cart) return;
-  for (let item of cart) {
+  try {
+    for (let item of cart) {
     await addToCartDB(item.name, token, item.amount)
+    }
+  } catch(error) {
+    console.log('error')
   }
 }
 

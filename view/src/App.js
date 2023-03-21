@@ -86,7 +86,7 @@ function App () {
           <Route path="/c/hair" element={<Hair setSearch={setSearch} />} />
           <Route path="/c/face" element={<Face setSearch={setSearch} />} />
           <Route path="/c/body" element={<Body setSearch={setSearch} />} />
-          <Route path="/product/:id" element={<Product search={search} token={token}/>} />
+          <Route path="/product/:id" element={<Product setSearch={setSearch} search={search} token={token}/>} />
           <Route path="/cart" element={<Cart token={token} />} />
           <Route path="/checkout" element={<Checkout token={token} />} />
           <Route element={<ProtectedRoutes token={token} />}>

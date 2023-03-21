@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProduct, addToCartDB, addToCartLocal } from '../../utility/helpers';
 
-export default function Product({ search, token }) {
+export default function Product({ setSearch, search, token }) {
   const [product, setProduct] = useState([]);
 
   useEffect(() => {
@@ -16,13 +16,32 @@ export default function Product({ search, token }) {
     fetchData();
   }, [])
 
-  const handleAdd = async () => {
-    const item = {
-      name: search.query,
-      amount: 1
-    }
+  const handleAdd = async (e) => {
+    setSearch({
+      search: {
+        query: e.target.getAttribute('value')
+      }
+    })
     if(token){
       await addToCartDB(search.query, token, 1);
+    }
+    const localCart = JSON.parse(localStorage.getItem('cart'));
+    if(!token && localCart){
+      const filteredCart = localCart.filter(item => item.name===search.query)
+      if(filteredCart[0]){
+        const newCart = localCart.map(item => {
+          if(item.name === search.query){
+            return {...item, amount: item.amount + 1};
+          }else {
+            return item;
+          }
+        })
+        return localStorage.setItem('cart', JSON.stringify(newCart));
+      }
+    }
+    const item = {
+    name: search.query,
+    amount: 1
     }
     addToCartLocal(item);
   }
@@ -33,7 +52,7 @@ export default function Product({ search, token }) {
     <div className="product-container" key={product}>
       <p>{product[0].name} -- {product[0].price}</p>
       <img src={`../img/${product[0].name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product[0].name}`}/>
-      <button onClick={handleAdd} type="submit">Add to cart</button>
+      <button value={product[0].name} onClick={handleAdd} type="submit">Add to cart</button>
     </div>
   )
 }
