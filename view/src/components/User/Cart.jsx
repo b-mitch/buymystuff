@@ -87,7 +87,7 @@ export default function Cart({ token }) {
     const newCart = cart.map((item, index) => {
       if (index === i) {
         return {...item, amount: item.amount + (item.amount < 10 ? 1:0)};
-      } else {
+      }else {
         return item;
       }
     })

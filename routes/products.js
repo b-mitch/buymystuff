@@ -76,6 +76,7 @@ productsRouter.get('/:product/price', (req, res) => {
 productsRouter.post('/:name', async (req, res) => {
   const name = req.params.name;
   const amount = req.body.amount;
+  console.log(name)
 
   const token = req.headers.authorization;
   const user = decodeJWT(token); 
@@ -83,17 +84,36 @@ productsRouter.post('/:name', async (req, res) => {
   const userID = selectObject.rows[0].id;
 
   const product = await db.query('select * from products where name = $1', [name]);
-  const productID = product.rows[0].id
+  const productID = product.rows[0].id;
 
-  const id = uuidv4();;
+  const productInCart = await db.query('select * from carts where product_id = $1', [productID])
 
-  await db.query('INSERT INTO carts (id, user_id, product_id, amount)VALUES($1, $2, $3, $4) RETURNING *', [id, userID, productID, amount], (error, results) => {
-    if (error) {
-    console.log('error')
-    throw error
+  if(productInCart.rows[0]) {
+    console.log('product in cart')
+    await db.query('UPDATE carts SET amount = amount + $1 WHERE product_id = $2 RETURNING *', [amount, productID], (error, results) => {
+      if (error) {
+      console.log('error')
+      throw error
     }
-    res.status(200).json(results.rows[0])
-  })
+    console.log(results.rows)
+    res.status(200).json(results.rows)
+    })
+  }
+
+  if(!productInCart.rows[0]) {
+    console.log('product not in cart')
+
+    const id = uuidv4();
+
+    await db.query('INSERT INTO carts (id, user_id, product_id, amount)VALUES($1, $2, $3, $4) RETURNING *', [id, userID, productID, amount], (error, results) => {
+      if (error) {
+      console.log('error')
+      throw error
+      }
+      console.log(results.rows[0])
+      res.status(200).json(results.rows[0])
+    })
+  }
 })
 
 
