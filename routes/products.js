@@ -95,7 +95,6 @@ productsRouter.post('/:name', async (req, res) => {
       console.log('error')
       throw error
     }
-    console.log(results.rows)
     res.status(200).json(results.rows)
     })
   }
@@ -110,7 +109,6 @@ productsRouter.post('/:name', async (req, res) => {
       console.log('error')
       throw error
       }
-      console.log(results.rows[0])
       res.status(200).json(results.rows[0])
     })
   }
