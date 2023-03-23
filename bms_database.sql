@@ -23,9 +23,14 @@ CREATE TABLE "products" (
 CREATE TABLE "orders" (
   "id" integer PRIMARY KEY,
   "user_id" integer references users (id) NOT NULL,
+  "first_name" varchar,
+  "last_name" varchar,
+  "email" varchar,
   "date" date NOT NULL,
-  "product_id" varchar references products(id) NOT NULL,
-  "product_amount" integer NOT NULL
+  "address" varchar NOT NULL,
+  "city" varchar NOT NULL,
+  "state" varchar NOT NULL,
+  "zip" varchar NOT NULL
 );
 
 CREATE TABLE "carts" (
@@ -33,4 +38,12 @@ CREATE TABLE "carts" (
   "user_id" integer references users (id) NOT NULL,
   "product_id" varchar references products(id) NOT NULL,
   "product_amount" integer NOT NULL
+);
+
+CREATE TABLE "products-orders" (
+  "order_id" integer references orders(id) NOT NULL,
+  "product_id" varchar references products(id) NOT NULL,
+  "amount" integer NOT NULL,
+  "price" money NOT NULL,
+  PRIMARY KEY ("order_id", "product_id")
 );

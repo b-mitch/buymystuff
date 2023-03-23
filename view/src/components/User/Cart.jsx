@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
-import { getCart, updateCart, getCartTotal, localCartTotal, deleteFromCartDB } from '../../utility/helpers';
+import { useNavigate } from 'react-router-dom';
+import { getCart, updateCart, getCartTotal, localCartTotal, deleteFromCartDB, getUser } from '../../utility/helpers';
 
 export default function Cart({ token }) {
+  const navigate = useNavigate();
   const [cart, setCart] = useState();
   const [total, setTotal] = useState(null);
 
@@ -108,35 +109,75 @@ export default function Cart({ token }) {
     }
   }
 
+  const handleClick = async () => {
+    if(!cart || cart.length===0) return alert("No Items in Cart!")
+    if(token) {
+      const user = await getUser(token);
+      sessionStorage.setItem('checkout', JSON.stringify({
+        seshFirst: user.first_name,
+        seshLast: user.last_name,
+        seshEmail: user.email,
+        seshBillingAddress: user.address ? user.address : '',seshBillingCity: user.city ? user.city : '',
+        seshBillingState: user.state ? user.state : '',
+        seshBillingZip: user.zip ? user.zip : '',
+        seshShippingAddress: '',
+        seshShippingCity: '',
+        seshShippingState: '',
+        seshShippingZip: '',
+      }))
+      navigate("/checkout/contact-billing")
+    }
+    if(!token) {
+      sessionStorage.setItem('checkout', JSON.stringify({
+        seshFirst: '',
+        seshLast: '',
+        seshEmail: '',
+        seshBillingAddress: '',seshBillingCity: '',
+        seshBillingState: '',
+        seshBillingZip: '',
+        seshShippingAddress: '',
+        seshShippingCity: '',
+        seshShippingState: '',
+        seshShippingZip: '',
+      }))
+      navigate("/checkoutlogin")
+    } 
+  }
+
+  const handleChange = () => {}
+
   const CartItems = () => {
     if(!cart) return;
     return (
       <table className = 'items-container'>
-        {cart.map((item, i) => {
-          return <tr className='item-card'>
-            <td>
-              {item.name}
-            </td>
-            <td>
-              <img src={`../img/${item.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${item.name}`}/>
-            </td>
-            <td>
-              <button onClick={() =>{handleDecrement(i)}} className='amount-btn'>-</button>
-              <input value={item.amount} className='amount-input' type='number' />
-              <button onClick={() => {handleIncrement(i)}} className='amount-btn'>+</button>
-            </td>
-            <td>
-              <button onClick={(e) => {handleDelete(e, i)}}>Remove</button>
-            </td>
-          </tr>
-          }
-        )}
+        <tbody>
+          {cart.map((item, i) => {
+            return <tr key={item.name.replace(/\s+/g, '')}className='item-card'>
+              <td>
+                {item.name}
+              </td>
+              <td>
+                <img src={`../img/${item.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${item.name}`}/>
+              </td>
+              <td>
+                <button onClick={() =>{handleDecrement(i)}} className='amount-btn'>-</button>
+                <input value={item.amount} onChange={handleChange} className='amount-input' type='number' />
+                <button onClick={() => {handleIncrement(i)}} className='amount-btn'>+</button>
+              </td>
+              <td>
+                <button onClick={(e) => {handleDelete(e, i)}}>Remove</button>
+              </td>
+            </tr>
+            }
+          )}
+        </tbody>
       </table>
     )
   }
 
   const CartTotal = () => {
     if (!cart) return;
+    if (cart.length===0) return;
     return <h3>Total: ${total}</h3>
   }
 
@@ -145,7 +186,7 @@ export default function Cart({ token }) {
       <h1>Cart</h1>
       <CartItems />
       <CartTotal />
-      <Link to='/checkout'>Checkout</Link>
+      <button onClick={() => {handleClick()}}>Checkout</button>
     </div>
   )
 }

@@ -46,6 +46,14 @@ export function useSearch() {
   }
 }
 
+export function setCheckoutSession(value) {
+  let prevData = JSON.parse(sessionStorage.getItem('checkout'));
+  Object.keys(value).forEach(function(val, key){
+      prevData[val] = value[val];
+  })
+  sessionStorage.setItem('checkout', JSON.stringify(prevData));
+}
+
 export function addToCartLocal(item) {
   let cart = [];
   const currentCart = JSON.parse(localStorage.getItem('cart'))
@@ -61,7 +69,6 @@ export function addToCartLocal(item) {
 }
 
 export async function localCartTotal() {
-  console.log('fetching cart total')
   const cart = JSON.parse(localStorage.getItem('cart'))
   if(!cart) return localStorage.setItem('cart-total', {total: 0});
   let stringPriceArray = [];
@@ -81,7 +88,6 @@ export async function localCartTotal() {
 }
 
 export async function addLocalCartToDB(token){
-  console.log('adding cart to DB')
   const cart = JSON.parse(localStorage.getItem('cart'));
   if(!cart) return;
   try {
