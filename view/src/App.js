@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, NavLink, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home';
@@ -15,7 +15,8 @@ import Orders from "./components/User/Account/Orders";
 import Returns from "./components/User/Account/Returns";
 import Password from "./components/User/Account/Password";
 import Cart from "./components/User/Cart";
-import Checkout from "./components/User/Checkout";
+import CheckoutContainer from "./components/Checkout/CheckoutContainer";
+import CheckoutLogin from "./components/CheckoutLogin";
 import { useToken, useSearch } from './utility/helpers';
 
 function App () {
@@ -82,13 +83,14 @@ function App () {
           <Route element={<Redirect />}>
             <Route path="/login" element={<Login setToken={setToken} />} />
             <Route path="/register" element={<Registration setToken={setToken} />} />
+            <Route path="/checkoutlogin" element={<CheckoutLogin setToken={setToken} />} />
           </Route>
           <Route path="/c/hair" element={<Hair setSearch={setSearch} />} />
           <Route path="/c/face" element={<Face setSearch={setSearch} />} />
           <Route path="/c/body" element={<Body setSearch={setSearch} />} />
           <Route path="/product/:id" element={<Product setSearch={setSearch} search={search} token={token}/>} />
           <Route path="/cart" element={<Cart token={token} />} />
-          <Route path="/checkout" element={<Checkout token={token} />} />
+          <Route path="/checkout/*" element={<CheckoutContainer token={token} />} />
           <Route element={<ProtectedRoutes token={token} />}>
             <Route path="account" element={<Account token={token} />} />
             <Route path="/account/details" element={<Details token={token} />} />
@@ -96,7 +98,6 @@ function App () {
             <Route path="/account/password" element={<Password token={token} />} />
             <Route path="/returns" element={<Returns />} />
             <Route path="/cart" element={<Cart token={token} />} />
-            <Route path="/checkout" element={<Checkout token={token} />} />
           </Route>
         </Routes>
       </div>

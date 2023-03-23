@@ -4,12 +4,17 @@ import { loginUser, addLocalCartToDB } from '../utility/helpers';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function Login({ setToken }) {
+export default function CheckoutLogin({ setToken }) {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState(false);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate("/checkout/contact-billing")
+  }
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -34,7 +39,7 @@ export default function Login({ setToken }) {
       setToken(token);
       addLocalCartToDB(JSON.parse(JSON.stringify(token.token)));
       localStorage.removeItem("cart");
-      navigate("/");
+      navigate("/cart");
     }
 
   const errorMessage = () => {
@@ -51,7 +56,8 @@ export default function Login({ setToken }) {
 
   return (
     <div>
-        <h1>Welcome!</h1>
+      <h1>Already have an account?</h1>
+      <h2>Sign in to add this order to your order history!</h2>
 
       <div className="form">
 
@@ -60,7 +66,6 @@ export default function Login({ setToken }) {
         </div>
 
         <form>
-          <h3>Login to your account</h3>
           <label for="username">
             Username:
             <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>
@@ -72,11 +77,11 @@ export default function Login({ setToken }) {
           <button onClick={handleSubmit} className="btn" type="submit">Submit</button>
         </form>
       </div>
+      <button onClick={(e) => {handleClick(e)}}>Checkout as a guest</button>
     </div>
   );
 }
 
-  Login.propTypes = {
+  CheckoutLogin.propTypes = {
   setToken: PropTypes.func.isRequired
   }
-  
