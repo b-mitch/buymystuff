@@ -1,111 +1,51 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
-import { setCheckoutSession } from '../../utility/helpers';
+import React from "react";
+import { Link } from 'react-router-dom';
 
-const { seshBillingAddress, seshBillingCity, seshBillingState, seshBillingZip, seshShippingAddress, seshShippingCity, seshShippingState, seshShippingZip } = JSON.parse(sessionStorage.getItem('checkout'));
-
-export default function Shipping() {
-  
-  const navigate = useNavigate();
-
-  const [shippingAddress, setShippingAddress] = useState(seshShippingAddress);
-  const [shippingCity, setShippingCity] = useState(seshShippingCity);
-  const [shippingState, setShippingState] = useState(seshShippingState);
-  const [shippingZip, setShippingZip] = useState(seshShippingZip);
-  const [useShipping, setUseShipping] = useState(false);
-
-  const [error, setError] = useState(false);
-
-  const handleShippingAddress = (e) => {
-    setCheckoutSession({seshShippingAddress: e.target.value})
-  };
-
-  const handleShippingCity = (e) => {
-    setCheckoutSession({seshShippingCity: e.target.value})
-  };
-
-  const handleShippingState = (e) => {
-    setCheckoutSession({seshShippingState: e.target.value})
-  };
-
-  const handleShippingZip = (e) => {
-    setCheckoutSession({seshShippingZip: e.target.value})
-  };
-
-  const handleCheckboxChange = () => {
-    if(useShipping) window.location.reload(false);
-    if(!useShipping) {
-      setShippingAddress(seshBillingAddress);
-      setShippingCity(seshBillingCity);
-      setShippingState(seshBillingState);
-      setShippingZip(seshBillingZip);
-      document.getElementById('shipping-form').style.display="none";
-    }
-    setUseShipping(!useShipping);
-  }
-
-  const errorMessage = () => {
-    return (
-      <div
-        className="error"
-        style={{
-          display: error ? '' : 'none',
-        }}>
-        <h1>Please enter all the fields</h1>
-      </div>
-    );
-  };
-
-  const handleShippingContinue = (e) => {
-    e.preventDefault();
-    setError(false);
-    if (shippingAddress === '' || shippingCity === '' || shippingState === '' || shippingZip === '') {
-      setError(true);
-      return;
-    }
-    setError(false);
-    setShippingAddress(seshShippingAddress);
-    setShippingCity(seshShippingCity);
-    setShippingState(seshShippingState);
-    setShippingZip(seshShippingZip);
-
-    navigate('../review')
-  }
-
-  const label = 'Shipping address same as billing?'
+export default function Shipping({
+  token, 
+  inputFields, 
+  handleChange, 
+  handleSubmit
+}) {
 
   return (
-    <div className='checkout-step'>
-      <nav className='page-history'><Link to='../contact-billing'>&lt; Contact and Billing</Link></nav>
-      <div className="messages">
-        {errorMessage()}
-      </div>
-      <h1>Shipping</h1>
-        <label>
-          <input type="checkbox" name={label} value={useShipping} onChange={handleCheckboxChange} className='shipping-checkbox'/>
-          {label}
-        </label>
-        <form id="shipping-form">
+    <div className='checkout'>
+      <nav className='page-history'><Link to='../../cart'>&lt; Cart</Link></nav>
+        <h2>Contact information</h2>
+        <form>
+          <label for="email">
+            Email*
+            <input value={inputFields.email} className="input" type="email" name="email" disabled={token ? true : false} onChange={e => handleChange(e)}/>
+          </label>
+        </form>
+        <h2>Shipping address</h2>
+        <form>
+          <label for="first">
+            First name* 
+            <input value={inputFields.first} className="input" onChange={e => handleChange(e)} type="text" name="first"/>
+          </label>
+          <label for="last">
+            Last name*
+            <input value={inputFields.last} className="input" onChange={e => handleChange(e)} type="text" name="last"/>
+          </label>
           <label for="address">
-            Shipping address*
-            <input defaultValue={shippingAddress} className="input" onChange={handleShippingAddress} type="text" name="address" disabled={useShipping ? true : false}/>
+            Billing address*
+            <input value={inputFields.shippingAddress} className="input" onChange={e => handleChange(e)} type="text" name="shippingAddress"/>
           </label>
           <label for="city">
             City*
-            <input defaultValue={shippingCity} className="input" onChange={handleShippingCity} type="text" name="city"
-            disabled={useShipping ? true : false}/>
+            <input value={inputFields.shippingCity} className="input" onChange={e => handleChange(e)} type="text" name="shippingCity"/>
           </label>
           <label for="state">
             State*
-            <input defaultValue={shippingState} className="input" onChange={handleShippingState} type="text" name="state" disabled={useShipping ? true : false}/>
+            <input value={inputFields.shippingState} className="input" onChange={e => handleChange(e)} type="text" name="shippingState"/>
           </label>
           <label for="zip">
             Postal code*
-            <input defaultValue={shippingZip} className="input" onChange={handleShippingZip} type="text" name="zip" disabled={useShipping ? true : false}/>
+            <input value={inputFields.shippingZip} className="input" onChange={e => handleChange(e)} type="text" name="shippingZip"/>
           </label>
         </form>
-      <button className="checkout-btn"><Link to='../checkout/review' onClick={handleShippingContinue}>Continue</Link></button>
+      <button className="checkout-btn" onClick={e => handleSubmit(e)}>Continue</button>
     </div>
-    
   )
 }

@@ -5,13 +5,14 @@ import { Elements } from "@stripe/react-stripe-js";
 
 import CheckoutForm from "./CheckoutForm";
 
-const { seshFirst, seshLast, seshEmail, seshBillingAddress, seshBillingCity, seshBillingState, seshBillingZip, seshShippingAddress, seshShippingCity, seshShippingState, seshShippingZip } = JSON.parse(sessionStorage.getItem('checkout'));
-
 const stripePromise = loadStripe('pk_test_51MpCyhDoFFCpZ0bnXeGikLiIbkZ2f2GcDkzkvYgLXIJamiz6XojIzXOsymQFmXdoaLFxTAQu2WoyOASqDicB5XLQ001b0QGfud');
 
 export default function Review({
-  cart,
-  total,
+  inputFields,
+  handleChange, 
+  handleSubmit,
+  radio,
+  handleRadioChange,
   token,
   cartItems,
   cartTotal
@@ -33,8 +34,6 @@ export default function Review({
       .then((data) => setClientSecret(data.clientSecret));
   }, []);
 
-  const handleSubmit = (e) => {}
-
   const appearance = {
     theme: 'stripe',
   };
@@ -50,9 +49,9 @@ export default function Review({
           <div className='summary-container'>
             <div className='summary-card'>
               <h2>Shipping to</h2>
-              <p>{seshFirst} {seshLast}<br/>
-              {seshShippingAddress}<br/>
-              {seshShippingCity}, {seshShippingState} {seshShippingZip}</p>
+              <p>{inputFields.first} {inputFields.last}<br/>
+              {inputFields.shippingAddress}<br/>
+              {inputFields.shippingCity}, {inputFields.shippingState} {inputFields.shippingZip}</p>
               <Link to='../shipping'>Change shipping address</Link>
               <h2>Shipping method:</h2>
               <p>Standard shipping - FREE<br/>
@@ -63,11 +62,49 @@ export default function Review({
               {cartTotal}
             </div>
             <div className='summary-card'>
-              <h2>Billing address</h2>
-              <p>{seshFirst} {seshLast}<br/>
-              {seshBillingAddress}<br/>
-              {seshBillingCity}, {seshBillingState} {seshBillingZip}</p>
-              <Link to='../contact-billing'>Edit</Link>
+              <h2>Billing</h2>
+              <p>Select the address that matches your card or payment method.</p>
+              <div className="billing-check">
+                <label>
+                  <input 
+                    type="radio" 
+                    name='same'
+                    value="same" 
+                    checked={radio==='same'} 
+                    onChange={handleRadioChange}
+                    className='radio-same'/>
+                  Same as shipping address  
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    name='different'
+                    value="different"
+                    checked={radio==='different'}   
+                    onChange={handleRadioChange}
+                    className='radio-different'/>
+                  Use a different billing address  
+                </label>
+              </div>
+              <form id="billing-form">
+                <label for="address">
+                  Billing address*
+                  <input value={inputFields.billingAddress} className="input" onChange={handleChange} type="text" name="billingAddress"/>
+                </label>
+                <label for="city">
+                  City*
+                  <input value={inputFields.billingCity} className="input" onChange={handleChange} type="text" name="billingCity"/>
+                </label>
+                <label for="state">
+                  State*
+                  <input value={inputFields.billingState} className="input" onChange={handleChange} type="text" name="billingState"/>
+                </label>
+                <label for="zip">
+                  Postal code*
+                  <input value={inputFields.billingZip} className="input" onChange={handleChange} type="text" name="billingZip"/>
+                </label>
+                <button className="checkout-btn" type='../checkout/submit' onClick={e => handleSubmit(e)}>Save Billing</button>
+              </form>
             </div>
             <div className='summary-card'>
               <h2>Payment options</h2>
