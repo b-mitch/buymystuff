@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Shipping from './Shipping';
 import Review from './Review';
-import { getCart, getCartTotal, localCartTotal, setCheckoutSession } from '../../utility/helpers';
-
-const checkoutSession = JSON.parse(sessionStorage.getItem('checkout'))
+import { getCart, getCartTotal, localCartTotal } from '../../utility/helpers';
 
 const { first, last, email, billingAddress, billingCity, billingState, billingZip, shippingAddress, shippingCity, shippingState, shippingZip } = JSON.parse(sessionStorage.getItem('checkout'));
 
