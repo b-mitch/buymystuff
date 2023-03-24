@@ -13,7 +13,7 @@ export default function CheckoutLogin({ setToken }) {
 
   const handleClick = (e) => {
     e.preventDefault();
-    navigate("/checkout/contact-billing")
+    navigate("/checkout/shipping")
   }
 
   const handleUsername = (e) => {

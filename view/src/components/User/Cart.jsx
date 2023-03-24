@@ -114,31 +114,31 @@ export default function Cart({ token }) {
     if(token) {
       const user = await getUser(token);
       sessionStorage.setItem('checkout', JSON.stringify({
-        seshFirst: user.first_name,
-        seshLast: user.last_name,
-        seshEmail: user.email,
-        seshBillingAddress: user.address ? user.address : '',seshBillingCity: user.city ? user.city : '',
-        seshBillingState: user.state ? user.state : '',
-        seshBillingZip: user.zip ? user.zip : '',
-        seshShippingAddress: '',
-        seshShippingCity: '',
-        seshShippingState: '',
-        seshShippingZip: '',
+        first: user.first_name,
+        last: user.last_name,
+        email: user.email,
+        shippingAddress: user.address ? user.address : '',shippingCity: user.city ? user.city : '',
+        shippingState: user.state ? user.state : '',
+        shippingZip: user.zip ? user.zip : '',
+        billingAddress: '',
+        billingCity: '',
+        billingState: '',
+        billingZip: '',
       }))
       navigate("/checkout/contact-billing")
     }
     if(!token) {
       sessionStorage.setItem('checkout', JSON.stringify({
-        seshFirst: '',
-        seshLast: '',
-        seshEmail: '',
-        seshBillingAddress: '',seshBillingCity: '',
-        seshBillingState: '',
-        seshBillingZip: '',
-        seshShippingAddress: '',
-        seshShippingCity: '',
-        seshShippingState: '',
-        seshShippingZip: '',
+        first: '',
+        last: '',
+        email: '',
+        billingAddress: '',billingCity: '',
+        billingState: '',
+        billingZip: '',
+        shippingAddress: '',
+        shippingCity: '',
+        shippingState: '',
+        shippingZip: '',
       }))
       navigate("/checkoutlogin")
     } 
