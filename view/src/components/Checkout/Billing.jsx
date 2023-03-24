@@ -126,23 +126,23 @@ export default function Billing({token}) {
         <form>
           <label for="email">
             Email*
-            <input defaultValue={email} className="input" onChange={handleEmail} type="email" name="email" disabled={token ? true : false}/>
+            <input defaultValue={seshEmail} className="input" onChange={handleEmail} type="email" name="email" disabled={token ? true : false}/>
           </label>
           <label for="first">
             First name* 
-            <input defaultValue={first} className="input" onChange={handleFirst} type="text" name="first"/>
+            <input defaultValue={seshFirst} className="input" onChange={handleFirst} type="text" name="first"/>
           </label>
           <label for="last">
             Last name*
-            <input defaultValue={last} className="input" onChange={handleLast} type="text" name="last"/>
+            <input defaultValue={seshLast} className="input" onChange={handleLast} type="text" name="last"/>
           </label>
           <label for="address">
             Billing address*
-            <input defaultValue={billingAddress} className="input" onChange={handleBillingAddress} type="text" name="address"/>
+            <input defaultValue={seshBillingAddress} className="input" onChange={handleBillingAddress} type="text" name="address"/>
           </label>
           <label for="city">
             City*
-            <input defaultValue={billingCity} className="input" onChange={handleBillingCity} type="text" name="city"/>
+            <input defaultValue={seshBillingCity} className="input" onChange={handleBillingCity} type="text" name="city"/>
           </label>
           <label for="state">
             State*
@@ -150,7 +150,7 @@ export default function Billing({token}) {
           </label>
           <label for="zip">
             Postal code*
-            <input defaultValue={billingZip} className="input" onChange={handleBillingZip} type="text" name="zip"/>
+            <input defaultValue={seshBillingZip} className="input" onChange={handleBillingZip} type="text" name="zip"/>
           </label>
         </form>
       <button className="checkout-btn" onClick={handleBillingContinue}>Continue</button>
