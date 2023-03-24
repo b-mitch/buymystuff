@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+import CheckoutForm from "./CheckoutForm";
 
 const { seshFirst, seshLast, seshEmail, seshBillingAddress, seshBillingCity, seshBillingState, seshBillingZip, seshShippingAddress, seshShippingCity, seshShippingState, seshShippingZip } = JSON.parse(sessionStorage.getItem('checkout'));
+
+const stripePromise = loadStripe('pk_test_51MpCyhDoFFCpZ0bnXeGikLiIbkZ2f2GcDkzkvYgLXIJamiz6XojIzXOsymQFmXdoaLFxTAQu2WoyOASqDicB5XLQ001b0QGfud');
 
 export default function Review({
   cart,
@@ -12,21 +18,29 @@ export default function Review({
 }) {
   const navigate = useNavigate();
 
+  const [clientSecret, setClientSecret] = useState("");
 
-  const [error, setError] = useState(false);
+  useEffect(() => {
+    // Create PaymentIntent as soon as the page loads
+    fetch("/checkout/create-payment-intent", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json", 
+        "Authorization": token 
+        },
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret));
+  }, []);
 
   const handleSubmit = (e) => {}
 
-  const errorMessage = () => {
-    return (
-      <div
-        className="error"
-        style={{
-          display: error ? '' : 'none',
-        }}>
-        <h1>Please enter all the fields</h1>
-      </div>
-    );
+  const appearance = {
+    theme: 'stripe',
+  };
+  const options = {
+    clientSecret,
+    appearance,
   };
 
   return (
@@ -57,9 +71,13 @@ export default function Review({
             </div>
             <div className='summary-card'>
               <h2>Payment options</h2>
+              {clientSecret && (
+                <Elements options={options} stripe={stripePromise}>
+                  <CheckoutForm />
+                </Elements>
+              )}
             </div>
           </div>
-          <button className="checkout-btn" type='../checkout/submit' onClick={(e) => {handleSubmit(e)}}>Submit order</button>
         </div>
       );
 }

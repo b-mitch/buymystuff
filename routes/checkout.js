@@ -1,6 +1,8 @@
 const express = require('express');
 const db = require('../db/index');
 const bodyParser = require('body-parser');
+const decodeJWT = require('../utils/decodeJWT');
+const stripe = require("stripe")('sk_test_51MpCyhDoFFCpZ0bnGFzsp5fR5mWc7Zi6wN5HadQs99Iwwi6VGCHbZQJD4FPqNk6QrI8cQzxUl1XfMXIU5Q5KyuBa00Cgy3yrXJ');
 
 const checkoutRouter = express.Router();
 
@@ -10,6 +12,13 @@ checkoutRouter.use(
     extended: true,
   })
 );
+
+const calculateOrderAmount = async (userID) => {
+  const results = await db.query('SELECT SUM(carts.amount*products.price) AS total FROM carts, products WHERE user_id = $1 AND products.id=carts.product_id', [userID]);
+  const total = (Number(results.rows[0].total.slice(1)).toFixed(2))*100;
+  console.log(total);
+  return total;
+};
 
 checkoutRouter.get('/', async (req, res) => {
   const userId = req.session.user.id;
@@ -62,6 +71,26 @@ checkoutRouter.delete('/', (req, res) => {
   })
 })
 
+checkoutRouter.post("/create-payment-intent", async (req, res) => {
+  console.log("STRIPING")
+  const token = req.headers.authorization;
+  const user = decodeJWT(token); 
+  const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+  const userID = selectObject.rows[0].id;
+
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: await calculateOrderAmount(userID),
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
 
 
 module.exports = checkoutRouter;
