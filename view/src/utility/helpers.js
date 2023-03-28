@@ -48,9 +48,7 @@ export function useSearch() {
 
 export function setCheckoutSession(value) {
   let prevData = JSON.parse(sessionStorage.getItem('checkout'));
-  Object.keys(value).forEach(function(val, key){
-      prevData[val] = value[val];
-  })
+  Object.assign(prevData, value)
   sessionStorage.setItem('checkout', JSON.stringify(prevData));
 }
 
@@ -93,6 +91,28 @@ export async function addLocalCartToDB(token){
   try {
     for (let item of cart) {
     await addToCartDB(item.name, token, item.amount)
+    }
+  } catch(error) {
+    console.log('error')
+  }
+}
+
+export async function noLoginCheckout(){
+  let idArray = [];
+  const cart = JSON.parse(localStorage.getItem('cart'));
+  if(!cart) return;
+  try {
+    for (let item of cart) {
+      const results = await fetch(`/products/${item.name}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({amount: item.amount})
+      })
+      const json = await results.json();
+      idArray.push(json)
+      localStorage.setItem('cart-ids', JSON.stringify(idArray))
     }
   } catch(error) {
     console.log('error')
@@ -212,6 +232,18 @@ export async function getAllProducts() {
   .then(data => data.json())
 }
 
+export async function updateProducts(credentials, token) {
+  return fetch('/checkout', {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.json())
+}
+
 export async function addToCartDB(product, token, amount) {
   return fetch(`/products/${product}`, {
     method: "POST",
@@ -267,3 +299,26 @@ export async function deleteFromCartDB(id) {
   .then(data => data.status)
 }
 
+export async function deleteCart(credentials, token) {
+  return fetch(`/checkout`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    "Authorization": token
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.status)
+}
+
+export async function createOrder(credentials, token) {
+  return fetch('/checkout' , {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.json());
+}

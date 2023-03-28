@@ -12,6 +12,7 @@ export default function Shipping({
     <div className='checkout'>
       <nav className='page-history'><Link to='../../cart'>&lt; Cart</Link></nav>
         <h2>Contact information</h2>
+        {token ? <h3>Edit email in account details page</h3> : <></>}
         <form>
           <label for="email">
             Email*

@@ -19,6 +19,7 @@ cartRouter.get('/total', async(req, res) => {
   const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
   const userID = selectObject.rows[0].id;
   const results = await db.query('SELECT SUM(carts.amount*products.price) AS total FROM carts, products WHERE user_id = $1 AND products.id=carts.product_id', [userID]);
+  if(!results.rows[0].total) return;
   const total = results.rows[0].total.slice(1);
   res.status(200).send(total);
 })

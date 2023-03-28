@@ -17,6 +17,7 @@ import Password from "./components/User/Account/Password";
 import Cart from "./components/User/Cart";
 import CheckoutContainer from "./components/Checkout/CheckoutContainer";
 import CheckoutLogin from "./components/CheckoutLogin";
+import Confirmation from './components/Confirmation';
 import { useToken, useSearch } from './utility/helpers';
 
 function App () {
@@ -91,6 +92,7 @@ function App () {
           <Route path="/product/:id" element={<Product setSearch={setSearch} search={search} token={token}/>} />
           <Route path="/cart" element={<Cart token={token} />} />
           <Route path="/checkout/*" element={<CheckoutContainer token={token} />} />
+          <Route path="/confirmation" element={<Confirmation />} />
           <Route element={<ProtectedRoutes token={token} />}>
             <Route path="account" element={<Account token={token} />} />
             <Route path="/account/details" element={<Details token={token} />} />

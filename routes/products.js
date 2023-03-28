@@ -76,20 +76,21 @@ productsRouter.get('/:product/price', (req, res) => {
 productsRouter.post('/:name', async (req, res) => {
   const name = req.params.name;
   const amount = req.body.amount;
-  console.log(name)
 
+  let userID;
   const token = req.headers.authorization;
-  const user = decodeJWT(token); 
-  const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
-  const userID = selectObject.rows[0].id;
+  if(token){
+    const user = decodeJWT(token); 
+    const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+    userID = selectObject.rows[0].id;
+  }
 
   const product = await db.query('select * from products where name = $1', [name]);
   const productID = product.rows[0].id;
 
-  const productInCart = await db.query('select * from carts where product_id = $1', [productID])
+  const productInCart = await db.query('select * from carts where product_id = $1 AND user_id = $2', [productID, userID])
 
-  if(productInCart.rows[0]) {
-    console.log('product in cart')
+  if(token && productInCart.rows[0]) {
     await db.query('UPDATE carts SET amount = amount + $1 WHERE product_id = $2 RETURNING *', [amount, productID], (error, results) => {
       if (error) {
       console.log('error')
@@ -97,10 +98,10 @@ productsRouter.post('/:name', async (req, res) => {
     }
     res.status(200).json(results.rows)
     })
+    return
   }
 
-  if(!productInCart.rows[0]) {
-    console.log('product not in cart')
+  if(token) {
 
     const id = uuidv4();
 
@@ -111,7 +112,18 @@ productsRouter.post('/:name', async (req, res) => {
       }
       res.status(200).json(results.rows[0])
     })
+    return
   }
+
+  const id = uuidv4();
+
+  await db.query('INSERT INTO carts (id, product_id, amount)VALUES($1, $2, $3) RETURNING *', [id, productID, amount], (error, results) => {
+    if (error) {
+    console.log('error')
+    throw error
+    }
+    return res.status(200).json(results.rows[0].id)
+  })
 })
 
 

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Shipping from './Shipping';
 import Review from './Review';
-import { getCart, getCartTotal, localCartTotal } from '../../utility/helpers';
-
-const { first, last, email, billingAddress, billingCity, billingState, billingZip, shippingAddress, shippingCity, shippingState, shippingZip } = JSON.parse(sessionStorage.getItem('checkout'));
+import { getCart, getCartTotal, localCartTotal, createOrder, updateProducts, deleteCart, setCheckoutSession } from '../../utility/helpers';
 
 export default function Checkout({ token }) {
+
+  const { first, last, email, billingAddress, billingCity, billingState, billingZip, shippingAddress, shippingCity, shippingState, shippingZip } = JSON.parse(sessionStorage.getItem('checkout'));
 
   const navigate = useNavigate();
   const page = window.location.href;
@@ -76,8 +76,7 @@ export default function Checkout({ token }) {
       billingState: inputFields.shippingState,
       billingZip: inputFields.shippingZip
     })
-      document.getElementById('billing-form').style.display="none";
-      return;
+    document.getElementById('billing-form').style.display="none";
     }
     if(value==='different'){
       setInputFields({
@@ -88,8 +87,17 @@ export default function Checkout({ token }) {
         billingZip: ''
       })
       document.getElementById('billing-form').style.display="inline-block";
-      return;
     }
+  }
+
+  const onSame = () => {
+    setCheckoutSession({
+      billingAddress: inputFields.shippingAddress,
+      billingCity: inputFields.shippingCity,
+      billingState: inputFields.shippingState,
+      billingZip: inputFields.shippingZip
+      })
+    return;
   }
 
   const handleFormSubmit = (e) => {
@@ -108,9 +116,72 @@ export default function Checkout({ token }) {
     setEmailError(false);
     sessionStorage.setItem('checkout', JSON.stringify(inputFields))
     if(page==='http://localhost:3000/checkout/shipping'){
-      navigate('review')
+      setCheckoutSession({
+      billingAddress: inputFields.shippingAddress,
+      billingCity: inputFields.shippingCity,
+      billingState: inputFields.shippingState,
+      billingZip: inputFields.shippingZip
+      })
+        navigate('review')
+    }
+    if(page==='http://localhost:3000/checkout/review'){
+      setCheckoutSession({
+        billingAddress: inputFields.billingAddress,
+        billingCity: inputFields.billingCity,
+        billingState: inputFields.billingState,
+        billingZip: inputFields.billingZip
+        })
     }
   };
+
+  const placeOrder = async() => {
+    let credentials;
+    if(token){
+      credentials = {
+        first: first,
+        last: last,
+        email: email,
+        address: shippingAddress,
+        city: shippingCity,
+        state: shippingState,
+        zip: shippingZip
+      }
+    } else {
+      credentials = {
+        first: first,
+        last: last,
+        email: email,
+        address: shippingAddress,
+        city: shippingCity,
+        state: shippingState,
+        zip: shippingZip,
+        idArray: JSON.parse(localStorage.getItem('cart-ids'))
+      }
+    }
+    const confNumber = await createOrder(credentials, token ? token : 1)
+    sessionStorage.setItem('confirmation', JSON.stringify(confNumber))
+  }
+
+  const updateInventory = async() => {
+    let credentials;
+    if(token){
+      credentials = {booty: 'booty'};
+    } else {
+      credentials = {
+        idArray: JSON.parse(localStorage.getItem('cart-ids'))
+      }
+    }
+    await updateProducts(credentials, token ? token : 1);
+  }
+
+  const handleDelete = async() => {
+    await deleteCart({
+        idArray: JSON.parse(localStorage.getItem('cart-ids'))
+      }, token ? token : 1);
+    localStorage.removeItem("cart");
+    localStorage.removeItem("cart-ids");
+    sessionStorage.removeItem("checkout");
+  }
 
   const errorMessage = () => {
     return (
@@ -176,10 +247,28 @@ export default function Checkout({ token }) {
       <Routes>
         <Route 
           path="shipping" 
-          element={<Shipping token={token} inputFields={inputFields} handleChange={handleFormChange} handleSubmit={handleFormSubmit}/>} 
+          element={
+          <Shipping 
+            token={token} 
+            inputFields={inputFields} 
+            handleChange={handleFormChange} 
+            handleSubmit={handleFormSubmit} />
+          } 
         />
         <Route path="review" element={
-          <Review inputFields={inputFields} handleChange={handleFormChange} handleSubmit={handleFormSubmit} radio={radio} handleRadioChange={handleRadioChange} cartItems={<CartItems/>} cartTotal={<CartTotal/>} token={token}/>
+          <Review 
+            inputFields={inputFields} 
+            handleChange={handleFormChange} 
+            handleSubmit={handleFormSubmit} 
+            radio={radio} 
+            handleRadioChange={handleRadioChange} 
+            onSame={onSame}
+            cartItems={<CartItems/>} 
+            cartTotal={<CartTotal/>} 
+            token={token} 
+            placeOrder={placeOrder}
+            updateInventory={updateInventory}
+            handleDelete={handleDelete} />
           } 
         />
       </Routes>
