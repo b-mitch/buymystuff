@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
+import { getUser } from "../../../utility/helpers";
 
 
 export default function Account({ token }) {
+
+  const [first, setFirst] = useState('');
+  const [id, setID] = useState('');
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = await getUser(token);
+      const newFirst = user.first_name;
+      setFirst(newFirst);
+      const newID = user.id;
+      setID(newID);
+    };
+    
+    fetchData();
+  }, [])
 
   return (
 
     <div className="account-container">
       <div className="account-header">
-        <h3>Member since: CREATION_DATE</h3>
-        <h1>Hi, FIRST_NAME</h1>
-        <h3>Member number: USER_ID</h3>
+        <h1>Hi, {first}</h1>
+        <h3>Member number: {id}</h3>
       </div>
       <div className="account-links">
         <div className="order-links">

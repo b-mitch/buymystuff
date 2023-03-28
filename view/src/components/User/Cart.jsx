@@ -152,7 +152,7 @@ export default function Cart({ token }) {
   const CartItems = () => {
     if(!cart) return;
     return (
-      <table className = 'items-container'>
+      <table className = 'cart-table'>
         <tbody>
           {cart.map((item, i) => {
             return <tr key={item.name.replace(/\s+/g, '')}className='item-card'>
@@ -185,7 +185,7 @@ export default function Cart({ token }) {
   }
 
   return (
-    <div>
+    <div className="cart-container">
       <h1>Cart</h1>
       <CartItems />
       <CartTotal />
