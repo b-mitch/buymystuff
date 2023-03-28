@@ -12,6 +12,7 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import Account from './components/User/Account/Account';
 import Details from "./components/User/Account/Details";
 import Orders from "./components/User/Account/Orders";
+import OrderDetails from "./components/User/Account/OrderDetails";
 import Returns from "./components/User/Account/Returns";
 import Password from "./components/User/Account/Password";
 import Cart from "./components/User/Cart";
@@ -97,6 +98,7 @@ function App () {
             <Route path="account" element={<Account token={token} />} />
             <Route path="/account/details" element={<Details token={token} />} />
             <Route path="/account/orders" element={<Orders token={token} />} />
+            <Route path="/account/orders/:id" element={<OrderDetails token={token} />} />
             <Route path="/account/password" element={<Password token={token} />} />
             <Route path="/returns" element={<Returns />} />
             <Route path="/cart" element={<Cart token={token} />} />

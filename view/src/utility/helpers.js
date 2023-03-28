@@ -322,3 +322,25 @@ export async function createOrder(credentials, token) {
   })
   .then(data => data.json());
 }
+
+export async function getOrders(token) {
+  return fetch('/orders', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+  })
+  .then(data => data.json())
+}
+
+export async function getOrderDetails(token, id) {
+  return fetch(`/orders/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+  })
+  .then(data => data.json())
+}
