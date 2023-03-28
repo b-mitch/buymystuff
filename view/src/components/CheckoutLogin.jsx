@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import { loginUser, addLocalCartToDB } from '../utility/helpers';
+import { loginUser, addLocalCartToDB, noLoginCheckout } from '../utility/helpers';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -10,11 +10,6 @@ export default function CheckoutLogin({ setToken }) {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState(false);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    navigate("/checkout/shipping")
-  }
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -41,6 +36,12 @@ export default function CheckoutLogin({ setToken }) {
       localStorage.removeItem("cart");
       navigate("/cart");
     }
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    noLoginCheckout();
+    navigate("/checkout/shipping")
+  }
 
   const errorMessage = () => {
     return (

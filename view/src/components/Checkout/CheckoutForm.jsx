@@ -5,7 +5,7 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ placeOrder, updateInventory, handleDelete }) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -58,7 +58,7 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: "http://localhost:3000/confirmation",
       },
     });
 
@@ -81,7 +81,12 @@ export default function CheckoutForm() {
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <form id="payment-form" onSubmit={handleSubmit} 
+    onClick={async() => {
+      await placeOrder();
+      await updateInventory();
+      await handleDelete();
+    }}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">

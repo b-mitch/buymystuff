@@ -47,6 +47,9 @@ export default function Cart({ token }) {
         thisClicked.closest("tr").remove();
         const newCart = cart.filter((item, index) => index !== i);
         setCart(newCart);
+        let cartTotal = await getCartTotal(token);
+        cartTotal = Number(cartTotal).toFixed(2)
+        setTotal(cartTotal);
       } else {
         alert("Unable to delete!")
       }
@@ -125,7 +128,7 @@ export default function Cart({ token }) {
         billingState: '',
         billingZip: '',
       }))
-      navigate("/checkout/contact-billing")
+      navigate("/checkout/shipping")
     }
     if(!token) {
       sessionStorage.setItem('checkout', JSON.stringify({

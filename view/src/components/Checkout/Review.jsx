@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 
@@ -13,11 +13,14 @@ export default function Review({
   handleSubmit,
   radio,
   handleRadioChange,
+  onSame,
   token,
   cartItems,
-  cartTotal
+  cartTotal,
+  placeOrder,
+  updateInventory,
+  handleDelete
 }) {
-  const navigate = useNavigate();
 
   const [clientSecret, setClientSecret] = useState("");
 
@@ -27,8 +30,9 @@ export default function Review({
       method: "POST",
       headers: { 
         "Content-Type": "application/json", 
-        "Authorization": token 
+        "Authorization": token ? token : 1
         },
+      body: token ? '' : JSON.stringify(JSON.parse(localStorage.getItem('cart-ids'))) 
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
@@ -71,7 +75,10 @@ export default function Review({
                     name='same'
                     value="same" 
                     checked={radio==='same'} 
-                    onChange={handleRadioChange}
+                    onChange={(e) => {
+                      handleRadioChange(e);
+                      onSame();
+                    }}
                     className='radio-same'/>
                   Same as shipping address  
                 </label>
@@ -110,7 +117,10 @@ export default function Review({
               <h2>Payment options</h2>
               {clientSecret && (
                 <Elements options={options} stripe={stripePromise}>
-                  <CheckoutForm />
+                  <CheckoutForm 
+                    placeOrder={placeOrder}
+                    updateInventory={updateInventory}
+                    handleDelete={handleDelete} />
                 </Elements>
               )}
             </div>

@@ -12,6 +12,13 @@ CREATE TABLE "users" (
   "zip" varchar
 );
 
+CREATE TABLE "carts" (
+  "id" varchar PRIMARY KEY,
+  "user_id" integer references users (id),
+  "product_id" varchar references products(id) NOT NULL,
+  "amount" integer NOT NULL
+);
+
 CREATE TABLE "products" (
   "id" varchar PRIMARY KEY,
   "name" varchar(100) NOT NULL,
@@ -21,27 +28,20 @@ CREATE TABLE "products" (
 );
 
 CREATE TABLE "orders" (
-  "id" integer PRIMARY KEY,
-  "user_id" integer references users (id) NOT NULL,
+  "id" varchar PRIMARY KEY,
+  "user_id" integer references users (id),
+  "date" date NOT NULL,
   "first_name" varchar,
   "last_name" varchar,
   "email" varchar,
-  "date" date NOT NULL,
   "address" varchar NOT NULL,
   "city" varchar NOT NULL,
   "state" varchar NOT NULL,
   "zip" varchar NOT NULL
 );
 
-CREATE TABLE "carts" (
-  "id" varchar PRIMARY KEY,
-  "user_id" integer references users (id) NOT NULL,
-  "product_id" varchar references products(id) NOT NULL,
-  "product_amount" integer NOT NULL
-);
-
 CREATE TABLE "products-orders" (
-  "order_id" integer references orders(id) NOT NULL,
+  "order_id" varchar references orders(id) NOT NULL,
   "product_id" varchar references products(id) NOT NULL,
   "amount" integer NOT NULL,
   "price" money NOT NULL,

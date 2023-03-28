@@ -17,6 +17,7 @@ export default function Product({ setSearch, search, token }) {
   }, [])
 
   const handleAdd = async (e) => {
+    let localCart = JSON.parse(localStorage.getItem('cart'));
     setSearch({
       search: {
         query: e.target.getAttribute('value')
@@ -24,26 +25,30 @@ export default function Product({ setSearch, search, token }) {
     })
     if(token){
       await addToCartDB(search.query, token, 1);
+      return
     }
-    const localCart = JSON.parse(localStorage.getItem('cart'));
-    if(!token && localCart){
-      const filteredCart = localCart.filter(item => item.name===search.query)
-      if(filteredCart[0]){
+    let filteredCart;
+    if (!localCart){
+      addToCartLocal({name: search.query, amount: 1});
+      localCart = JSON.parse(localStorage.getItem('cart'));
+      return;
+    }
+    if (localCart) {
+      filteredCart = localCart.filter(item => item.name===search.query)
+      if (!filteredCart[0]){
+        addToCartLocal({name: search.query, amount: 1});
+        localCart = JSON.parse(localStorage.getItem('cart'));
+      } else {
         const newCart = localCart.map(item => {
-          if(item.name === search.query){
-            return {...item, amount: item.amount + 1};
-          }else {
-            return item;
-          }
-        })
-        return localStorage.setItem('cart', JSON.stringify(newCart));
+        if(item.name === search.query){
+          return {...item, amount: item.amount + 1};
+        }else {
+          return item;
+        }
+      })
+      localStorage.setItem('cart', JSON.stringify(newCart));
       }
     }
-    const item = {
-    name: search.query,
-    amount: 1
-    }
-    addToCartLocal(item);
   }
 
   if(product.length===0) return;

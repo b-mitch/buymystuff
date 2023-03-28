@@ -13,74 +13,131 @@ checkoutRouter.use(
   })
 );
 
-const calculateOrderAmount = async (userID) => {
+const calculateOrderTotal = async (userID) => {
+
   const results = await db.query('SELECT SUM(carts.amount*products.price) AS total FROM carts, products WHERE user_id = $1 AND products.id=carts.product_id', [userID]);
   const total = (Number(results.rows[0].total.slice(1)).toFixed(2))*100;
-  console.log(total);
   return total;
 };
 
+const nologinTotal = async (idArray) => {
+  let totalArray = [];
+  for (item of idArray){
+    const results = await db.query('SELECT SUM(carts.amount*products.price) AS total FROM carts, products WHERE carts.id = $1 AND products.id=carts.product_id', [item]);
+    let itemTotal = (Number(results.rows[0].total.slice(1)).toFixed(2))*100;
+    totalArray.push(itemTotal);
+  }
+
+  const total = totalArray.reduce((x,y) => x+y)
+  return(total)
+}
+
 checkoutRouter.get('/', async (req, res) => {
-  const userId = req.session.user.id;
-  const results = await db.query('SELECT * FROM carts WHERE user_id = $1', [userId]);
+  const userID = req.session.user.id;
+  const results = await db.query('SELECT * FROM carts WHERE user_id = $1', [userID]);
   const cart = results.rows;
-  const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userId]);
+  const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userID]);
   const total = totalObject.rows[0];
   cart.push(total);
   res.status(200).send(cart);
 });
 
 checkoutRouter.put('/', async (req, res) => {
-  const userId = req.session.user.id;
-  const select = await db.query('SELECT product_id, product_amount FROM carts WHERE user_id = $1', [userId]);
-  const productsArray = select.rows;
+//Get products
+  const token = req.headers.authorization;
+  let userID;
+  let products = [];
+  if(token!=='1') {
+    const user = decodeJWT(token); 
+    const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+    userID = selectObject.rows[0].id;
+    const results = await db.query('SELECT product_id, amount FROM carts WHERE user_id = $1', [userID]);
+    products = results.rows;
+  } else {
+      const idArray = req.body.idArray
+      for (item of idArray){
+        const results = await db.query('SELECT product_id, amount FROM carts WHERE carts.id = $1', [item]);
+        products.push(results.rows[0]);
+      }
+  }
+
+//Update products
   let updatedProducts = [];
-  for (const item of productsArray) {
-    const results = await db.query('UPDATE products SET inventory = inventory - $1 WHERE id = $2 RETURNING *', [item.product_amount, item.product_id])
+  for (const item of products) {
+    const results = await db.query('UPDATE products SET inventory = inventory - $1 WHERE id = $2 RETURNING *', [item.amount, item.product_id])
     updatedProducts.push(results.rows[0])
     };
   res.status(200).send(updatedProducts);
 })
 
 checkoutRouter.post('/', async (req, res) => {
-  const userId = req.session.user.id
+//Add to orders
+  const { first, last, email, address, city, state, zip } = req.body;
+
   const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const select = await db.query('SELECT product_id, product_price, product_amount FROM carts WHERE user_id = $1', [userId]);
-  const products = select.rows;
+  
+  const id = "id" + Math.random().toString(16).slice(2);
 
-  const selectOrders = await db.query('SELECT COUNT(*) FROM orders');
-  const totalOrders = Number(selectOrders.rows[0].count);
-  const id = totalOrders+1;
+  const token = req.headers.authorization;
+  let userID;
+  if(token!=='1'){
+    const user = decodeJWT(token); 
+    const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+    userID = selectObject.rows[0].id;
 
-  let order = [];
+    await db.query('INSERT INTO orders (id, date, user_id, first_name, last_name, email, address, city, state, zip) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *', [id, date, userID, first, last, email, address, city, state, zip]);
+  } else {
+      await db.query('INSERT INTO orders (id, date, first_name, last_name, email, address, city, state, zip) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [id, date, first, last, email, address, city, state, zip]);
+    }
+
+
+//Add to products-orders 
+  let products = [];
+  if(token!=='1') {
+    const results = await db.query('SELECT products.id, products.price, carts.amount FROM carts, products WHERE user_id = $1 AND products.id=carts.product_id', [userID]);
+    products = results.rows;
+  } else {
+      const idArray = req.body.idArray
+      for (item of idArray){
+        const results = await db.query('SELECT products.id, products.price, carts.amount FROM carts, products WHERE carts.id = $1 AND products.id=carts.product_id', [item]);
+        products.push(results.rows[0]);
+      }
+  }
+
   for (const item of products) {
-    const results = await db.query('INSERT INTO orders (id, user_id, date, product_id, product_price, product_amount) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [id, userId, date, item.product_id, item.product_price, item.product_amount]);
-    order.push(results.rows[0]);
+    await db.query('INSERT INTO products_orders (order_id, product_id, amount, price) VALUES ($1, $2, $3, $4) RETURNING *', [id, item.id, item.amount, item.price]);
     } 
-  res.status(200).send(order);
+  res.status(200).send({id: id});
 })
 
-checkoutRouter.delete('/', (req, res) => {
-  const userId = req.session.user.id;
-  db.query('DELETE FROM carts WHERE user_id = $1', [userId], (error, results) => {
-    if (error) {
-    console.log('error')
-    throw error
-    }
-    res.status(204).send('product deleted from cart');
-  })
+checkoutRouter.delete('/', async (req, res) => {
+  const token = req.headers.authorization;
+  let userID;
+  if(token!=='1') {
+    const user = decodeJWT(token); 
+    const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+    userID = selectObject.rows[0].id;
+    await db.query('DELETE FROM carts WHERE user_id = $1', [userID]);
+    return res.status(204).send('product deleted from cart')
+  }
+  return res.status(204).send('no login carts deleted automatically daily')
 })
 
 checkoutRouter.post("/create-payment-intent", async (req, res) => {
-  console.log("STRIPING")
+  console.log("setting up stripe payment intent")
   const token = req.headers.authorization;
-  const user = decodeJWT(token); 
-  const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
-  const userID = selectObject.rows[0].id;
+  let userID;
+  if(token!=='1'){
+    const user = decodeJWT(token); 
+    const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
+    userID = selectObject.rows[0].id;
+  }
+
+  const idArray = req.body
 
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: await calculateOrderAmount(userID),
+    amount: userID ? await calculateOrderTotal(userID) : await nologinTotal(idArray),
     currency: "usd",
     automatic_payment_methods: {
       enabled: true,
