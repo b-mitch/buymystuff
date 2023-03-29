@@ -19,6 +19,7 @@ import Cart from "./components/User/Cart";
 import CheckoutContainer from "./components/Checkout/CheckoutContainer";
 import CheckoutLogin from "./components/CheckoutLogin";
 import Confirmation from './components/Confirmation';
+import NotFound from './components/NotFound';
 import { useToken, useSearch } from './utility/helpers';
 
 function App () {
@@ -82,6 +83,7 @@ function App () {
 
         <Routes>
           <Route path="/" element={<Home token={token} setSearch={setSearch} search={search} />} />
+          <Route path="*" element={<NotFound />} />
           <Route element={<Redirect />}>
             <Route path="/login" element={<Login setToken={setToken} />} />
             <Route path="/register" element={<Registration setToken={setToken} />} />
