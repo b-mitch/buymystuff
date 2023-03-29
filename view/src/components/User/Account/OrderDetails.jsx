@@ -27,7 +27,8 @@ export default function OrderDetails({ token }) {
   const OrderDetailItems = () => {
     if(!orderDetails) return;
     return (
-      <table className='order-details-table'>
+      <div className="order-details-container">
+        <table className='order-details-table'>
         <tbody>
           {orderDetails.map((item) => {
             return <tr key={item.id}className='item-card'>
@@ -51,6 +52,8 @@ export default function OrderDetails({ token }) {
           )}
         </tbody>
       </table>
+      <Link to='/returns'>Request return</Link>
+      </div>
     )
   }
 

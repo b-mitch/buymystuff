@@ -30,7 +30,6 @@ export default function Account({ token }) {
       <div className="account-links">
         <div className="order-links">
           <Link to='/account/orders'>Order history</Link>
-          <Link to='/returns'>Returns</Link>
         </div>
         <div className="detail-links">
           <Link to='/account/details'>Account details</Link>

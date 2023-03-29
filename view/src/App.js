@@ -99,11 +99,10 @@ function App () {
           <Route element={<ProtectedRoutes token={token} />}>
             <Route path="account" element={<Account token={token} />} />
             <Route path="/account/details" element={<Details token={token} />} />
+            <Route path="/account/password" element={<Password token={token} />} />
             <Route path="/account/orders" element={<Orders token={token} />} />
             <Route path="/account/orders/:id" element={<OrderDetails token={token} />} />
-            <Route path="/account/password" element={<Password token={token} />} />
             <Route path="/returns" element={<Returns />} />
-            <Route path="/cart" element={<Cart token={token} />} />
           </Route>
         </Routes>
       </div>
