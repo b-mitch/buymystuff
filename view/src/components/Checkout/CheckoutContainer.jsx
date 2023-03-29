@@ -32,6 +32,8 @@ export default function Checkout({ token }) {
   const [emailError, setEmailError] = useState(false);
   const [radio, setRadio] = useState('same');
 
+  const [success, setSuccess] = useState(false);
+
   useEffect(() => {
     const localCart = JSON.parse(localStorage.getItem('cart'));
     const fetchCart = async () => {
@@ -97,7 +99,7 @@ export default function Checkout({ token }) {
       billingState: inputFields.shippingState,
       billingZip: inputFields.shippingZip
       })
-    return;
+    return setSuccess(false);
   }
 
   const handleFormSubmit = (e) => {
@@ -122,7 +124,7 @@ export default function Checkout({ token }) {
       billingState: inputFields.shippingState,
       billingZip: inputFields.shippingZip
       })
-        navigate('review')
+      navigate('review')
     }
     if(page==='http://localhost:3000/checkout/review'){
       setCheckoutSession({
@@ -130,7 +132,8 @@ export default function Checkout({ token }) {
         billingCity: inputFields.billingCity,
         billingState: inputFields.billingState,
         billingZip: inputFields.billingZip
-        })
+      })
+      setSuccess(true);
     }
   };
 
@@ -190,7 +193,7 @@ export default function Checkout({ token }) {
         style={{
           display: error ? '' : 'none',
         }}>
-        <h1>Please enter all the fields</h1>
+        <h3>Please enter all the fields</h3>
       </div>
     );
   };
@@ -202,7 +205,7 @@ export default function Checkout({ token }) {
         style={{
           display: emailError ? '' : 'none',
         }}>
-        <h1>Please enter valid email</h1>
+        <h3>Please enter a valid email</h3>
       </div>
     );
   };
@@ -257,7 +260,8 @@ export default function Checkout({ token }) {
         />
         <Route path="review" element={
           <Review 
-            inputFields={inputFields} 
+            inputFields={inputFields}
+            success={success} 
             handleChange={handleFormChange} 
             handleSubmit={handleFormSubmit} 
             radio={radio} 

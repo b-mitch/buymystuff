@@ -55,7 +55,7 @@ registerRouter.post('/', [
       const user = results.rows[0];
       if (user) {
         console.log("User already exists!");
-        return res.redirect("login");
+        return res.status(400).send({ error: true, message: "Username already exists. Please choose another username"});
       }
       const insertText = 'INSERT INTO users (id, first_name, last_name, email, username, password)VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
       const hashedPassword = await passwordHasher(password, 10);

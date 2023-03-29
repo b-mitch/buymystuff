@@ -20,22 +20,26 @@ export default function Login({ setToken }) {
   };
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError(false);
-      if (username === '' || password === '') {
-        setError(true);
-        return;
-      }
-      setError(false);
-      const token = await loginUser({
-          username,
-          password
-      });
-      setToken(token);
-      addLocalCartToDB(JSON.parse(JSON.stringify(token.token)));
-      localStorage.removeItem("cart");
-      navigate("/");
+    e.preventDefault();
+    setError(false);
+    if (username === '' || password === '') {
+      setError(true);
+      return;
     }
+    setError(false);
+    const response = await loginUser({
+        username,
+        password
+    });
+    if(response.error){
+      setError(response.message)
+      return;
+    }
+    setToken(response);
+    addLocalCartToDB(JSON.parse(JSON.stringify(response.token)));
+    localStorage.removeItem("cart");
+    navigate("/");
+  }
 
   const errorMessage = () => {
     return (
@@ -44,7 +48,7 @@ export default function Login({ setToken }) {
         style={{
           display: error ? '' : 'none',
         }}>
-        <h2>Please enter all the fields</h2>
+        <h3>{error===true ? 'Please enter all the fields' : error}</h3>
       </div>
     );
   };
@@ -60,7 +64,7 @@ export default function Login({ setToken }) {
         </div>
 
         <form>
-          <h3>Login to your account</h3>
+          <h2>Login to your account</h2>
           <label for="username">
             Username:
             <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>

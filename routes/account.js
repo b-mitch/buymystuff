@@ -110,7 +110,7 @@ accountRouter.put('/password', [check('password').isLength({ max: 20, min: 5 })]
   const matchedPassword = await bcrypt.compare(currentPassword, user.password);
   if (!matchedPassword) {
     console.log("Password did not match!");
-    return res.status(400).send({ error: true, message: "Invalid password"});
+    return res.status(400).send({ error: true, message: "Invalid current password"});
   }
 
   if(password) {
