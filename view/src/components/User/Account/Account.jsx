@@ -18,7 +18,7 @@ export default function Account({ token }) {
     };
     
     fetchData();
-  }, [])
+  }, [token])
 
   return (
 
