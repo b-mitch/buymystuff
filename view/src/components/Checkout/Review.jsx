@@ -9,6 +9,7 @@ const stripePromise = loadStripe('pk_test_51MpCyhDoFFCpZ0bnXeGikLiIbkZ2f2GcDkzkv
 
 export default function Review({
   inputFields,
+  success,
   handleChange, 
   handleSubmit,
   radio,
@@ -36,7 +37,7 @@ export default function Review({
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
-  }, []);
+  }, [token]);
 
   const appearance = {
     theme: 'stripe',
@@ -45,6 +46,18 @@ export default function Review({
     clientSecret,
     appearance,
   };
+
+  const successMessage = () => {
+      return (
+        <div
+          className="success"
+          style={{
+            display: success ? '' : 'none',
+          }}>
+          <h3>Billing saved!</h3>
+        </div>
+      );
+    };
 
   return (
         <div className='checkout-step'>
@@ -67,7 +80,7 @@ export default function Review({
             </div>
             <div className='summary-card'>
               <h2>Billing</h2>
-              <p>Select the address that matches your card or payment method.</p>
+              <p>{success ? successMessage() : 'Select the address that matches your card or payment method.'}</p>
               <div className="billing-check">
                 <label>
                   <input 

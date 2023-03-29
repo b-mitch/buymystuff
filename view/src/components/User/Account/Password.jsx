@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { updatePassword } from "../../../utility/helpers";
 
 export default function Password({ token }) {
@@ -24,21 +24,23 @@ export default function Password({ token }) {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setError(false);
-    // if (first === '' || last === '' || email === '' || username === '') {
-    //   setError(true);
-    //   return;
-    // }
     if (newPassword.length < 6 || newPassword.length > 20){
       setPasswordError(true);
       return;
     }
     setError(false);
     setPasswordError(false);
-    setUpdated(true);
-    await updatePassword(token, {
+    const response = await updatePassword(token, {
       currentPassword: password,
       password: newPassword
     });
+    if(response.error){
+      setError(response.message)
+      return;
+    }
+    setUpdated(true);
+    setPassword('');
+    setNewPassword('');
   }
 
   const successMessage = () => {
@@ -60,7 +62,7 @@ export default function Password({ token }) {
         style={{
           display: error ? '' : 'none',
         }}>
-        <h3>Error</h3>
+        <h3>{error===true ? 'Please enter all the fields' : error}</h3>
       </div>
     );
   };
@@ -72,7 +74,7 @@ export default function Password({ token }) {
         style={{
           display: passwordError ? '' : 'none',
         }}>
-        <h1>Password must be greater than 5 digits and less than 20</h1>
+        <h3>Password must be greater than 5 digits and less than 20</h3>
       </div>
     );
   };

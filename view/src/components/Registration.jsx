@@ -62,15 +62,19 @@ export default function Registration({ setToken }) {
     setError(false);
     setEmailError(false);
     setPasswordError(false);
-    setSubmitted(true);
-    const token = await createUser({
+    const response = await createUser({
       first: first,
       last: last,
       email: email,
       username: username,
       password: password
     })
-    setToken(token);
+    if(response.error){
+      setError(response.message)
+      return;
+    }
+    setSubmitted(true);
+    setToken(response);
     navigate("/");
   }
 
@@ -93,7 +97,7 @@ export default function Registration({ setToken }) {
         style={{
           display: error ? '' : 'none',
         }}>
-        <h1>Please enter all the fields</h1>
+        <h3>{error===true ? 'Please enter all the fields' : error}</h3>
       </div>
     );
   };

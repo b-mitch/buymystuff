@@ -58,7 +58,7 @@ export default function CheckoutLogin({ setToken }) {
   return (
     <div>
       <h1>Already have an account?</h1>
-      <h2>Sign in to add this order to your order history!</h2>
+      <h2>Sign in for easy access to your order!</h2>
 
       <div className="form">
 

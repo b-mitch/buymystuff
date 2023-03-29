@@ -139,7 +139,7 @@ export default function Details({ token }) {
         style={{
           display: emailError ? '' : 'none',
         }}>
-        <h3>Please enter valid email</h3>
+        <h3>Please enter a valid email</h3>
       </div>
     );
   };

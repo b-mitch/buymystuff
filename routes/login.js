@@ -18,7 +18,7 @@ loginRouter.use(
 loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-  return res.status(422).json({ errors: errors.array() });
+    return res.status(422).json({ errors: errors.array() });
   }
   const username = validator.escape(req.body.username);
   const password = validator.escape(req.body.password);
@@ -27,11 +27,11 @@ loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req, res
   try {
     const results = await db.query(selectText, values);
     const user = await results.rows[0];
-    const id = user.id;
     if (!user) {
       console.log("User does not exist!");
       return res.status(400).send({ error: true, message: "User does not exist"});
     }
+    const id = user.id;
     const matchedPassword = await bcrypt.compare(password, user.password);
     if (!matchedPassword) {
       console.log("Password did not match!");
