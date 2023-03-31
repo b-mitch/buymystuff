@@ -97,7 +97,8 @@ checkoutRouter.post('/', async (req, res) => {
     const results = await db.query('SELECT products.id, products.price, carts.amount FROM carts, products WHERE user_id = $1 AND products.id=carts.product_id', [userID]);
     products = results.rows;
   } else {
-      const idArray = req.body.idArray
+      const idArray = req.body.idArray;
+      console.log(idArray)
       for (item of idArray){
         const results = await db.query('SELECT products.id, products.price, carts.amount FROM carts, products WHERE carts.id = $1 AND products.id=carts.product_id', [item]);
         products.push(results.rows[0]);

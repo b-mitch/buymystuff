@@ -56,29 +56,29 @@ export default function CheckoutLogin({ setToken }) {
   };
 
   return (
-    <div>
-      <h1>Already have an account?</h1>
-      <h2>Sign in for easy access to your order!</h2>
+    <div className="form-container">
+      <div className="chkout-login form">
+        <h1 className="title">Already have an account?</h1>
 
-      <div className="form">
-
-        <div className="messages">
-          {errorMessage()}
-        </div>
-
-        <form>
-          <label for="username">
-            Username:
-            <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>
-          </label>
-          <label for="password">
-            Password:
-            <input value={password} className="input" onChange={handlePassword} type="text" name="password"/>
-          </label>
-          <button onClick={handleSubmit} className="btn" type="submit">Submit</button>
-        </form>
+      <div className="messages">
+        {errorMessage()}
       </div>
-      <button onClick={(e) => {handleClick(e)}}>Checkout as a guest</button>
+
+      <h2 className="subtitle">Sign in for easy access to your order!</h2>
+        <div className="input-container ic1">
+          <input value={username} className="input" onChange={handleUsername} type="text" id="username"/>
+          <div className="cut"></div>
+          <label for="username" className="placeholder">Username</label>
+        </div>
+        <div className="input-container ic2">
+          <input value={password} className="input" onChange={handlePassword} type="text" id="password"/>
+          <div className="cut"></div>
+          <label for="password" className="placeholder">Password</label>
+        </div>
+        <button onClick={handleSubmit} className="submit" type="submit">Submit</button>
+        <button onClick={(e) => {handleClick(e)}}
+        className="chkout-btn submit" type="submit">Checkout as a guest</button>
+      </div>
     </div>
   );
 }

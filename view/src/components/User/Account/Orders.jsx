@@ -27,17 +27,22 @@ export default function Orders({ token }) {
     if(!orders) return;
     return (
       <table className='orders-table'>
+        <thead>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Total</th>
+          </thead>
         <tbody>
           {orders.map((item) => {
             return <tr key={item.id}className='item-card'>
               <td>
-                Order #: {item.id}
+                {item.id}
               </td>
               <td>
-                Date: {dateFormator(item.date)} 
+                {dateFormator(item.date)} 
               </td>
               <td>
-                Total: {item.total}
+                {item.total}
               </td>
               <td>
                 <Link to={`${item.id}`}>Order details</Link>
@@ -51,7 +56,7 @@ export default function Orders({ token }) {
   }
 
   return (
-    <div className="orders-container">
+    <div className="orders container">
       <h1>Order History</h1>
       <OrderItems />
     </div>

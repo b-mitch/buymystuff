@@ -21,20 +21,15 @@ export default function Account({ token }) {
   }, [token])
 
   return (
-
-    <div className="account-container">
+    <div className="account container">
       <div className="account-header">
         <h1>Hi, {first}</h1>
-        <h3>Member number: {id}</h3>
+        <h2>Member number: {id}</h2>
       </div>
       <div className="account-links">
-        <div className="order-links">
           <Link to='/account/orders'>Order history</Link>
-        </div>
-        <div className="detail-links">
           <Link to='/account/details'>Account details</Link>
           <Link to='/account/password'>Change password</Link>
-        </div>
       </div>
     </div>
   )

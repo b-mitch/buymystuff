@@ -88,9 +88,9 @@ export default function CheckoutForm({ placeOrder, updateInventory, handleDelete
       await handleDelete();
     }}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button disabled={isLoading || !stripe || !elements} className="submit">
         <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Submit order"}
+          {isLoading ? <div className="spinner" id="spinner">Processing..</div> : "Submit order"}
         </span>
       </button>
       {/* Show any error or success messages */}

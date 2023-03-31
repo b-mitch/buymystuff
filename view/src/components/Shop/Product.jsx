@@ -19,6 +19,16 @@ export default function Product({ setSearch, search, token }) {
     fetchData();
   }, [])
 
+  function resetSuccess() {
+    let el = document.getElementById('success');
+    el.style.animation = '';
+    el.style.display = '';
+    setTimeout(() => {
+      el.style.display='none';
+      el.style.animation='none';
+    }, "3000")
+  }
+
   const handleAdd = async (e) => {
     setError(false);
     let localCart = JSON.parse(localStorage.getItem('cart'));
@@ -31,15 +41,20 @@ export default function Product({ setSearch, search, token }) {
       const response = await addToCartDB(search.query, token, 1);
       console.log(response)
       if(!response) {
+        setSuccess(false)
         setError(true)
       }
-      return setSuccess(true);
+      setSuccess(true);
+      resetSuccess();
+      return;
     }
     let filteredCart;
     if (!localCart){
       addToCartLocal({name: search.query, amount: 1});
       localCart = JSON.parse(localStorage.getItem('cart'));
-      return setSuccess(true);
+      setSuccess(true);
+      resetSuccess();
+      return;
     }
     if (localCart) {
       filteredCart = localCart.filter(item => item.name===search.query)
@@ -47,23 +62,24 @@ export default function Product({ setSearch, search, token }) {
         addToCartLocal({name: search.query, amount: 1});
         localCart = JSON.parse(localStorage.getItem('cart'));
       } else {
-        const newCart = localCart.map(item => {
-        if(item.name === search.query){
-          return {...item, amount: item.amount + 1};
-        }else {
-          return item;
-        }
-      })
-      localStorage.setItem('cart', JSON.stringify(newCart));
-      setSuccess(true)
+          const newCart = localCart.map(item => {
+          if(item.name === search.query){
+            return {...item, amount: item.amount + 1};
+          } else {
+              return item;
+            }
+        })
+        localStorage.setItem('cart', JSON.stringify(newCart));
       }
+      setSuccess(true);
+      resetSuccess();
     }
   }
 
   const successMessage = () => {
     return (
       <div
-        className="success"
+        id="success"
         style={{
           display: success ? '' : 'none',
         }}>
@@ -75,7 +91,7 @@ export default function Product({ setSearch, search, token }) {
   const errorMessage = () => {
     return (
       <div
-        className="error"
+        id="error"
         style={{
           display: error ? '' : 'none',
         }}>
@@ -84,15 +100,22 @@ export default function Product({ setSearch, search, token }) {
     );
   };
 
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   if(product.length===0) return;
 
   return (
-    <div className="product-container" key={product}>
-      <p>{product[0].name} -- {product[0].price}</p>
-      <img src={`../img/${product[0].name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product[0].name}`}/>
-      <button value={product[0].name} onClick={handleAdd} type="submit">Add to cart</button>
-      {errorMessage()}
-      {successMessage()}
+    <div className="container" key={product}>
+      <div className="product-page">
+        <h2>{capitalizeFirstLetter(product[0].name)}</h2>
+        <img src={`../img/${product[0].name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product[0].name}`}/>
+        <h3>{product[0].price}</h3>
+        <button value={product[0].name} onClick={handleAdd} type="submit">Add to cart</button>
+          {errorMessage()}
+          {successMessage()}
+      </div>
     </div>
   )
 }

@@ -54,27 +54,25 @@ export default function Login({ setToken }) {
   };
 
   return (
-    <div>
-        <h1>Welcome!</h1>
+    <div className="form-container">
+      <div className="messages">
+        {errorMessage()}
+      </div>
+      <div className="login form">
+        <h1 className="title">Welcome!</h1>
 
-      <div className="form">
-
-        <div className="messages">
-          {errorMessage()}
+      <h2 className="subtitle">Login to your account</h2>
+        <div className="input-container ic1">
+          <input value={username} className="input" onChange={handleUsername} type="text" id="username"/>
+          <div className="cut"></div>
+          <label for="username" className="placeholder">Username</label>
         </div>
-
-        <form>
-          <h2>Login to your account</h2>
-          <label for="username">
-            Username:
-            <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>
-          </label>
-          <label for="password">
-            Password:
-            <input value={password} className="input" onChange={handlePassword} type="text" name="password"/>
-          </label>
-          <button onClick={handleSubmit} className="btn" type="submit">Submit</button>
-        </form>
+        <div className="input-container ic2">
+          <input value={password} className="input" onChange={handlePassword} type="PASSWORD" id="password"/>
+          <div className="cut"></div>
+          <label for="password" className="placeholder">Password</label>
+        </div>
+        <button onClick={handleSubmit} className="submit" type="submit">Submit</button>
       </div>
     </div>
   );

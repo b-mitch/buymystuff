@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { getAllProducts } from '../../utility/helpers';
 
 const SearchBar = ({ search, setSearch }) => {
-  const navigate = useNavigate();
 
   const handleChange = async (e) => {
     e.preventDefault();
@@ -18,11 +17,6 @@ const SearchBar = ({ search, setSearch }) => {
         list: results
       }
     })
-  }
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(`product/${search.query}`)
   }
 
   const handleClick = (e) => {
@@ -40,10 +34,10 @@ const SearchBar = ({ search, setSearch }) => {
           onChange={handleChange}
           type="search"
           id="header-search"
-          placeholder="Search for shit"
+          placeholder="Search for stuff"
           name="search" 
+          autofocus
         />
-        <button onClick={handleSearch} type="submit">Search</button>
     </form>
     <ul>
       {(!search || !search.list ? "" : search.list.map(product => {

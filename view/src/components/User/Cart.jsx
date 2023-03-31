@@ -164,7 +164,11 @@ export default function Cart({ token }) {
               </td>
               <td>
                 <button onClick={() =>{handleDecrement(i)}} className='amount-btn'>-</button>
+              </td>
+              <td>
                 <input value={item.amount} onChange={handleChange} className='amount-input' type='number' />
+              </td>
+              <td>
                 <button onClick={() => {handleIncrement(i)}} className='amount-btn'>+</button>
               </td>
               <td>
@@ -185,11 +189,13 @@ export default function Cart({ token }) {
   }
 
   return (
-    <div className="cart-container">
+    <div className="container">
       <h1>Cart</h1>
       <CartItems />
-      <CartTotal />
-      <button onClick={() => {handleClick()}}>Checkout</button>
+      <div className="align-left">
+        <CartTotal />
+        <button onClick={() => {handleClick()}}>Checkout</button>
+      </div>
     </div>
   )
 }
