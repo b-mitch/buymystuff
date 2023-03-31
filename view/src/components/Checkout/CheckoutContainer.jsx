@@ -213,7 +213,7 @@ export default function Checkout({ token }) {
   const CartItems = () => {
     if(!cart) return;
     return (
-      <table className = 'items-container'>
+      <table>
         <tbody>
           {cart.map((item, i) => {
             return <tr key={item.name.replace(/\s+/g, '')}className='item-card'>
@@ -237,11 +237,11 @@ export default function Checkout({ token }) {
   const CartTotal = () => {
     if (!cart) return;
     if (cart.length===0) return;
-    return <h3>Total: ${total}</h3>
+    return <h4 className="total">Total: ${total}</h4>
   }
 
   return (
-    <div className="checkout">
+    <div className="container">
       <h1>Checkout</h1>
       <div className="messages">
         {emailErrorMessage()}

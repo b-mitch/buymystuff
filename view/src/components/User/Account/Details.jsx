@@ -127,7 +127,7 @@ export default function Details({ token }) {
         style={{
           display: error ? '' : 'none',
         }}>
-        <h3>Error</h3>
+        <h3>Please fill in all required fields</h3>
       </div>
     );
   };
@@ -145,14 +145,14 @@ export default function Details({ token }) {
   };
 
   return (
-    <div className="update-details">
+    <div className="container">
       <div className="messages">
         {emailErrorMessage()}
         {updateError()}
         {successMessage()}
       </div>
-      <form>
-        <h1>Your personal details</h1>
+      <h1>Your personal details</h1>
+      <div className="account-details">
         <label for="first">
           First name*
           <input value={first} className="input" onChange={handleFirst} type="text" name="first"/>
@@ -170,23 +170,23 @@ export default function Details({ token }) {
           <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>
         </label>
         <label for="address">
-          Mailing address*
+          Mailing address
           <input value={address} className="input" onChange={handleAddress} type="text" name="address"/>
         </label>
         <label for="city">
-          City*
+          City
           <input value={city} className="input" onChange={handleCity} type="text" name="city"/>
         </label>
         <label for="state">
-          State*
+          State
           <input value={state} className="input" onChange={handleState} type="text" name="state"/>
         </label>
         <label for="zip">
-          Postal code*
+          Postal code
           <input value={zip} className="input" onChange={handleZip} type="text" name="zip"/>
         </label>
         <button onClick={handleUpdate} className="btn" type="submit">Update</button>
-      </form>
+      </div>
     </div>
   )
 }

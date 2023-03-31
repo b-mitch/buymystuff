@@ -4,9 +4,7 @@ import './App.css';
 import Home from './components/Home';
 import Registration from './components/Registration';
 import Login from './components/Login';
-import Hair from './components/Shop/Categories/Hair';
-import Face from './components/Shop/Categories/Face';
-import Body from './components/Shop/Categories/Body';
+import Category from './components/Shop/Category';
 import Product from './components/Shop/Product';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Account from './components/User/Account/Account';
@@ -67,7 +65,7 @@ function App () {
             <NavLink to="/cart">Cart</NavLink>
           </li>
         </ul>
-        <button onClick={handleLogOut}>Log Out</button>
+        <button className="logout" onClick={handleLogOut}>Log Out</button>
       </nav>
     )
   }
@@ -89,9 +87,7 @@ function App () {
             <Route path="/register" element={<Registration setToken={setToken} />} />
             <Route path="/checkoutlogin" element={<CheckoutLogin setToken={setToken} />} />
           </Route>
-          <Route path="/c/hair" element={<Hair setSearch={setSearch} />} />
-          <Route path="/c/face" element={<Face setSearch={setSearch} />} />
-          <Route path="/c/body" element={<Body setSearch={setSearch} />} />
+          <Route path="/c/:category" element={<Category setSearch={setSearch} />} />
           <Route path="/product/:id" element={<Product setSearch={setSearch} search={search} token={token}/>} />
           <Route path="/cart" element={<Cart token={token} />} />
           <Route path="/checkout/*" element={<CheckoutContainer token={token} />} />

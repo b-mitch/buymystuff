@@ -10,17 +10,19 @@ export default function Shipping({
 
   return (
     <div className='checkout'>
-      <nav className='page-history'><Link to='../../cart'>&lt; Cart</Link></nav>
-        <h2>Contact information</h2>
-        {token ? <h3>Edit email in account details page</h3> : <></>}
-        <form>
+      <div className='page-history'><Link to='../../cart'>&lt;Cart</Link>
+      </div>
+      <div className="contact-shipping">
+        <div className="contact">
+          <h2>Contact information</h2>
+          {token ? <h3>Edit email in account details page</h3> : <></>}
           <label for="email">
             Email*
             <input value={inputFields.email} className="input" type="email" name="email" disabled={token ? true : false} onChange={e => handleChange(e)}/>
           </label>
-        </form>
-        <h2>Shipping address</h2>
-        <form>
+        </div>
+        <div className="shipping">
+          <h2>Shipping address</h2>
           <label for="first">
             First name* 
             <input value={inputFields.first} className="input" onChange={e => handleChange(e)} type="text" name="first"/>
@@ -45,7 +47,8 @@ export default function Shipping({
             Postal code*
             <input value={inputFields.shippingZip} className="input" onChange={e => handleChange(e)} type="text" name="shippingZip"/>
           </label>
-        </form>
+        </div>
+      </div>
       <button className="checkout-btn" onClick={e => handleSubmit(e)}>Continue</button>
     </div>
   )

@@ -29,39 +29,50 @@ export default function OrderDetails({ token }) {
     return (
       <div className="order-details-container">
         <table className='order-details-table'>
+          <thead>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Amount</th>
+          </thead>
         <tbody>
           {orderDetails.map((item) => {
             return <tr key={item.id}className='item-card'>
               <td>
-                Order #: {item.id}
+                {item.id}
               </td>
               <td>
-                Date: {dateFormator(item.date)} 
+                {dateFormator(item.date)} 
               </td>
               <td>
-                Name: {item.name}
+                {item.name}
               </td>
               <td>
-                Price: {item.price}
+                {item.price}
               </td>
               <td>
-                Amount: {item.amount}
+                {item.amount}
               </td>
             </tr>
             }
           )}
         </tbody>
       </table>
-      <Link to='/returns'>Request return</Link>
       </div>
     )
   }
 
   return(
-    <div className="order-details-container">
+    <div className="order-details container">
       <h1>Order Details</h1>
-      <Link to='../account/orders'>All orders</Link>
+      <div className="align-left">
+        <Link to='../account/orders'>&lt;All orders</Link>
+      </div>
       <OrderDetailItems />
+      <div className="nav-link">
+        <Link to='/returns'>Request return</Link>
+      </div>
     </div>
   )
 }

@@ -127,10 +127,9 @@ export default function Registration({ setToken }) {
   };
 
   return (
-    <div className="form">
-      <div>
-        <h1>User Registration</h1>
-      </div>
+    <div className="form-container">
+      <div className="registration form">
+        <h1 className="title">User Registration</h1>
 
       <div className="messages">
         {passwordErrorMessage()}
@@ -139,30 +138,34 @@ export default function Registration({ setToken }) {
         {successMessage()}
       </div>
 
-      <form>
-        <h3>Create your account</h3>
-        <label for="first">
-          First name* 
-          <input value={first} className="input" onChange={handleFirst} type="text" name="first"/>
-        </label>
-        <label for="last">
-          Last name*
-          <input value={last} className="input" onChange={handleLast} type="text" name="last"/>
-        </label>
-        <label for="email">
-          Email*
-          <input value={email} className="input" onChange={handleEmail} type="email" name="email"/>
-        </label>
-        <label for="username">
-          Username*
-          <input value={username} className="input" onChange={handleUsername} type="text" name="username"/>
-        </label>
-        <label for="password">
-          Password*
-          <input value={password} className="input" onChange={handlePassword} type="text" name="password"/>
-        </label>
-        <button onClick={handleSubmit} className="btn" type="submit">Submit</button>
-      </form>
+        <h2 className="subtitle">Create your account</h2>
+        <div className="input-container ic1">
+          <input value={first} className="input" onChange={handleFirst} type="text" id="first"/>
+          <div className="cut"></div>
+          <label for="first" className="placeholder">First name</label>
+        </div>
+        <div className="input-container ic2">
+          <input value={last} className="input" onChange={handleLast} type="text" id="last"/>
+          <div className="cut"></div>
+          <label for="last" className="placeholder">Last name</label>
+        </div>
+        <div className="input-container ic2">
+          <input value={email} className="input" onChange={handleEmail} type="email" id="email"/>
+          <div className="cut"></div>
+          <label for="email" className="placeholder">Email</label>
+        </div>
+        <div className="input-container ic2">
+          <input value={username} className="input" onChange={handleUsername} type="text" id="username"/>
+          <div className="cut"></div>
+          <label for="username" className="placeholder">Username</label>
+        </div>
+        <div className="input-container ic2">
+          <input value={password} className="input" onChange={handlePassword} type="text" id="password"/>
+          <div className="cut"></div>
+          <label for="password" className="placeholder">Password</label>
+        </div>
+        <button onClick={handleSubmit} className="submit" type="submit">Submit</button>
+      </div>
     </div>
   );
 }
