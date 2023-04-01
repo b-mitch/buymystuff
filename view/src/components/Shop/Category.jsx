@@ -30,7 +30,7 @@ export default function Hair({ setSearch }) {
   const productsList = products.map((product) => {
     return (
       <div className="product" key={product.name}>
-        <Link value={product.name} onClick={() => handleClick(product.name)} to={`../product/${product.name.replace(/\s+/g, '')}`}>
+        <Link value={product.name} onClick={() => handleClick(product.name)} to={`../product/${product.name}`}>
           <img src={`../img/${product.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product.name}`}/>
           <p>{product.name}</p>
         </Link>

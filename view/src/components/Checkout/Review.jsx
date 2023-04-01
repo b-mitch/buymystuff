@@ -64,15 +64,15 @@ export default function Review({
           <div className='page-history'><Link to='../shipping'>&lt;Shipping</Link>
           </div>
           <div className="review">
-            <h2>Review and Pay</h2>
+            <h1>Review and Pay</h1>
             <div className='summary-container'>
               <div className='summary-card'>
-                <h3>Shipping to:</h3>
+                <h2>Shipping to:</h2>
                 <p>{inputFields.first} {inputFields.last}<br/>
                 {inputFields.shippingAddress}<br/>
                 {inputFields.shippingCity}, {inputFields.shippingState} {inputFields.shippingZip}</p>
                 <Link to='../shipping'>Change shipping address</Link>
-                <h3>Shipping method:</h3>
+                <h2>Shipping method:</h2>
                 <p>Standard shipping - FREE<br/>
                 Estimated arrival: 5 business days</p> 
               </div>
@@ -83,8 +83,8 @@ export default function Review({
                 {cartTotal}
               </div>
               <div className='summary-card'>
-                <h3>Billing</h3>
-                <p>{success ? successMessage() : 'Select the address that matches your card or payment method.'}</p>
+                <h2>Billing</h2>
+                <h3>{success ? successMessage() : 'Select the option that matches your card or payment method.'}</h3>
                 <div className="billing-check">
                   <label>
                     <input 
@@ -131,7 +131,7 @@ export default function Review({
                 </div>
               </div>
               <div className='summary-card'>
-                <h3>Payment options</h3>
+                <h2>Payment options</h2>
                 {clientSecret && (
                   <Elements options={options} stripe={stripePromise}>
                     <CheckoutForm 

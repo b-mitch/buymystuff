@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { getUser } from "../utility/helpers";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/Shop/SearchBar';
 
 export default function Home({ token, search, setSearch }) {
   const [first, setFirst] = useState(null)
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+
+  const params = new URLSearchParams(window.location.search)
+  const searchParam = params.get("search")
+
   useEffect(() => {
+    if(searchParam){
+      setSearch({
+      search: {
+        query: searchParam
+      }
+    })
+      navigate(`product/${searchParam}`)
+    }
     setSearch({
       search: {
         query: '',
@@ -21,8 +34,8 @@ export default function Home({ token, search, setSearch }) {
       setFirst(newFirst);
       setIsLoading(false)
     };
-    
-    fetchData();
+      
+    if(token) fetchData();
   }, [token])
 
   return (

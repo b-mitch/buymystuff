@@ -1,22 +1,21 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getAllProducts } from '../../utility/helpers';
 
 const SearchBar = ({ search, setSearch }) => {
 
   const handleChange = async (e) => {
-    e.preventDefault();
+    const query = e.target.value;
     const products = await getAllProducts();
     const results = products.filter(product => {
-      if (e.target.value === "")      return
+      if (!query) return
       return product.name.toLowerCase().includes(e.target.value.toLowerCase()) || product.category.toLowerCase().includes(e.target.value.toLowerCase())  
     })
-    setSearch({
-      search: {
-        query: e.target.value,
-        list: results
-      }
-    })
+    setSearch({search: {
+      ...search,
+      query: query,
+      list: results
+    }})
   }
 
   const handleClick = (e) => {
@@ -31,12 +30,12 @@ const SearchBar = ({ search, setSearch }) => {
     <div className="search-bar">
       <form>
         <input
+          value={search.query}
           onChange={handleChange}
           type="search"
           id="header-search"
           placeholder="Search for stuff"
           name="search" 
-          autofocus
         />
     </form>
     <ul>

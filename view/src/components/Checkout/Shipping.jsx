@@ -10,6 +10,7 @@ export default function Shipping({
 
   return (
     <div className='checkout'>
+      <h1>Shipping</h1>
       <div className='page-history'><Link to='../../cart'>&lt;Cart</Link>
       </div>
       <div className="contact-shipping">

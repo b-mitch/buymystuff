@@ -45,17 +45,13 @@ nav ul {
   float: right;
 }
 
-nav li {
+li {
   display: inline-block;
   padding: 10px 15px;
 }
 
 nav a {
   padding: 10px 5px;
-}
-
-a {
-  cursor: pointer;
 }
 
 @keyframes fadeInOut {
@@ -373,6 +369,10 @@ td {
   margin: auto;
 }
 
+.contact h2, .shipping h2 {
+  margin-bottom: 10px;
+}
+
 .contact-shipping input, .account-details input {
   margin-bottom: 10px;
   height: 30px;
@@ -398,10 +398,10 @@ table {
 }
 
 .summary-card {
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
-.summary-card h3 {
+.summary-card h2 {
   margin-bottom: 10px;
 }
 
@@ -418,6 +418,10 @@ table {
 
 #billing-form input {
   margin-bottom: 10px;
+}
+
+.billing-check label {
+  padding: 5px;
 }
 
 .logout {
@@ -444,18 +448,28 @@ table {
 
 .account a:-webkit-any-link:hover, 
 .orders a:-webkit-any-link:hover, 
-.order-details a:-webkit-any-link:hover {
-    background: #15172b;
-    color: #08d;
-    box-shadow: 0 0 5px #15172b,
-                0 0 25px #15172b,
-                0 0 50px #15172b,
-                0 0 200px #15172b;
-                border-radius: 20px;
+.order-details a:-webkit-any-link:hover,
+.cart a:-webkit-any-link:hover {
+  background: #15172b;
+  color: #08d;
+  box-shadow: 0 0 5px #15172b,
+              0 0 25px #15172b,
+              0 0 50px #15172b,
+              0 0 200px #15172b;
+              border-radius: 20px;
+}
+
+.search-bar a:-webkit-any-link:hover,
+.page-history a:-webkit-any-link:hover {
+  color: #08d;
+  background: transparent;
+  box-shadow: none;
 }
 
 .orders a:-webkit-any-link, 
-.order-details a:-webkit-any-link {
+.order-details a:-webkit-any-link,
+.search-bar a:-webkit-any-link,
+.cart a:-webkit-any-link {
   color: black;
   padding: 5px;
 }

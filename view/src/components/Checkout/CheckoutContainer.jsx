@@ -242,7 +242,6 @@ export default function Checkout({ token }) {
 
   return (
     <div className="container">
-      <h1>Checkout</h1>
       <div className="messages">
         {emailErrorMessage()}
         {errorMessage()}

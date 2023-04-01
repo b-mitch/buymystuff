@@ -6,6 +6,7 @@ import Registration from './components/Registration';
 import Login from './components/Login';
 import Category from './components/Shop/Category';
 import Product from './components/Shop/Product';
+import ProductNotFound from './components/Shop/ProductNotFound';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Account from './components/User/Account/Account';
 import Details from "./components/User/Account/Details";
@@ -88,7 +89,8 @@ function App () {
             <Route path="/checkoutlogin" element={<CheckoutLogin setToken={setToken} />} />
           </Route>
           <Route path="/c/:category" element={<Category setSearch={setSearch} />} />
-          <Route path="/product/:id" element={<Product setSearch={setSearch} search={search} token={token}/>} />
+          <Route path="/product/:name" element={<Product setSearch={setSearch} search={search} token={token}/>} />
+          <Route path="/productnotfound" element={<ProductNotFound setSearch={setSearch}/>} />
           <Route path="/cart" element={<Cart token={token} />} />
           <Route path="/checkout/*" element={<CheckoutContainer token={token} />} />
           <Route path="/confirmation" element={<Confirmation />} />
