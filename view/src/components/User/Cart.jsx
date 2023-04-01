@@ -189,7 +189,7 @@ export default function Cart({ token }) {
   }
 
   return (
-    <div className="container">
+    <div className="cart container">
       <h1>Cart</h1>
       <CartItems />
       <div className="align-left">

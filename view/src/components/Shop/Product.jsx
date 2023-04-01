@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getProduct, addToCartDB, addToCartLocal } from '../../utility/helpers';
 
 export default function Product({ setSearch, search, token }) {
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState();
 
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  const {name} = useParams();
+  const navigate = useNavigate();
+
   useEffect(() => {
+    console.log(search)
+    console.log(name)
     const fetchData = async () => {
       let newProductArray = []
-      const newProduct = await 
-      getProduct(search.query);
-      newProductArray.push(newProduct);
+      const response = await 
+      getProduct(name);
+      if(response.error){
+        navigate("/productnotfound")
+      }
+      newProductArray.push(response);
       setProduct(newProductArray);
     };
     
     fetchData();
-  }, [])
+  }, [search])
 
   function resetSuccess() {
     let el = document.getElementById('success');
@@ -100,21 +109,20 @@ export default function Product({ setSearch, search, token }) {
     );
   };
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  
 
-  if(product.length===0) return;
+
+  if(!product) return;
 
   return (
     <div className="container" key={product}>
+      {errorMessage()}
+      {successMessage()}
       <div className="product-page">
-        <h2>{capitalizeFirstLetter(product[0].name)}</h2>
+        <h2>{product[0].name}</h2>
         <img src={`../img/${product[0].name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product[0].name}`}/>
         <h3>{product[0].price}</h3>
         <button value={product[0].name} onClick={handleAdd} type="submit">Add to cart</button>
-          {errorMessage()}
-          {successMessage()}
       </div>
     </div>
   )

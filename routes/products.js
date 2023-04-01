@@ -50,15 +50,13 @@ productsRouter.get('/c/:category', (req, res) => {
   })
 })
 
-productsRouter.get('/:product', (req, res) => {
+productsRouter.get('/:product', async (req, res) => {
   const name = req.params.product;
-  db.query('SELECT * FROM products WHERE name = $1', [name], (error, results) => {
-    if (error) {
-    console.log('error')
-    throw error
-    }
-    res.status(200).json(results.rows[0])
-  })
+  const results = await db.query('SELECT * FROM products WHERE name = $1', [name])
+  if(!results.rows[0]){
+    return res.status(400).send({ error: true, message: "Product does not exist"});
+  }
+  res.status(200).json(results.rows[0])
 })
 
 productsRouter.get('/:product/price', (req, res) => {
