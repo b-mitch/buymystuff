@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getCart, updateCart, getCartTotal, localCartTotal, deleteFromCartDB, getUser } from '../../utility/helpers';
 
-export default function Cart({ token }) {
+export default function Cart({ token, setSearch }) {
   const navigate = useNavigate();
   const [cart, setCart] = useState();
   const [total, setTotal] = useState(null);
@@ -147,7 +147,19 @@ export default function Cart({ token }) {
     } 
   }
 
-  const handleChange = () => {}
+  const handleLink = (product) => {
+    setSearch({
+      search: {
+        query: product
+      }
+    })
+  }
+
+  const CartTotal = () => {
+    if (!cart) return;
+    if (cart.length===0) return;
+    return <h3>Total: ${total}</h3>
+  }
 
   const CartItems = () => {
     if(!cart) return;
@@ -156,17 +168,19 @@ export default function Cart({ token }) {
         <tbody>
           {cart.map((item, i) => {
             return <tr key={item.name.replace(/\s+/g, '')}className='item-card'>
-              <td>
-                {item.name}
+              <td className='first-col'>
+                <Link value={item.name} onClick={() => handleLink(item.name)} to={`../product/${item.name}`}>{item.name}</Link>
               </td>
-              <td>
-                <img src={`../img/${item.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${item.name}`}/>
+              <td> 
+                <div className='second-col'>
+                  <img src={`../img/${item.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${item.name}`}/>
+                </div>
               </td>
               <td>
                 <button onClick={() =>{handleDecrement(i)}} className='amount-btn'>-</button>
               </td>
               <td>
-                <input value={item.amount} onChange={handleChange} className='amount-input' type='number' />
+                <input value={item.amount} className='amount-input' type='number' />
               </td>
               <td>
                 <button onClick={() => {handleIncrement(i)}} className='amount-btn'>+</button>
@@ -177,25 +191,23 @@ export default function Cart({ token }) {
             </tr>
             }
           )}
+          <tr>
+            <td colspan='6'>
+              <div className="cart-total">
+                  <CartTotal />
+                  <button onClick={() => {handleClick()}}>Checkout</button>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     )
-  }
-
-  const CartTotal = () => {
-    if (!cart) return;
-    if (cart.length===0) return;
-    return <h3>Total: ${total}</h3>
   }
 
   return (
     <div className="cart container">
       <h1>Cart</h1>
       <CartItems />
-      <div className="align-left">
-        <CartTotal />
-        <button onClick={() => {handleClick()}}>Checkout</button>
-      </div>
     </div>
   )
 }

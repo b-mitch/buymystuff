@@ -77,7 +77,7 @@ export default function Review({
                 Estimated arrival: 5 business days</p> 
               </div>
               <div className='summary-card'>
-                <div className="cart">
+                <div className="checkoutcart">
                   {cartItems}
                 </div>
                 {cartTotal}

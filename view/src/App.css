@@ -10,6 +10,7 @@ img {
   max-width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 5px;
 }
 
 a:-webkit-any-link {
@@ -277,7 +278,7 @@ h3 {
   margin-left: 10px;
 }
 
-.product {
+.category-grid {
   cursor: pointer;
   padding: 0px 15px;
   border: 0 solid #15172b;
@@ -291,6 +292,12 @@ h3 {
   grid-gap: 5px;
   background-color: #15172b;
   text-align: center;
+  align-items: center;
+}
+
+.category-grid img {
+    height: auto;
+    max-height: 250px;
 }
 
 .category p {
@@ -321,7 +328,7 @@ button:hover{
 
 .product-page img{
   height: 50%;
-  width: 50%
+  width: 50%;
 }
 
 .amount {
@@ -336,8 +343,35 @@ button:hover{
   padding-left: 10px;
 }
 
+.cart-table {
+    margin-top: 20px;
+}
+
 td {
-  padding-top: 20px;
+  vertical-align: middle;
+}
+
+.second-col img{
+    max-height: 200px;
+    min-height: 100px;
+    min-width: 150px;
+    vertical-align: bottom;
+    text-align: left;
+}
+
+.first-col {
+    background-color: #15172b;
+    color: white;
+    border-radius: 10px;
+}
+
+.second-col {
+    padding-left: 0;
+    border-radius: 5px;
+}
+
+.cart-total {
+    text-align: right;
 }
 
 .align-left {
@@ -392,7 +426,7 @@ table {
   font-size: 18px;
 }
 
-.cart img {
+.checkoutcart img {
   height: 200px;
   padding-left: 5px;
 }
@@ -472,6 +506,13 @@ table {
 .cart a:-webkit-any-link {
   color: black;
   padding: 5px;
+}
+
+.first-col a:-webkit-any-link{
+    background-color: #15172b;
+    color: white;
+    border-radius: 10px;
+    box-shadow: none;
 }
 
 .orders table, .order-details table {

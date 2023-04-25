@@ -31,8 +31,10 @@ export default function Hair({ setSearch }) {
     return (
       <div className="product" key={product.name}>
         <Link value={product.name} onClick={() => handleClick(product.name)} to={`../product/${product.name}`}>
+        <div className="category-grid">
           <img src={`../img/${product.name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product.name}`}/>
           <p>{product.name}</p>
+        </div>
         </Link>
       </div>
     )

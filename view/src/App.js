@@ -91,7 +91,7 @@ function App () {
           <Route path="/c/:category" element={<Category setSearch={setSearch} />} />
           <Route path="/product/:name" element={<Product setSearch={setSearch} search={search} token={token}/>} />
           <Route path="/productnotfound" element={<ProductNotFound setSearch={setSearch}/>} />
-          <Route path="/cart" element={<Cart token={token} />} />
+          <Route path="/cart" element={<Cart token={token} setSearch={setSearch} />} />
           <Route path="/checkout/*" element={<CheckoutContainer token={token} />} />
           <Route path="/confirmation" element={<Confirmation />} />
           <Route element={<ProtectedRoutes token={token} />}>
