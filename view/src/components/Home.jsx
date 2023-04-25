@@ -38,6 +38,8 @@ export default function Home({ token, search, setSearch }) {
     if(token) fetchData();
   }, [token])
 
+  if (!search) return;
+
   return (
     <div className="container">
         <SearchBar setSearch={setSearch} search={search}/>

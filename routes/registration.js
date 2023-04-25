@@ -38,11 +38,21 @@ registerRouter.post('/', [
   const totalUsers = Number(selectObject.rows[0].count);
   const id = totalUsers+1;
 
-  const first = validator.escape(req.body.first); 
-  const last = validator.escape(req.body.last); 
-  const email = validator.escape(req.body.email); 
-  const username = validator.escape(req.body.username); 
-  const password = validator.escape(req.body.password);
+  let first = req.body.first; 
+  let last = req.body.last; 
+  let email = req.body.email; 
+  let username = req.body.username; 
+  let password = req.body.password;
+
+  if (!first || !last || !email || !username || !password) {
+    return res.status(400).send({ error: true, message: "Missing one or more required fields"});
+  }
+
+  first = validator.escape(first); 
+  last = validator.escape(last); 
+  email = validator.escape(email); 
+  username = validator.escape(username); 
+  password = validator.escape(password);
 
   try {
     const selectText = 'SELECT * FROM users WHERE username = $1'

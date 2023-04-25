@@ -58,35 +58,35 @@ accountRouter.put('/details', [
   try {
     if(first) {
     first = validator.escape(first); 
-    results = await db.query('update users set first_name = $1 where id = $2 RETURNING *', [first, id]);
+    results = await db.query('update users set first_name = $1 where id = $2 RETURNING first_name', [first, id]);
   }
     if(last) { 
       last = validator.escape(last); 
-      results = await db.query('update users set last_name = $1 where id = $2 RETURNING *', [last, id]);
+      results = await db.query('update users set last_name = $1 where id = $2 RETURNING last_name', [last, id]);
     }
     if(email) {
       email = validator.escape(email);
-      results = await db.query('update users set email = $1 where id = $2 RETURNING *', [email, id]);
+      results = await db.query('update users set email = $1 where id = $2 RETURNING email', [email, id]);
     }
     if(username) {
       username = validator.escape(username);
-      results = await db.query('update users set username = $1 where id = $2 RETURNING *', [username, id]);
+      results = await db.query('update users set username = $1 where id = $2 RETURNING username', [username, id]);
     }
     if(address) {
       address = validator.escape(address);
-      results = await db.query('update users set address = $1 where id = $2 RETURNING *', [address, id]);
+      results = await db.query('update users set address = $1 where id = $2 RETURNING address', [address, id]);
     }
     if(city) {
       city = validator.escape(city);
-      results = await db.query('update users set city = $1 where id = $2 RETURNING *', [city, id]);
+      results = await db.query('update users set city = $1 where id = $2 RETURNING city', [city, id]);
     }
     if(state) {
       state = validator.escape(state);
-      results = await db.query('update users set state = $1 where id = $2 RETURNING *', [state, id]);
+      results = await db.query('update users set state = $1 where id = $2 RETURNING state', [state, id]);
     }
     if(zip) {
       zip = validator.escape(zip);
-      results = await db.query('update users set zip = $1 where id = $2 RETURNING *', [zip, id]);
+      results = await db.query('update users set zip = $1 where id = $2 RETURNING zip', [zip, id]);
     }
     await res.status(200).json(results.rows[0])
   } catch (err) {
@@ -114,15 +114,15 @@ accountRouter.put('/password', [check('password').isLength({ max: 20, min: 5 })]
   }
 
   if(password) {
-  const updateText = 'update users set password = $1 where username = $2 RETURNING *'
+  const updateText = 'update users set password = $1 where username = $2'
   const hashedPassword = await passwordHasher(password, 10);
   const values = await [hashedPassword, username];
-  await db.query(updateText, values, (error, results) => {
+  await db.query(updateText, values, (error) => {
     if (error) {
     console.log('error')
     throw error
     }
-    res.status(200).json(results.rows[0])
+    res.status(200).send({ error: false, message: "Password updated successfully"})
     }) 
   }
 })

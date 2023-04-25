@@ -32,15 +32,6 @@ const nologinTotal = async (idArray) => {
   return(total)
 }
 
-checkoutRouter.get('/', async (req, res) => {
-  const userID = req.session.user.id;
-  const results = await db.query('SELECT * FROM carts WHERE user_id = $1', [userID]);
-  const cart = results.rows;
-  const totalObject = await db.query('SELECT SUM(product_amount*product_price) AS total FROM carts WHERE user_id = $1', [userID]);
-  const total = totalObject.rows[0];
-  cart.push(total);
-  res.status(200).send(cart);
-});
 
 checkoutRouter.put('/', async (req, res) => {
 //Get products
@@ -119,13 +110,12 @@ checkoutRouter.delete('/', async (req, res) => {
     const selectObject =  await db.query('SELECT id FROM users WHERE username = $1', [user]);
     userID = selectObject.rows[0].id;
     await db.query('DELETE FROM carts WHERE user_id = $1', [userID]);
-    return res.status(204).send('product deleted from cart')
+    return res.status(200).send({ error: false, message: "Items deleted from user cart" })
   }
-  return res.status(204).send('no login carts deleted automatically daily')
+  return res.status(200).send({ error: false, message: "no-login carts deleted from database" })
 })
 
 checkoutRouter.post("/create-payment-intent", async (req, res) => {
-  console.log("setting up stripe payment intent")
   const token = req.headers.authorization;
   let userID;
   if(token!=='1'){

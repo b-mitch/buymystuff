@@ -71,8 +71,8 @@ productsRouter.get('/:product/price', (req, res) => {
   })
 })
 
-productsRouter.post('/:name', async (req, res) => {
-  const name = req.params.name;
+productsRouter.post('/:product', async (req, res) => {
+  const name = req.params.product;
   const amount = req.body.amount;
 
   let userID;

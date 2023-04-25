@@ -4,10 +4,8 @@ info:
   version: 3.0.0
   description: Codecademy e-commerce project
 paths:
-  /home:
-    summary: home page
   /login:
-    summary: login page
+    summary: verify user credentials and create login token
     post:
       summary: 'Verifies user credentials and starts user session '
       description: >-
@@ -15,12 +13,33 @@ paths:
         page
       operationId: post_login
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: successful login
+          content:
+            application/json:
+              examples:
+                Login:
+                  value: |-
+                    {
+                        "error": false,
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE2ODIzNjAzMDQsImV4cCI6MTY4MjQ0NjcwNH0.k2DlwvoiVpL-h9OWdWVB14_1a9X1foQAHcNlyVDmP0E",
+                        "message": "Logged in sucessfully"
+                    }
+        '400':
+          description: invalid password
+          content:
+            application/json:
+              examples:
+                Login:
+                  value: |-
+                    {
+                        "error": true,
+                        "message": "Invalid password"
+                    }
       tags:
         - Login
   /register:
-    summary: register new user page
+    summary: creates new user and authorizes session with token
     post:
       summary: Posts a new user to database
       description: >-
@@ -28,20 +47,58 @@ paths:
         password using bcrypt
       operationId: post_register
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: new user created and token generated
+          content:
+            application/json:
+              examples:
+                Register:
+                  value: |-
+                    {
+                        "error": false,
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1jdGVzdCIsImlhdCI6MTY4MjM2MTExMywiZXhwIjoxNjgyNDQ3NTEzfQ.YAbd2MXGRuonBrIHi-h60ieSUXMM8kTFr0_CB4PD8X0",
+                        "message": "User created"
+                    }
+        '400':
+          description: missing required regsitration fields
+          content:
+            application/json:
+              examples:
+                Register:
+                  value: |-
+                    {
+                        "error": true,
+                        "message": "Missing one or more required fields"
+                    }
       tags:
         - Register
   /account:
-    summary: user account page
+    summary: accesses user account info
     description: user must first login to access
     get:
       summary: Gets user data
       description: Gets user data based on session data after use logs in
       operationId: get_account
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: User account info
+          content:
+            application/json:
+              examples:
+                Account:
+                  value: |-
+                    {
+                        "id": 7,
+                        "first_name": "Testie",
+                        "last_name": "McTesterson",
+                        "email": "testing@gmail.com",
+                        "username": "mctest",
+                        "password": "$2b$10$sxFRk9dJ8dlZ9maFaohajeqWslY3m4MofX4a9o8lwhzQEijA7alpm",
+                        "address": null,
+                        "city": null,
+                        "state": null,
+                        "zip": null
+                    }
       tags:
         - Account
   /account/details:
@@ -54,8 +111,16 @@ paths:
         the users table
       operationId: put_details
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: account details (city) updated successfully
+          content:
+            application/json:
+              examples:
+                Account Details:
+                  value: |-
+                    {
+                        "city": "atlanta"
+                    }
       tags:
         - Account
   /account/password:
@@ -66,34 +131,100 @@ paths:
       description: Uses req.body to change user's password in the users database
       operationId: put_password
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: password updated successfully
+          content:
+            application/json:
+              examples:
+                Account Password:
+                  value: |-
+                    {
+                        "error": false,
+                        "message": "Password updated successfully"
+                    }
       tags:
         - Account
+  /cart/total:
+    summary: cart total
+    description: allows UI to access and display cart total
+    get:
+      summary: Get cart total
+      description: allows UI to access cart total cost
+      operationId: get_cart_total
+      responses:
+        '200':
+          description: cart total for current user
+          content:
+            application/json:
+              examples:
+                Cart Total:
+                  value: '20.00'
+      tags:
+        - Cart
   /cart:
-    summary: Get and modify cart
+    summary: Get cart
     description: user can see cart contents and modify them but must be logged in first
     get:
       summary: Get cart details
       description: Shows user cart contents
       operationId: get_cart
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: User cart
+          content:
+            application/json:
+              examples:
+                Cart:
+                  value: |-
+                    [
+                        {
+                            "id": "9167e7cc-6ffd-4bbf-81c6-fa9f0cfe70b0",
+                            "amount": 5,
+                            "name": "face wash"
+                        }
+                    ]
       tags:
         - Cart
+  /cart/{id}:
     put:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The cart ID
       summary: Make changes to cart
       description: >-
         Allows user to make changes with req.body to the cart rows in the cart
         table that are linked to their user id
       operationId: put_cart
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: Update amount for cart by id
+          content:
+            application/json:
+              examples:
+                Cart By ID:
+                  value: |-
+                    {
+                        "id": "9167e7cc-6ffd-4bbf-81c6-fa9f0cfe70b0",
+                        "user_id": 7,
+                        "product_id": "5ff4dad2-b26f-473b-9f4f-89aede9a005a",
+                        "amount": 3
+                    }
       tags:
         - Cart
     delete:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The cart ID
       summary: Delete a product from cart
       description: >-
         Allows deletion of product from the carts table via selecting a
@@ -105,19 +236,10 @@ paths:
       tags:
         - Cart
   /checkout:
-    summary: Get cart and make checkout related changes
+    summary: Make checkout related changes
     description: >-
       user is able to see cart and submit orders which posts to orders table,
       deletes items from cart & alters product inventories
-    get:
-      summary: Get cart contents
-      description: Queries carts table to display carts rows the belong to the user
-      operationId: get_checkout
-      responses:
-        default:
-          description: Default error sample response
-      tags:
-        - Checkout
     put:
       summary: Put changes to product inventory
       description: >-
@@ -125,8 +247,22 @@ paths:
         an order is submitted
       operationId: put_checkout
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: inventory reduced by 3 for items in user cart (face wash)
+          content:
+            application/json:
+              examples:
+                Checkout:
+                  value: |-
+                    [
+                        {
+                            "id": "5ff4dad2-b26f-473b-9f4f-89aede9a005a",
+                            "name": "face wash",
+                            "category": "face",
+                            "price": "$4.00",
+                            "inventory": 32
+                        }
+                    ]
       tags:
         - Checkout
     post:
@@ -134,8 +270,16 @@ paths:
       description: Adds all items from the users cart to the orders table
       operationId: post_checkout
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: New order created
+          content:
+            application/json:
+              examples:
+                Checkout:
+                  value: |-
+                    {
+                        "id": "idc459bd9aa3e98"
+                    }
       tags:
         - Checkout
     delete:
@@ -143,8 +287,38 @@ paths:
       description: Deletes all items from the user's cart
       operationId: delete_checkout
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: items deleted from user's cart
+          content:
+            application/json:
+              examples:
+                Checkout:
+                  value: |-
+                    {
+                        "error": false,
+                        "message": "Items deleted from user cart"
+                    }
+      tags:
+        - Checkout
+  /checkout/create-payment-intent:
+    summary: connects checkout functionality with stripe api
+    post:
+      summary: create a stripe payment intent
+      description: >-
+        connects to stripe api with a payment intent allowing users to submit
+        payment via the stripe api
+      operationId: post_create-payment-intent
+      responses:
+        '200':
+          description: client secret generated for Stripe api
+          content:
+            application/json:
+              examples:
+                Checkout Stripe:
+                  value: |-
+                    {
+                        "clientSecret": "pi_3N0pfnDoFFCpZ0bn3KE7kwDp_secret_ala2xmaeZkPah4lJiBZ8fTniL"
+                    }
       tags:
         - Checkout
   /orders:
@@ -155,8 +329,54 @@ paths:
       description: Queries the orders table of the database based on user id
       operationId: get_orders
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: Order history retrieved
+          content:
+            application/json:
+              examples:
+                Orders:
+                  value: |-
+                    [
+                        {
+                            "id": "idc459bd9aa3e98",
+                            "date": "2023-04-24T07:00:00.000Z",
+                            "total": "$12.00"
+                        }
+                    ]
+      tags:
+        - Orders
+  /orders/{id}:
+    summary: Get order by id
+    description: retrieves order by id from the orders table of the database
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The order ID
+      summary: Get order data
+      description: Queries the orders table of the database based on user id
+      operationId: get_orders_byid
+      responses:
+        '200':
+          description: order details by id retrieved
+          content:
+            application/json:
+              examples:
+                Order Details:
+                  value: |-
+                    [
+                        {
+                            "id": "idc459bd9aa3e98",
+                            "date": "2023-04-24T07:00:00.000Z",
+                            "name": "face wash",
+                            "amount": 3,
+                            "price": "$4.00"
+                        }
+                    ]
       tags:
         - Orders
   /products:
@@ -166,8 +386,36 @@ paths:
       description: Queries entire products table of the database
       operationId: get_products
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: All products retrieved from database
+          content:
+            application/json:
+              examples:
+                Products:
+                  value: |-
+                    [
+                        {
+                            "id": "fce0b5c5-e362-400c-8071-6e874b705b42",
+                            "name": "shampoo",
+                            "category": "hair",
+                            "price": "$2.00",
+                            "inventory": 485
+                        },
+                        {
+                            "id": "71ad7d3a-90a0-4d73-be26-86de1f2a37a6",
+                            "name": "conditioner",
+                            "category": "hair",
+                            "price": "$2.50",
+                            "inventory": 483
+                        },
+                        {
+                            "id": "293941d9-aabb-4e8f-8bc1-4706d992ad67",
+                            "name": "body wash",
+                            "category": "body",
+                            "price": "$1.00",
+                            "inventory": 497
+                        }
+                    ]
       tags:
         - Products
     post:
@@ -175,12 +423,24 @@ paths:
       description: Adds new product to the products table
       operationId: post_products
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: New product added
+          content:
+            application/json:
+              examples:
+                Products:
+                  value: |-
+                    {
+                        "id": "5ff4dad2-b26f-473b-9f4f-89aede9a005a",
+                        "name": "face wash",
+                        "category": "face",
+                        "price": "$4.00",
+                        "inventory": 35
+                    }
       tags:
         - Products
-  /products?category=hair:
-    summary: Get products filtered by category
+  /products/c:
+    summary: Get all products and post new ones
     get:
       parameters:
         - in: query
@@ -188,49 +448,112 @@ paths:
           schema:
             type: string
           description: The category to filter products by
-      summary: Get product by category
-      description: Filters the products by the category column of the products table
-      operationId: get_products_by_category
+      summary: Get products by category
+      description: Queries database and returns products that match category filter
+      operationId: get_products_bycategory
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: Products by category (face)
+          content:
+            application/json:
+              examples:
+                Products By Category:
+                  value: |-
+                    [
+                        {
+                            "id": "5ff4dad2-b26f-473b-9f4f-89aede9a005a",
+                            "name": "face wash",
+                            "category": "face",
+                            "price": "$4.00",
+                            "inventory": 35
+                        }
+                    ]
       tags:
         - Products
-  /products/{id}:
-    summary: get products by id and post them to cart
+  /products/{product}:
+    summary: get products by name and post them to cart
     get:
       parameters:
         - in: path
-          name: id
+          name: product
           required: true
           schema:
-            type: integer
+            type: string
             minimum: 1
-          description: The product ID
-      summary: Get product by ID
-      description: Query database for product that matches req.params
-      operationId: get_product_by_id
+          description: The product name
+      summary: Get product by name
+      description: Query database for product info
+      operationId: get_product_byname
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: Products by name (face wash)
+          content:
+            application/json:
+              examples:
+                Products By Name:
+                  value: |-
+                    [
+                        {
+                            "id": "5ff4dad2-b26f-473b-9f4f-89aede9a005a",
+                            "name": "face wash",
+                            "category": "face",
+                            "price": "$4.00",
+                            "inventory": 35
+                        }
+                    ]
       tags:
         - Products
     post:
       parameters:
         - in: path
-          name: id
+          name: product
           required: true
           schema:
-            type: integer
+            type: string
             minimum: 1
-          description: The product ID
+          description: The product name
       summary: Post product to cart
       description: >-
         Inserts new row for the product in the carts table with user id and
         amount
-      operationId: post_product_by_id
+      operationId: post_product_byname
       responses:
-        default:
-          description: Default error sample response
+        '200':
+          description: added product (face wash) to user cart
+          content:
+            application/json:
+              examples:
+                Products by Name:
+                  value: |-
+                    {
+                        "id": "9167e7cc-6ffd-4bbf-81c6-fa9f0cfe70b0",
+                        "user_id": 7,
+                        "product_id": "5ff4dad2-b26f-473b-9f4f-89aede9a005a",
+                        "amount": 5
+                    }
+      tags:
+        - Products
+  /products/{product}/price:
+    summary: access product price by name
+    get:
+      parameters:
+        - in: path
+          name: product
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: The product name
+      summary: Get product price by name
+      description: Query database for product price that matches name
+      operationId: get_productprice_byname
+      responses:
+        '200':
+          description: Product (face wash) price
+          content:
+            application/json:
+              examples:
+                Product Price:
+                  value: '"4.00"'
       tags:
         - Products
