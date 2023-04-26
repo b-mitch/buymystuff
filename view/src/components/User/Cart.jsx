@@ -113,7 +113,6 @@ export default function Cart({ token, setSearch }) {
   }
 
   const handleClick = async () => {
-    if(!cart || cart.length===0) return alert("No Items in Cart!")
     if(token) {
       const user = await getUser(token);
       sessionStorage.setItem('checkout', JSON.stringify({
@@ -195,7 +194,9 @@ export default function Cart({ token, setSearch }) {
             <td colspan='6'>
               <div className="cart-total">
                   <CartTotal />
-                  <button onClick={() => {handleClick()}}>Checkout</button>
+                  <button style={{
+          display: !cart || cart.length===0 ? 'none' : '',
+        }} onClick={() => {handleClick()}}>Checkout</button>
               </div>
             </td>
           </tr>

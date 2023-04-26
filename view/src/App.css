@@ -78,11 +78,27 @@ nav a {
   margin: 10px;
   padding: 10px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .search-bar input {
   border-radius: 20px;
   padding: 5px;
+}
+
+.search-auto {
+  top: 38px;
+  position: absolute;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, .95);
+  border: thin solid #15172b;;
+}
+
+.search-auto li {
+  display: block;
 }
 
 h1 {
@@ -473,6 +489,11 @@ table {
 
 .account {
   margin-top: 80px;
+}
+
+.account-links {
+  margin-top: 20px;
+  font-size: 18px;
 }
 
 .account a:-webkit-any-link {

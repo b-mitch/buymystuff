@@ -24,7 +24,6 @@ export default function Account({ token }) {
     <div className="account container">
       <div className="account-header">
         <h1>Hi, {first}</h1>
-        <h2>Member number: {id}</h2>
       </div>
       <div className="account-links">
           <Link to='/account/orders'>Order history</Link>
