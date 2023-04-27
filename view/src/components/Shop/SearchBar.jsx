@@ -26,6 +26,21 @@ const SearchBar = ({ search, setSearch }) => {
     })
   }
 
+  const Results = () => {
+    if (!search || !search.list) return;
+    if (!search.list.length) return;
+    return (
+      <div className='search-auto'>
+        <ul>
+          {search.list.map(product => {
+            return <li key={product.name.replace(/\s+/g, '')}><Link value={product.name} onClick={handleClick} to={`/product/${product.name.replace(/\s+/g, '')}`}>{product.name}</Link></li>
+          })}
+        </ul>
+      </div>
+    )
+   
+  }
+
   return(
     <div className="search-bar">
       <form>
@@ -38,15 +53,7 @@ const SearchBar = ({ search, setSearch }) => {
           name="search" 
         />
       </form>
-      <div style={{
-          display: !search || !search.list.length ? 'none' : '',
-        }}className='search-auto'>
-        <ul>
-          {search.list.map(product => {
-            return <li key={product.name.replace(/\s+/g, '')}><Link value={product.name} onClick={handleClick} to={`/product/${product.name.replace(/\s+/g, '')}`}>{product.name}</Link></li>
-          })}
-        </ul>
-      </div>
+      <Results />
     </div>
   )
 };
