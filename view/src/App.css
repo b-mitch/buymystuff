@@ -415,18 +415,37 @@ td {
   color: #15172b;
 }
 
+.contact-shipping { 
+  margin: 20px auto;
+  width: 75%;
+  max-width: 600px;
+  background-color: #08d;
+  padding: 10px;
+  border-radius: 50px;
+  color: #15172b;
+}
+
 .contact, .shipping, .account-details {
-  width: 50%;
+  width: 75%;
   margin: auto;
 }
 
 .contact h2, .shipping h2 {
   margin-bottom: 10px;
+  color: white;
 }
 
 .contact-shipping input, .account-details input {
   margin-bottom: 10px;
   height: 30px;
+  background-color: #15172b;
+}
+
+.contact-shipping label {
+  color: #15172b;
+  padding: 2px;
+  float: left;
+  margin-left: 5px;
 }
 
 .checkout-btn {
