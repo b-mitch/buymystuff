@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import {Link, useParams, useNavigate } from 'react-router-dom';
 import { getProduct, addToCartDB, addToCartLocal } from '../../utility/helpers';
 
 export default function Product({ setSearch, search, token }) {
@@ -118,6 +118,8 @@ export default function Product({ setSearch, search, token }) {
     <div className="container" key={product}>
       {errorMessage()}
       {successMessage()}
+      <div className='page-history'><Link to='/'>/ home </Link><Link to={`/c/${product[0].category}`}>/ {product[0].category}</Link>
+      </div>
       <div className="product-page">
         <h2>{product[0].name}</h2>
         <img src={`../img/${product[0].name.replace(/\s+/g, '')}.jpg`} alt={`Container of ${product[0].name}`}/>

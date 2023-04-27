@@ -71,6 +71,7 @@ nav a {
   position: relative;
   margin: 60px 10px;
   text-align: center;
+  padding-top: 10px;
 }
 
 .search-bar {
@@ -165,7 +166,7 @@ h3 {
 }
 
 .registration {
-  margin-top: 250px;
+  margin-top: 220px;
   height: 700px;
 }
 

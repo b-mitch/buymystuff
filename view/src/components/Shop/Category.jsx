@@ -42,6 +42,8 @@ export default function Hair({ setSearch }) {
 
   return (
     <div className="container">
+      <div className='page-history'><Link to='/'>/ home</Link>
+      </div>
       <h1>{capitalizeFirstLetter(category)} Products</h1>
       <div className="products-container">
         {productsList}
