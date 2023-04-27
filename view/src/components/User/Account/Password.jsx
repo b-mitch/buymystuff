@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import { updatePassword } from "../../../utility/helpers";
 
 export default function Password({ token }) {
@@ -80,14 +81,16 @@ export default function Password({ token }) {
   };
 
   return (
-    <div className="update-details">
+    <div className="container">
+      <div className='page-history'><Link to='/account'>&lt; account</Link>
+      </div>
       <div className="messages">
         {passwordErrorMessage()}
         {updateError()}
         {successMessage()}
       </div>
-      <form>
-        <h1>Edit password</h1>
+      <h1>Edit password</h1>
+      <div className="account-details">
         <label for="password">
           Current password*
           <input value={password} className="input" onChange={handlePassword} type="text" name="password"/>
@@ -97,7 +100,7 @@ export default function Password({ token }) {
             <input value={newPassword} className="input" onChange={handleNewPassword} type="text" name="new-password"/>
         </label>
         <button onClick={handleUpdate} className="btn" type="submit">Update</button>
-      </form>
+      </div>
     </div>
   )
 }
