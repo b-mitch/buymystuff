@@ -167,12 +167,76 @@ h3 {
 
 .registration {
   margin-top: 220px;
-  height: 700px;
+  max-height: 800px;
 }
 
 .registration h1 {
   margin-top: 5px;
   margin-bottom: 20px;
+}
+
+.password {
+  color: white;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.check {
+  cursor: pointer;
+  margin-left: 25px;
+  font-size: 14px;
+}
+
+.check input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 53px;
+  margin-left: 0px;
+  left: 5px;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+  border-radius: 2px;
+}
+
+.check:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.check input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.check input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.check .checkmark:after {
+  left: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.password:hover .checkbox {
+  background-color: #ccc;
 }
 
 .title {
@@ -273,7 +337,7 @@ h3 {
   cursor: pointer;
   font-size: 18px;
   height: 50px;
-  margin-top: 38px;
+  margin-top: 50px;
   outline: 0;
   text-align: center;
   width: 100%;
@@ -415,18 +479,37 @@ td {
   color: #15172b;
 }
 
+.contact-shipping { 
+  margin: 20px auto;
+  width: 75%;
+  max-width: 600px;
+  background-color: #08d;
+  padding: 10px;
+  border-radius: 50px;
+  color: #15172b;
+}
+
 .contact, .shipping, .account-details {
-  width: 50%;
+  width: 75%;
   margin: auto;
 }
 
 .contact h2, .shipping h2 {
   margin-bottom: 10px;
+  color: white;
 }
 
 .contact-shipping input, .account-details input {
   margin-bottom: 10px;
   height: 30px;
+  background-color: #15172b;
+}
+
+.contact-shipping label {
+  color: #15172b;
+  padding: 2px;
+  float: left;
+  margin-left: 5px;
 }
 
 .checkout-btn {

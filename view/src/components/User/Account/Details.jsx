@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import { getUser, updateDetails } from "../../../utility/helpers";
 
 export default function Details({ token }) {
@@ -146,6 +147,8 @@ export default function Details({ token }) {
 
   return (
     <div className="container">
+      <div className='page-history'><Link to='/account'>&lt; account</Link>
+      </div>
       <div className="messages">
         {emailErrorMessage()}
         {updateError()}
