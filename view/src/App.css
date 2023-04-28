@@ -175,6 +175,69 @@ h3 {
   margin-bottom: 20px;
 }
 
+.password {
+  color: white;
+  margin-left: 20px;
+}
+
+.check {
+  cursor: pointer;
+  margin-left: 30px;
+  font-size: 14px;
+}
+
+.check input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 53px;
+  margin-left: 5px;
+  left: 5px;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+  border-radius: 2px;
+}
+
+.check:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.check input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.check input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.check .checkmark:after {
+  left: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.password:hover .checkbox {
+  background-color: #ccc;
+}
+
 .title {
   color: #eee;
   font-family: sans-serif;
@@ -273,7 +336,7 @@ h3 {
   cursor: pointer;
   font-size: 18px;
   height: 50px;
-  margin-top: 38px;
+  margin-top: 40px;
   outline: 0;
   text-align: center;
   width: 100%;

@@ -14,6 +14,7 @@ export default function Registration({ setToken }) {
   const [error, setError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+\.[a-zA-Z_.+-]+$/, "gm");
 
@@ -165,6 +166,20 @@ export default function Registration({ setToken }) {
           <input value={password} className="input" onChange={handlePassword} type="PASSWORD" id="password"/>
           <div className="cut"></div>
           <label for="password" className="placeholder">Password</label>
+          <label className='password check'> show password
+            <input 
+              type="checkbox" 
+              name='show' 
+              className="checkbox"
+              onChange={() => {setShowPassword(!showPassword)
+              }}/>
+            <span class="checkmark"></span>
+          </label>
+          <div style={{
+          display: showPassword ? '' : 'none',
+        }}className="password">
+            <p>{password}</p>
+          </div>
         </div>
         <button onClick={handleSubmit} className="submit" type="submit">Submit</button>
       </div>
