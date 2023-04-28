@@ -54,6 +54,13 @@ registerRouter.post('/', [
   username = validator.escape(username); 
   password = validator.escape(password);
 
+  let emailExists = await db.query('SELECT * FROM users WHERE email = $1', [email]) 
+  emailExists = emailExists.rows
+  if (emailExists?.length) {
+    console.log("email already exists!");
+    return res.status(400).send({ error: true, message: "The provided email is linked to an existing account."});
+  }
+
   try {
     const selectText = 'SELECT * FROM users WHERE username = $1'
     const values = [username];
@@ -73,7 +80,6 @@ registerRouter.post('/', [
       let newUser = await db.query(insertText, values)
       let newUsername = await newUser.rows[0].username;
       const token = generateToken({ username: newUsername })
-      console.log(token)
       return res.status(200).send({ error: false, token, message: "User created" })
       }) 
   } catch (err) {
