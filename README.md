@@ -18,7 +18,7 @@ Please follow the following steps to set up the app locally.
 <br>3. Open your favorite Postgres client and create a new database for your e-commerce app. Import bms.sql from the db folder of the BMS repository.
 <br> ![Set Up Client](./readme_images/client.png)
 <br>
-<br>4. Open your favorite code editor and create a .env file with the following format: 
+<br>4. Open the BMS main folder in your favorite code editor and create a .env file with the following format: 
 <br>DB_USER=YOUR DATABASE USERNAME
 <br>DB_PASSWORD=YOUR DATABASE PASSWORD
 <br>DB_HOST=localhost (make sure this matches your database)
