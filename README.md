@@ -24,25 +24,25 @@ Please follow the following steps to set up the app locally.
 <br>DB_HOST=localhost (make sure this matches your database)
 <br>DB_POST=5432 (make sure this matches your database)
 <br>DB_DATABASE=YOUR DATABASE NAME
-PORT=4000
+<br>PORT=4000
 <br>TOKEN_SECRET=ANYTHING
-<br>STRIPE_KEY=YOUR STRIPE KEY(see step 9)
+<br>STRIPE_KEY=YOUR STRIPE KEY(see step 5)
 <br> ![Set Up .env](./readme_images/env.png)
 <br>
-<br>5. Make sure Node.js is installed and up to date
+<br>5. Create a Stripe account and add the secret test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, reveal the test key and copy & paste it to your .env file.
+<br> ![Connect Stripe](./readme_images/stripe.png)
+<br>
+<br>6. Make sure [Node.js](https://nodejs.org/en) is installed and up to date
 <br> ![Check Node](./readme_images/node.png)
 <br>
-<br>6. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
+<br>7. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
 <br> ![Install Dependencies](./readme_images/dependencies.png)
 <br>
-<br>7. Run the back-end locally.
+<br>8. Run the back-end locally.
 <br> ![Run the Back-End](./readme_images/backend.png)
 <br>
-<br>8. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
+<br>9. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Install dependencies and run the front-end locally.
 <br> ![Run the Front-End](./readme_images/frontend.png)
-<br>
-<br>9. Create a Stripe account and add the secret test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, reveal the test key and copy & paste it to your .env file.
-<br> ![Connect Stripe](./readme_images/stripe.png)
 <br>
 <br>10. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
 <br> ![Enjoy!](./readme_images/bms.png)
@@ -50,9 +50,9 @@ PORT=4000
 ### Requirements
 The following packages and programs are required for the app to work.
 - PostgreSQL - download from the Postgres site [here](https://www.postgresql.org/)
-- Node.js v16.18.0+ - download from the Node site [here] (https://nodejs.org/en)
+- Node.js v16.18.0+ - download from the Node site [here](https://nodejs.org/en)
 
-Remember to install all package.json dependencies with npm install (See step 4 in Usage)
+Remember to install all package.json dependencies with npm install in both the main folder and the view folder (See step 4 in Usage)
 
 ## Additional Notes
 
