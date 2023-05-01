@@ -12,25 +12,39 @@ Please follow the following steps to set up the app locally.
 <br>1. Download all files from the Buy My Stuff repository on github.
 <br> ![Download Repository](./readme_images/download.png)
 <br>
-<br>2. Make sure your local Postgres server is running.
-<br> ![Set Up Postres](./readme_images/postgres.png)
+<br>2. Make sure your local [Postgres](https://www.postgresql.org/) server is running.
+<br> ![Run Postres](./readme_images/postgres.png)
 <br>
 <br>3. Open your favorite Postgres client and create a new database for your e-commerce app. Import bms.sql from the db folder of the BMS repository.
 <br> ![Set Up Client](./readme_images/client.png)
 <br>
-<br>4. Make sure Node.js is installed and up to date
+<br>4. Open your favorite code editor and create a .env file with the following format: 
+<br>DB_USER=YOUR DATABASE USERNAME
+DB_PASSWORD=YOUR DATABASE PASSWORD
+DB_HOST=localhost (make sure this matches your database)
+DB_POST=5432 (make sure this matches your database)
+DB_DATABASE=YOUR DATABASE NAME
+PORT=4000
+TOKEN_SECRET=access
+STRIPE_KEY=YOUR STRIPE KEY(see step 9)
+<br> ![Set Up .env](./readme_images/env.png)
+<br>
+<br>5. Make sure Node.js is installed and up to date
 <br> ![Check Node](./readme_images/node.png)
 <br>
-<br>5. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
+<br>6. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
 <br> ![Install Dependencies](./readme_images/dependencies.png)
 <br>
-<br>6. Run the back-end locally.
+<br>7. Run the back-end locally.
 <br> ![Run the Back-End](./readme_images/backend.png)
 <br>
-<br>7. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
+<br>8. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
 <br> ![Run the Front-End](./readme_images/frontend.png)
 <br>
-<br>8. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
+<br>9. Create a Stripe account and add the secret test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, reveal the test key and copy & paste it to your .env file.
+<br> ![Connect Stripe](./readme_images/stripe.png)
+<br>
+<br>10. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
 <br> ![Enjoy!](./readme_images/bms.png)
 
 ### Requirements
