@@ -18,21 +18,25 @@ Please follow the following steps to set up the app locally.
 <br>3. Open your favorite Postgres client and create a new database for your e-commerce app. Import bms.sql from the db folder of the BMS repository.
 <br> ![Set Up Client](./readme_images/client.png)
 <br>
-<br>4. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
+<br>4. Make sure Node.js is installed and up to date
+<br> ![Check Node](./readme_images/node.png)
+<br>
+<br>5. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
 <br> ![Install Dependencies](./readme_images/dependencies.png)
 <br>
-<br>5. Run the back-end locally.
+<br>6. Run the back-end locally.
 <br> ![Run the Back-End](./readme_images/backend.png)
 <br>
-<br>6. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
+<br>7. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
 <br> ![Run the Front-End](./readme_images/frontend.png)
 <br>
-<br>7. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
+<br>8. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
 <br> ![Enjoy!](./readme_images/bms.png)
 
 ### Requirements
 The following packages and programs are required for the app to work.
 - PostgreSQL - download from the Postgres site [here](https://www.postgresql.org/)
+- Node.js v16.18.0+ - download from the Node site [here] (https://nodejs.org/en)
 
 Remember to install all package.json dependencies with npm install (See step 4 in Usage)
 
