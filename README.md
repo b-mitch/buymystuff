@@ -11,21 +11,30 @@ Buy My Stuff is an e-commerce web app I build during the Codecademy Full-Stack E
 Please follow the following steps to set up the app locally.
 <br>1. Download all files from the Buy My Stuff repository on github.
 <br> ![Download Repository](./readme_images/download.png)
+<br>
 <br>2. Make sure your local Postgres server is running.
 <br> ![Set Up Postres](./readme_images/postgres.png)
-<br>3. Open your favorite Postgres client and create a new database for your e-commerce app. Import bms.sql from the db folder of the BMS repository
+<br>
+<br>3. Open your favorite Postgres client and create a new database for your e-commerce app. Import bms.sql from the db folder of the BMS repository.
 <br> ![Set Up Client](./readme_images/client.png)
-<br>4. Navigate to the respository in your terminal and run the back-end locally.
+<br>
+<br>4. Navigate to the BMS directory in your terminal and run npm install to install all dependencies from package.json.
+<br> ![Install Dependencies](./readme_images/dependencies.png)
+<br>
+<br>5. Run the back-end locally.
 <br> ![Run the Back-End](./readme_images/backend.png)
-<br>5. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
+<br>
+<br>6. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Run the front-end locally.
 <br> ![Run the Front-End](./readme_images/frontend.png)
-<br>6. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
+<br>
+<br>7. And that's it! You should now see the By My Stuff e-commerce app open in your browser at localhost:3000.
 <br> ![Enjoy!](./readme_images/bms.png)
 
 ### Requirements
 The following packages and programs are required for the app to work.
-- Postgres
-- 
+- PostgreSQL - download from the Postgres site [here](https://www.postgresql.org/)
+
+Remember to install all package.json dependencies with npm install (See step 4 in Usage)
 
 ## Additional Notes
 
