@@ -29,7 +29,7 @@ Please follow the following steps to set up the app locally.
 <br>STRIPE_KEY=YOUR STRIPE KEY(see step 5)
 <br> ![Set Up .env](./readme_images/env.png)
 <br>
-<br>5. Create a Stripe account and add the secret test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, reveal the test key and copy & paste it to your .env file.
+<br>5. Create a Stripe account and add the publishable test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, copy the test key and paste it to your .env file.
 <br> ![Connect Stripe](./readme_images/stripe.png)
 <br>
 <br>6. Make sure [Node.js](https://nodejs.org/en) is installed and up to date
