@@ -20,13 +20,13 @@ Please follow the following steps to set up the app locally.
 <br>
 <br>4. Open your favorite code editor and create a .env file with the following format: 
 <br>DB_USER=YOUR DATABASE USERNAME
-DB_PASSWORD=YOUR DATABASE PASSWORD
-DB_HOST=localhost (make sure this matches your database)
-DB_POST=5432 (make sure this matches your database)
-DB_DATABASE=YOUR DATABASE NAME
+<br>DB_PASSWORD=YOUR DATABASE PASSWORD
+<br>DB_HOST=localhost (make sure this matches your database)
+<br>DB_POST=5432 (make sure this matches your database)
+<br>DB_DATABASE=YOUR DATABASE NAME
 PORT=4000
-TOKEN_SECRET=access
-STRIPE_KEY=YOUR STRIPE KEY(see step 9)
+<br>TOKEN_SECRET=ANYTHING
+<br>STRIPE_KEY=YOUR STRIPE KEY(see step 9)
 <br> ![Set Up .env](./readme_images/env.png)
 <br>
 <br>5. Make sure Node.js is installed and up to date
