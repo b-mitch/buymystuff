@@ -12,19 +12,19 @@ CREATE TABLE "users" (
   "zip" varchar
 );
 
-CREATE TABLE "carts" (
-  "id" varchar PRIMARY KEY,
-  "user_id" integer references users (id),
-  "product_id" varchar references products(id) NOT NULL,
-  "amount" integer NOT NULL
-);
-
 CREATE TABLE "products" (
   "id" varchar PRIMARY KEY,
   "name" varchar(100) NOT NULL,
   "category" varchar(100) NOT NULL,
   "price" money NOT NULL,
   "inventory" integer NOT NULL
+);
+
+CREATE TABLE "carts" (
+  "id" varchar PRIMARY KEY,
+  "user_id" integer references users (id),
+  "product_id" varchar references products(id) NOT NULL,
+  "amount" integer NOT NULL
 );
 
 CREATE TABLE "orders" (
