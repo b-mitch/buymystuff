@@ -51,8 +51,9 @@ Please follow these steps to set up the app locally.
 The following packages and programs are required for the app to work.
 - PostgreSQL - download from the Postgres site [here](https://www.postgresql.org/)
 - Node.js v16.18.0+ - download from the Node site [here](https://nodejs.org/en)
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or you can use [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) but be sure to utilize the correct yarn commands instead of npm
 
-Remember to install all package.json dependencies with npm install in both the main folder and the view folder (See step 4 in Usage).
+Remember to install all package.json dependencies with npm install (or yarn install) in both the main folder and the view folder (See step 4 in Usage).
 
 ## Additional Notes
 
