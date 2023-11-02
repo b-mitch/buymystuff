@@ -9,7 +9,7 @@ Buy My Stuff is an e-commerce web app I built during the Codecademy Full-Stack E
 
 ## Usage
 Please follow these steps to set up the app locally.
-<br>1. Download all files from the Buy My Stuff repository on github.
+<br>1. Clone the repo locally or download all files from the Buy My Stuff repository on github.
 <br> ![Download Repository](./readme_images/download.png)
 <br>
 <br>2. Make sure your local [Postgres](https://www.postgresql.org/) server is running.
