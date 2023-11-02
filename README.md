@@ -7,7 +7,7 @@
 ## What is Buy My Stuff??
 Buy My Stuff is an e-commerce web app I built during the Codecademy Full-Stack Engineer course. Unlike other projects in the course, this one consists entirely of code I personally wrote (with help from stackoverflow and other sites, of course). Codecademy simply provided the prompt - "build an e-commerce web app using a RESTful API" - and a very general project outline. The purpose of the site is to test and showcase my capabilities as a full-stack engineer. However, it can easily be implemented as the backbone of a production e-commerce web app.
 
-## Usage
+## Setup
 Please follow these steps to set up the app locally.
 <br>1. Clone the repo locally or download all files from the Buy My Stuff repository on github.
 <br> ![Download Repository](./readme_images/download.png)
@@ -53,7 +53,7 @@ The following packages and programs are required for the app to work.
 - Node.js v16.18.0+ - download from the Node site [here](https://nodejs.org/en)
 - [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or you can use [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) but be sure to utilize the correct yarn commands instead of npm
 
-Remember to install all package.json dependencies with npm install (or yarn install) in both the main folder and the view folder (See step 4 in Usage).
+Remember to install all package.json dependencies with npm install (or yarn install) in both the main folder and the view folder (See step 4 in Setup).
 
 ## Additional Notes
 
