@@ -2,10 +2,12 @@
   "name": "e-commerce_project",
   "version": "1.0.0",
   "description": "codecademy e-commerce project",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "build": "tsc",
+    "start": "nodemon --exec ts-node app.ts",
+    "start:prod": "node dist/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +31,18 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.21"
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "@types/uuid": "^10.0.0",
+    "@types/validator": "^13.15.9",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
