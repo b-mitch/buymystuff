@@ -35,7 +35,7 @@ const Login: React.FC<any> = ({setToken}) => {
       return;
     }
     setToken(response);
-    addLocalCartToDB(JSON.parse(JSON.stringify(response.token)));
+    addLocalCartToDB(response.token);
     localStorage.removeItem("cart");
     navigate("/");
   }

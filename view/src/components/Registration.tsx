@@ -76,7 +76,7 @@ const Registration: React.FC<any> = ({setToken}) => {
     }
     setSubmitted(true);
     setToken(response);
-    addLocalCartToDB(JSON.parse(JSON.stringify(response.token)));
+    addLocalCartToDB(response.token);
     localStorage.removeItem("cart");
     navigate("/");
   }
