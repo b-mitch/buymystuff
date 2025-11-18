@@ -1,4 +1,8 @@
 import { Pool, QueryResult, QueryResultRow } from 'pg';
+import dotenv from 'dotenv';
+
+// Load environment variables before creating the pool
+dotenv.config();
 
 const pool = new Pool({
   user: process.env.DB_USER,
