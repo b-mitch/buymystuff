@@ -3,8 +3,9 @@ import { useState } from 'react';
 export function useToken() {
   const getToken = () => {
     const tokenString = sessionStorage.getItem('token');
+    if (!tokenString) return null;
     const userToken = JSON.parse(tokenString);
-    return userToken?.token
+    return userToken?.token || null;
   };
 
   const [token, setToken] = useState(getToken());
@@ -23,17 +24,12 @@ export function useToken() {
 export function useSearch() {
   const getSearch = () => {
     const searchString = sessionStorage.getItem('search');
+    if (!searchString) return undefined;
     const search = JSON.parse(searchString);
-    return search?.search
+    return search?.search;
   };
 
-  const [search, setSearch] = useState(getSearch({
-    search: {
-      query: '',
-      list: []
-    }
-    
-  }));
+  const [search, setSearch] = useState(getSearch());
 
   const saveSearch = (userSearch: any): void => {
     sessionStorage.setItem('search', JSON.stringify(userSearch));
@@ -47,18 +43,20 @@ export function useSearch() {
 }
 
 export function setCheckoutSession(value: any): void {
-  let prevData = JSON.parse(sessionStorage.getItem('checkout'));
-  Object.assign(prevData, value)
+  const checkoutString = sessionStorage.getItem('checkout');
+  const prevData = checkoutString ? JSON.parse(checkoutString) : {};
+  Object.assign(prevData, value);
   sessionStorage.setItem('checkout', JSON.stringify(prevData));
 }
 
 export function addToCartLocal(item: any): any[] {
-  let cart = [];
-  const currentCart = JSON.parse(localStorage.getItem('cart'))
+  let cart: any[] = [];
+  const cartString = localStorage.getItem('cart');
+  const currentCart = cartString ? JSON.parse(cartString) : null;
   if(!currentCart){
     cart[0]=item;
     localStorage.setItem('cart', JSON.stringify(cart));
-    return cart
+    return cart;
   }
   cart = currentCart || [];
   cart.push(item);
@@ -67,40 +65,42 @@ export function addToCartLocal(item: any): any[] {
 }
 
 export async function localCartTotal(): Promise<number | undefined> {
-  const cart = JSON.parse(localStorage.getItem('cart'))
-  if(!cart) return localStorage.setItem('cart-total', {total: 0});
-  let stringPriceArray = [];
-  let price;
-  let amount;
-  let cost;
+  const cartString = localStorage.getItem('cart');
+  if (!cartString) return undefined;
+  const cart = JSON.parse(cartString);
+  if(!cart) return undefined;
+  const stringPriceArray: number[] = [];
   for (let item of cart) {
-    price = await getProductPrice(item.name);
-    price = Number(price).toFixed(2);
-    amount = item.amount;
-    cost = price*amount;
+    let price = await getProductPrice(item.name);
+    const priceNum = Number(price);
+    const amount = item.amount;
+    const cost = priceNum * amount;
     stringPriceArray.push(cost);
   }
-  const priceArray = stringPriceArray.map(Number);
-  const total = priceArray.reduce((x, y) => x+y);
+  const total = stringPriceArray.reduce((x, y) => x+y, 0);
   return total;
 }
 
-export async function addLocalCartToDB(token: string): Promise<void>{
-  const cart = JSON.parse(localStorage.getItem('cart'));
-  if (!search) return null;
+export async function addLocalCartToDB(token: string): Promise<void> {
+  const cartString = localStorage.getItem('cart');
+  if (!cartString) return;
+  const cart = JSON.parse(cartString);
+  if (!cart) return;
   try {
     for (let item of cart) {
-    await addToCartDB(item.name, token, item.amount)
+      await addToCartDB(item.name, token, item.amount);
     }
   } catch(error) {
-    console.log('error')
+    console.log('error');
   }
 }
 
-export async function noLoginCheckout(): Promise<void>{
-  let idArray = [];
-  const cart = JSON.parse(localStorage.getItem('cart'));
-  if (!search) return null;
+export async function noLoginCheckout(): Promise<void> {
+  const idArray: any[] = [];
+  const cartString = localStorage.getItem('cart');
+  if (!cartString) return;
+  const cart = JSON.parse(cartString);
+  if (!cart) return;
   try {
     for (let item of cart) {
       const results = await fetch(`/products/${item.name}`, {
@@ -109,13 +109,13 @@ export async function noLoginCheckout(): Promise<void>{
           "Content-Type": "application/json",
         },
         body: JSON.stringify({amount: item.amount})
-      })
+      });
       const json = await results.json();
-      idArray.push(json)
-      localStorage.setItem('cart-ids', JSON.stringify(idArray))
+      idArray.push(json);
+      localStorage.setItem('cart-ids', JSON.stringify(idArray));
     }
   } catch(error) {
-    console.log('error')
+    console.log('error');
   }
 }
 
@@ -316,7 +316,7 @@ export async function createOrder(credentials: any, token: string | number): Pro
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": token
+      "Authorization": String(token)
     },
     body: JSON.stringify(credentials)
   })

@@ -80,9 +80,9 @@ const Cart: React.FC<any> = ({token, setSearch}) => {
       setTotal(cartTotal);
     }
     if(!token) {
-      localStorage.setItem('cart', JSON.stringify(newCart))
-      let cartTotal = await localCartTotal();
-      cartTotal = Number(cartTotal).toFixed(2);
+      localStorage.setItem('cart', JSON.stringify(newCart));
+      const cartTotalNum = await localCartTotal();
+      const cartTotal = cartTotalNum ? Number(cartTotalNum).toFixed(2) : '0.00';
       setTotal(cartTotal);
     }
   };
@@ -105,9 +105,9 @@ const Cart: React.FC<any> = ({token, setSearch}) => {
       setTotal(cartTotal);
     }
     if(!token) {
-    localStorage.setItem('cart', JSON.stringify(newCart));
-      let cartTotal = await localCartTotal();
-      cartTotal = Number(cartTotal).toFixed(2)
+      localStorage.setItem('cart', JSON.stringify(newCart));
+      const cartTotalNum = await localCartTotal();
+      const cartTotal = cartTotalNum ? Number(cartTotalNum).toFixed(2) : '0.00';
       setTotal(cartTotal);
     }
   }
@@ -191,7 +191,7 @@ const Cart: React.FC<any> = ({token, setSearch}) => {
             }
           )}
           <tr>
-            <td colspan='6'>
+            <td colSpan={6}>
               <div className="cart-total">
                   <CartTotal />
                   <button style={{
