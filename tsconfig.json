@@ -24,12 +24,13 @@
   "include": [
     "app.ts",
     "db/**/*.ts",
-    "routes/**/*.ts",
+    "routes-elysia/**/*.ts",
     "utils/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "view"
+    "view",
+    "routes"
   ]
 }
