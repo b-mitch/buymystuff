@@ -14,6 +14,12 @@ const loginRoutes = new Elysia({ prefix: '/login' })
   .post('/', async ({ body, set, cookie, setSession }) => {
     const { username, password } = body as any;
 
+    // Check for required fields
+    if (!username || !password) {
+      set.status = 400;
+      return { error: true, message: "Missing username or password" };
+    }
+
     // Validate password length
     if (!isValidPassword(password)) {
       set.status = 422;

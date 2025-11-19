@@ -22,7 +22,7 @@ const nologinTotal = async (idArray: string[]): Promise<number> => {
     totalArray.push(itemTotal);
   }
 
-  const total = totalArray.reduce((x, y) => x + y);
+  const total = totalArray.length > 0 ? totalArray.reduce((x, y) => x + y) : 0;
   return total;
 };
 

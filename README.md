@@ -7,7 +7,10 @@
 ## What is Buy My Stuff??
 Buy My Stuff is an e-commerce web app I built during the Codecademy Full-Stack Engineer course. Unlike other projects in the course, this one consists entirely of code I personally wrote (with help from stackoverflow and other sites, of course). Codecademy simply provided the prompt - "build an e-commerce web app using a RESTful API" - and a very general project outline. The purpose of the site is to test and showcase my capabilities as a full-stack engineer. However, it can easily be implemented as the backbone of a production e-commerce web app.
 
-**Note**: This application has been migrated from Node.js to **Bun** runtime and from Webpack to **Vite** bundler for improved performance and developer experience.
+**Note**: This application has been migrated for improved performance and developer experience:
+- Runtime: Node.js → **Bun**
+- Bundler: Webpack → **Vite**
+- Backend Framework: Express → **Elysia.js** (while maintaining full API compatibility)
 
 ## Setup
 Please follow these steps to set up the app locally.
@@ -73,7 +76,7 @@ Remember to install all package.json dependencies with `bun install` in both the
 
 ### Technology Stack
 - **Runtime**: Bun (migrated from Node.js)
-- **Backend**: Express + TypeScript + PostgreSQL
+- **Backend**: Elysia.js + TypeScript + PostgreSQL (migrated from Express)
 - **Frontend**: React + TypeScript
 - **Bundler**: Vite (migrated from Webpack/react-scripts)
 
@@ -88,6 +91,39 @@ Remember to install all package.json dependencies with `bun install` in both the
 - `bun start` - Start the Vite development server (port 3000)
 - `bun build` - Build the production bundle
 - `bun preview` - Preview the production build
+
+## Migration to Elysia.js
+
+The backend has been migrated from Express to Elysia.js, a modern web framework optimized for Bun. This migration provides:
+
+### Benefits
+- **Better Performance**: Elysia is built specifically for Bun's runtime, providing faster request handling
+- **Type Safety**: Enhanced TypeScript support with automatic type inference
+- **Modern API**: Cleaner, more intuitive routing and middleware system
+- **Full Compatibility**: All existing API endpoints work identically - same paths, methods, request/response formats
+
+### What Changed
+- Framework: Express → Elysia.js
+- Route handlers moved to `routes-elysia/` directory
+- Middleware updated to use Elysia plugins: `@elysiajs/cors`, `@elysiajs/cookie`, `@elysiajs/jwt`
+- Session management reimplemented with in-memory store maintaining same behavior
+
+### What Stayed the Same
+- All API endpoints (paths, methods, request/response formats)
+- PostgreSQL database and queries
+- Frontend code (React + Vite)
+- Environment variables
+- Authentication flow (JWT tokens)
+- Stripe payment integration
+- All business logic and validation rules
+
+### API Compatibility
+The REST API is 100% backward compatible. No changes are needed in:
+- Frontend API calls
+- Request payloads
+- Response formats
+- Status codes
+- Error messages
 
 ## Additional Notes
 
