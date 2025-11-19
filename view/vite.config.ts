@@ -7,39 +7,14 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/register': {
+      // Proxy API requests to backend server
+      '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      '/login': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/products': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/account': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/cart': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/checkout': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/orders': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/home': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/logout': {
+      // Proxy specific routes to backend
+      '^/(register|login|products|account|cart|checkout|orders|home|logout)': {
         target: 'http://localhost:4000',
         changeOrigin: true,
       },
