@@ -81,7 +81,7 @@ const app = new Elysia()
   .get('/logout', ({ cookie, destroySession, redirect }) => {
     const sessionId = cookie.sessionId;
     if (sessionId) {
-      destroySession(sessionId.value);
+      destroySession(sessionId.value as string);
     }
     // Redirect to home page
     return redirect('/');

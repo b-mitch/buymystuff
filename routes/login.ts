@@ -11,8 +11,11 @@ const isValidPassword = (password: string): boolean => {
 };
 
 const loginRouter = new Elysia({ prefix: '/login' })
-  .post('/', async ({ body, set, cookie, setSession }) => {
+  .post('/', async (context) => {
+    const { body, set, cookie } = context;
     const { username, password } = body as any;
+    // @ts-ignore - setSession is added via derive in app.ts
+    const setSession = (context as any).setSession;
 
     // Check for required fields
     if (!username || !password) {
