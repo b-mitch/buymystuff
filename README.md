@@ -1,13 +1,11 @@
 <div align="center">
   <h1>Buy My Stuff</h1>
-  <strong>Basic e-commerce web app built to test full-stack engineering fundamentals using the PERN stack (Postgres + Express + React + Bun)</strong><br>
+  <strong>Basic e-commerce web app built to test full-stack engineering fundamentals using the Postgres + Elysia + React + Bun stack</strong><br>
 </div>
 <br>
 
 ## What is Buy My Stuff??
-Buy My Stuff is an e-commerce web app I built during the Codecademy Full-Stack Engineer course. Unlike other projects in the course, this one consists entirely of code I personally wrote (with help from stackoverflow and other sites, of course). Codecademy simply provided the prompt - "build an e-commerce web app using a RESTful API" - and a very general project outline. The purpose of the site is to test and showcase my capabilities as a full-stack engineer. However, it can easily be implemented as the backbone of a production e-commerce web app.
-
-**Note**: This application has been migrated from Node.js to **Bun** runtime and from Webpack to **Vite** bundler for improved performance and developer experience.
+Buy My Stuff is an e-commerce web app I built during the Codecademy Full-Stack Engineer course. Unlike other projects in the course, this one consists entirely of code I personally wrote (with help from stackoverflow and other sites, of course). Codecademy simply provided the prompt - "build an e-commerce web app using a RESTful API" - and a very general project outline. The original purpose of the site was to test and showcase my capabilities as a full-stack engineer. The application was originally built with the PERN stack & written in Javascript. It has since been refactored to a Bun + Elysia + React + Postgres (BERP??) Typescript app to make it more modern and test out the capabilities of GitHub's Copilot Agent in refactoring projects.
 
 ## Setup
 Please follow these steps to set up the app locally.
@@ -72,9 +70,10 @@ The following packages and programs are required for the app to work:
 Remember to install all package.json dependencies with `bun install` in both the main folder and the view folder (See steps 7-9 in Setup).
 
 ### Technology Stack
+- **Language**: Typescript (migrated from Javascript)
 - **Runtime**: Bun (migrated from Node.js)
-- **Backend**: Elysia.js + TypeScript + PostgreSQL
-- **Frontend**: React + TypeScript
+- **Backend**: Elysia.js (migrated from Express.js) + PostgreSQL
+- **Frontend**: React
 - **Bundler**: Vite (migrated from Webpack/react-scripts)
 
 ### Available Scripts
