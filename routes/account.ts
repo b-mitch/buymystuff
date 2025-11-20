@@ -1,21 +1,10 @@
-import express, { Request, Response } from 'express';
+import { Elysia } from 'elysia';
 import db from '../db/index';
-import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import { check, validationResult } from 'express-validator';
-import authenticateUser from '../utils/auth';
+import authenticateToken from '../utils/auth';
 import decodeJWT from '../utils/decodeJWT';
 import { User } from '../types';
-
-const accountRouter = express.Router();
-
-accountRouter.use(bodyParser.json());
-accountRouter.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
 
 const passwordHasher = async (password: string, saltRounds: number): Promise<string | null> => {
   try {
@@ -28,103 +17,131 @@ const passwordHasher = async (password: string, saltRounds: number): Promise<str
   return null;
 };
 
-accountRouter.get('/', authenticateUser, (req: Request, res: Response) => {
-  const token = req.headers.authorization;
-  const username = decodeJWT(token as string);
-  db.query<User>('SELECT * FROM users WHERE username = $1', [username], (error, results) => {
-    if (error) {
+// Email validation function
+const isEmail = (email: string): boolean => {
+  return validator.isEmail(email);
+};
+
+// Password validation function
+const isValidPassword = (password: string): boolean => {
+  return password.length >= 5 && password.length <= 20;
+};
+
+const accountRoutes = new Elysia({ prefix: '/account' })
+  // GET account details - requires authentication
+  .get('/', async ({ headers, set }) => {
+    try {
+      authenticateToken(headers);
+      const token = headers.authorization;
+      const username = decodeJWT(token as string);
+      
+      const results = await db.query<User>('SELECT * FROM users WHERE username = $1', [username]);
+      set.status = 200;
+      return results.rows[0];
+    } catch (error: any) {
+      if (error.message === 'Unauthorized') {
+        set.status = 401;
+        return { error: true, message: 'Unauthorized' };
+      }
+      if (error.message === 'Forbidden') {
+        set.status = 403;
+        return { error: true, message: 'Forbidden' };
+      }
       console.log('error');
       throw error;
     }
-    res.status(200).json(results.rows[0]);
-  });
-});
+  })
+  // PUT update account details
+  .put('/details', async ({ body, headers, set }) => {
+    const token = headers.authorization;
+    const user = decodeJWT(token as string);
+    const selectObject = await db.query<User>('SELECT id FROM users WHERE username = $1', [user]);
+    const id = selectObject.rows[0].id;
 
-accountRouter.put('/details', [
-  check('email').isEmail()
-], async (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
-  }
+    let { first, last, email, username, address, city, state, zip } = body as any;
 
-  const token = req.headers.authorization;
-  const user = decodeJWT(token as string); 
-  const selectObject = await db.query<User>('SELECT id FROM users WHERE username = $1', [user]);
-  const id = selectObject.rows[0].id;
+    // Validate email if provided
+    if (email && !isEmail(email)) {
+      set.status = 422;
+      return { errors: [{ field: 'email', message: 'Invalid email format' }] };
+    }
 
-  let { first, last, email, username, address, city, state, zip } = req.body;
-  let results: any;
-  try {
-    if(first) {
-      first = validator.escape(first); 
-      results = await db.query('update users set first_name = $1 where id = $2 RETURNING first_name', [first, id]);
+    let results: any;
+    try {
+      if (first) {
+        first = validator.escape(first);
+        results = await db.query('update users set first_name = $1 where id = $2 RETURNING first_name', [first, id]);
+      }
+      if (last) {
+        last = validator.escape(last);
+        results = await db.query('update users set last_name = $1 where id = $2 RETURNING last_name', [last, id]);
+      }
+      if (email) {
+        email = validator.escape(email);
+        results = await db.query('update users set email = $1 where id = $2 RETURNING email', [email, id]);
+      }
+      if (username) {
+        username = validator.escape(username);
+        results = await db.query('update users set username = $1 where id = $2 RETURNING username', [username, id]);
+      }
+      if (address) {
+        address = validator.escape(address);
+        results = await db.query('update users set address = $1 where id = $2 RETURNING address', [address, id]);
+      }
+      if (city) {
+        city = validator.escape(city);
+        results = await db.query('update users set city = $1 where id = $2 RETURNING city', [city, id]);
+      }
+      if (state) {
+        state = validator.escape(state);
+        results = await db.query('update users set state = $1 where id = $2 RETURNING state', [state, id]);
+      }
+      if (zip) {
+        zip = validator.escape(zip);
+        results = await db.query('update users set zip = $1 where id = $2 RETURNING zip', [zip, id]);
+      }
+      set.status = 200;
+      return results.rows[0];
+    } catch (err: any) {
+      return err.stack;
     }
-    if(last) { 
-      last = validator.escape(last); 
-      results = await db.query('update users set last_name = $1 where id = $2 RETURNING last_name', [last, id]);
-    }
-    if(email) {
-      email = validator.escape(email);
-      results = await db.query('update users set email = $1 where id = $2 RETURNING email', [email, id]);
-    }
-    if(username) {
-      username = validator.escape(username);
-      results = await db.query('update users set username = $1 where id = $2 RETURNING username', [username, id]);
-    }
-    if(address) {
-      address = validator.escape(address);
-      results = await db.query('update users set address = $1 where id = $2 RETURNING address', [address, id]);
-    }
-    if(city) {
-      city = validator.escape(city);
-      results = await db.query('update users set city = $1 where id = $2 RETURNING city', [city, id]);
-    }
-    if(state) {
-      state = validator.escape(state);
-      results = await db.query('update users set state = $1 where id = $2 RETURNING state', [state, id]);
-    }
-    if(zip) {
-      zip = validator.escape(zip);
-      results = await db.query('update users set zip = $1 where id = $2 RETURNING zip', [zip, id]);
-    }
-    await res.status(200).json(results.rows[0]);
-  } catch (err: any) {
-    return err.stack;
-  }
-});
+  })
+  // PUT update password
+  .put('/password', async ({ body, headers, set }) => {
+    const { currentPassword, password } = body as any;
 
-accountRouter.put('/password', [check('password').isLength({ max: 20, min: 5 })], async (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
-  }
+    // Validate password length
+    if (!isValidPassword(password)) {
+      set.status = 422;
+      return { errors: [{ field: 'password', message: 'Password must be between 5 and 20 characters' }] };
+    }
 
-  const token = req.headers.authorization;
-  const username = decodeJWT(token as string); 
-  const selectObject = await db.query<User>('SELECT * FROM users WHERE username = $1', [username]);
-  const user = selectObject.rows[0];
-  const currentPassword = req.body.currentPassword;
-  const password = req.body.password;
+    const token = headers.authorization;
+    const username = decodeJWT(token as string);
+    const selectObject = await db.query<User>('SELECT * FROM users WHERE username = $1', [username]);
+    const user = selectObject.rows[0];
 
-  const matchedPassword = await bcrypt.compare(currentPassword, user.password);
-  if (!matchedPassword) {
-    console.log("Password did not match!");
-    return res.status(400).send({ error: true, message: "Invalid current password"});
-  }
+    const matchedPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!matchedPassword) {
+      console.log("Password did not match!");
+      set.status = 400;
+      return { error: true, message: "Invalid current password" };
+    }
 
-  if(password) {
-    const updateText = 'update users set password = $1 where username = $2';
-    const hashedPassword = await passwordHasher(password, 10);
-    const values = await [hashedPassword, username];
-    await db.query(updateText, values, (error) => {
-      if (error) {
+    if (password) {
+      const updateText = 'update users set password = $1 where username = $2';
+      const hashedPassword = await passwordHasher(password, 10);
+      const values = [hashedPassword, username];
+      
+      try {
+        await db.query(updateText, values);
+        set.status = 200;
+        return { error: false, message: "Password updated successfully" };
+      } catch (error) {
         console.log('error');
         throw error;
       }
-      res.status(200).send({ error: false, message: "Password updated successfully"});
-    }); 
-  }
-});
+    }
+  });
 
-export default accountRouter;
+export default accountRoutes;

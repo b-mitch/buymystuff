@@ -39,20 +39,19 @@ This document details the migration of the Buy My Stuff e-commerce backend from 
 
 ## File Structure Changes
 
-### New Files
+### Updated Files
 - `app.ts` - Elysia server entry point (replaced Express version)
-- `routes-elysia/registration.ts` - User registration route
-- `routes-elysia/login.ts` - User login route
-- `routes-elysia/products.ts` - Product management routes
-- `routes-elysia/account.ts` - Account management routes
-- `routes-elysia/cart.ts` - Shopping cart routes
-- `routes-elysia/checkout.ts` - Checkout and payment routes
-- `routes-elysia/orders.ts` - Order history routes
-- `utils/auth-elysia.ts` - Elysia-compatible authentication helper
+- `routes/registration.ts` - User registration route (migrated to Elysia)
+- `routes/login.ts` - User login route (migrated to Elysia)
+- `routes/products.ts` - Product management routes (migrated to Elysia)
+- `routes/account.ts` - Account management routes (migrated to Elysia)
+- `routes/cart.ts` - Shopping cart routes (migrated to Elysia)
+- `routes/checkout.ts` - Checkout and payment routes (migrated to Elysia)
+- `routes/orders.ts` - Order history routes (migrated to Elysia)
+- `utils/auth.ts` - Authentication helper (migrated to Elysia)
 
 ### Archived Files (in .gitignore)
 - `app-express-backup.ts` - Original Express implementation
-- `routes/` - Original Express route handlers
 
 ## API Compatibility
 

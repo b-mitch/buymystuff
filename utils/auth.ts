@@ -1,36 +1,23 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Request, Response, NextFunction } from 'express';
 import { JWTPayload } from '../types';
 
 dotenv.config();
 
-// Extend Express Request type to include user
-declare global {
-  namespace Express {
-    interface Request {
-      user?: JWTPayload;
-    }
-  }
-}
-
-const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
-  const token = req.headers['authorization'];
+// Elysia authentication middleware
+export const authenticateToken = (headers: Record<string, string | undefined>) => {
+  const token = headers['authorization'];
 
   if (token == null) {
-    res.sendStatus(401);
-    return;
+    throw new Error('Unauthorized');
   }
 
-  jwt.verify(token, process.env.TOKEN_SECRET as string, (err, user) => {
-    if (err) {
-      res.sendStatus(403);
-      return;
-    }
-
-    req.user = user as JWTPayload;
-    next();
-  });
+  try {
+    const user = jwt.verify(token, process.env.TOKEN_SECRET as string) as JWTPayload;
+    return user;
+  } catch (err) {
+    throw new Error('Forbidden');
+  }
 };
 
 export default authenticateToken;

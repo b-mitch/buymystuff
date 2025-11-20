@@ -7,14 +7,14 @@ import dotenv from 'dotenv';
 import db from './db/index';
 import { User } from './types';
 
-// Import route handlers (to be created)
-import registerRoutes from './routes-elysia/registration';
-import loginRoutes from './routes-elysia/login';
-import productsRoutes from './routes-elysia/products';
-import accountRoutes from './routes-elysia/account';
-import cartRoutes from './routes-elysia/cart';
-import checkoutRoutes from './routes-elysia/checkout';
-import ordersRoutes from './routes-elysia/orders';
+// Import route handlers
+import registerRoutes from './routes/registration';
+import loginRoutes from './routes/login';
+import productsRoutes from './routes/products';
+import accountRoutes from './routes/account';
+import cartRoutes from './routes/cart';
+import checkoutRoutes from './routes/checkout';
+import ordersRoutes from './routes/orders';
 
 dotenv.config();
 

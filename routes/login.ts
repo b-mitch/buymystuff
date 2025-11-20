@@ -1,67 +1,85 @@
-import express, { Request, Response } from 'express';
+import { Elysia } from 'elysia';
 import db from '../db/index';
-import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import { check, validationResult } from 'express-validator';
 import generateToken from '../utils/generateToken';
-import { User, LoginRequest } from '../types';
+import { User } from '../types';
 
-// Extend session data type
-declare module 'express-session' {
-  interface SessionData {
-    authenticated?: boolean;
-    user?: {
-      id: string;
-      username: string;
-      password: string;
-    };
-  }
-}
+// Password validation function
+const isValidPassword = (password: string): boolean => {
+  return password.length <= 20;
+};
 
-const loginRouter = express.Router();
+const loginRoutes = new Elysia({ prefix: '/login' })
+  .post('/', async ({ body, set, cookie, setSession }) => {
+    const { username, password } = body as any;
 
-loginRouter.use(bodyParser.json());
-loginRouter.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-
-loginRouter.post("/", [check('password').isLength({ max: 20 })], async (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
-  }
-  const username = validator.escape(req.body.username);
-  const password = validator.escape(req.body.password);
-  const selectText = 'SELECT * FROM users WHERE username = $1';
-  const values = [username];
-  try {
-    const results = await db.query<User>(selectText, values);
-    const user = await results.rows[0];
-    if (!user) {
-      console.log("User does not exist!");
-      return res.status(400).send({ error: true, message: "User does not exist"});
+    // Check for required fields
+    if (!username || !password) {
+      set.status = 400;
+      return { error: true, message: "Missing username or password" };
     }
-    const id = user.id;
-    const matchedPassword = await bcrypt.compare(password, user.password);
-    if (!matchedPassword) {
-      console.log("Password did not match!");
-      return res.status(400).send({ error: true, message: "Invalid password"});
-    }
-    console.log('Password matches!');
-    req.session.authenticated = true;
-    req.session.user = {
-      id,
-      username,
-      password
-    };
-    const token = generateToken({ username: req.session.user.username });
-    return res.status(200).send({ error: false, token, message: "Logged in sucessfully" });
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
-  }
-});
 
-export default loginRouter;
+    // Validate password length
+    if (!isValidPassword(password)) {
+      set.status = 422;
+      return { errors: [{ field: 'password', message: 'Password too long' }] };
+    }
+
+    const sanitizedUsername = validator.escape(username);
+    const sanitizedPassword = validator.escape(password);
+    
+    const selectText = 'SELECT * FROM users WHERE username = $1';
+    const values = [sanitizedUsername];
+    
+    try {
+      const results = await db.query<User>(selectText, values);
+      const user = results.rows[0];
+      
+      if (!user) {
+        console.log("User does not exist!");
+        set.status = 400;
+        return { error: true, message: "User does not exist" };
+      }
+      
+      const id = user.id;
+      const matchedPassword = await bcrypt.compare(sanitizedPassword, user.password);
+      
+      if (!matchedPassword) {
+        console.log("Password did not match!");
+        set.status = 400;
+        return { error: true, message: "Invalid password" };
+      }
+      
+      console.log('Password matches!');
+      
+      // Create session ID and store session data
+      const sessionId = Math.random().toString(36).substring(7);
+      cookie.sessionId = {
+        value: sessionId,
+        httpOnly: true,
+        secure: false,
+        sameSite: 'none',
+        path: "/",
+        maxAge: 86400000 / 1000, // Convert to seconds for cookie
+      };
+      
+      setSession(sessionId, {
+        authenticated: true,
+        user: {
+          id,
+          username: sanitizedUsername,
+          password: sanitizedPassword,
+        },
+      });
+      
+      const token = generateToken({ username: sanitizedUsername });
+      set.status = 200;
+      return { error: false, token, message: "Logged in sucessfully" };
+    } catch (err: any) {
+      set.status = 500;
+      return { message: err.message };
+    }
+  });
+
+export default loginRoutes;

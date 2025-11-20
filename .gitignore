@@ -9,7 +9,6 @@ view/build
 
 # Migration backup files
 app-express-backup.ts
-routes/
 
 # Lock files
 package-lock.json

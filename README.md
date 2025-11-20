@@ -104,7 +104,7 @@ The backend has been migrated from Express to Elysia.js, a modern web framework 
 
 ### What Changed
 - Framework: Express → Elysia.js
-- Route handlers moved to `routes-elysia/` directory
+- Route handlers in `routes/` directory migrated to Elysia
 - Middleware updated to use Elysia plugins: `@elysiajs/cors`, `@elysiajs/cookie`, `@elysiajs/jwt`
 - Session management reimplemented with in-memory store maintaining same behavior
 
