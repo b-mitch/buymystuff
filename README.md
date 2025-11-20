@@ -9,55 +9,57 @@ Buy My Stuff is an e-commerce web app I built during the Codecademy Full-Stack E
 
 ## Setup
 Please follow these steps to set up the app locally.
-<br>1. Clone the repo locally or download all files from the Buy My Stuff repository on github.
-<br> ![Download Repository](./readme_images/download.png)
-<br>
-<br>2. Make sure your local [Postgres](https://www.postgresql.org/) server is running.
-<br> ![Run Postres](./readme_images/postgres.png)
-<br>
-<br>3. Open your favorite Postgres client and create a new database for your e-commerce app. Import bms.sql from the db folder of the BMS repository.
-<br> ![Set Up Client](./readme_images/client.png)
-<br>
-<br>4. Open the BMS main folder in your favorite code editor and create a .env file with the following format: 
-<br>DB_USER=YOUR DATABASE USERNAME
-<br>DB_PASSWORD=YOUR DATABASE PASSWORD
-<br>DB_HOST=localhost (make sure this matches your database)
-<br>DB_POST=5432 (make sure this matches your database)
-<br>DB_DATABASE=YOUR DATABASE NAME
-<br>PORT=4000
-<br>TOKEN_SECRET=ANYTHING
-<br>STRIPE_KEY=YOUR STRIPE KEY(see step 5)
-<br> ![Set Up .env](./readme_images/env.png)
-<br>
-<br>5. Create a Stripe account and add the <strong>publishable</strong> test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, copy the test key and paste it to your .env file.
-<br> ![Connect Stripe](./readme_images/stripe.png)
-<br>
-<br>6. Make sure [Bun](https://bun.sh) is installed. To install Bun:
+1. Clone the repo locally or download all files from the Buy My Stuff repository on github.
+![Download Repository](./readme_images/download.png)
+
+2. Make sure your local [Postgres](https://www.postgresql.org/) server is running.
+![Run Postres](./readme_images/postgres.png)
+
+3. Open your favorite Postgres client and create a new database for your e-commerce app. \
+   Import bms.sql from the db folder of the BMS repository.
+   ![Set Up Client](./readme_images/client.png)
+
+5. Open the BMS main folder in your favorite code editor and create a .env file with the following format: 
+```DB_USER=YOUR DATABASE USERNAME
+DB_PASSWORD=YOUR DATABASE PASSWORD
+DB_HOST=localhost (make sure this matches your database)
+DB_POST=5432 (make sure this matches your database)
+DB_DATABASE=YOUR DATABASE NAME
+PORT=4000
+TOKEN_SECRET=ANYTHING
+STRIPE_KEY=YOUR STRIPE KEY(see step 5)
+```
+![Set Up .env](./readme_images/env.png)
+
+5. Create a Stripe account and add the <strong>publishable</strong> test key to your .env file. To locate, simply navigate to "API Keys" in the "Developers" tab. Then <strong>switch to test mode</strong>. Lastly, copy the test key and paste it to your .env file.
+![Connect Stripe](./readme_images/stripe.png)
+
+6. Make sure [Bun](https://bun.sh) is installed. To install Bun:
 ```bash
 curl -fsSL https://bun.sh/install | bash
 ```
-<br>
-<br>7. Navigate to the BMS directory in your terminal and run `bun install` to install all dependencies from package.json.
+
+7. Navigate to the BMS directory in your terminal and run `bun install` to install all dependencies from package.json.
 ```bash
 cd buymystuff
 bun install
 ```
-<br>
-<br>8. Run the back-end locally with Bun:
+
+8. Run the back-end locally with Bun:
 ```bash
 bun start
 # Or for production mode: bun start:prod
 ```
-<br>
-<br>9. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Install dependencies (`bun install` again) and run the front-end locally with Vite:
+
+9. Open a new terminal window or tab and navigate to the view folder of the BMS repository. Install dependencies (`bun install` again) and run the front-end locally with Vite:
 ```bash
 cd view
 bun install
 bun start
 ```
-<br>
-<br>10. And that's it! You should now see the Buy My Stuff e-commerce app open in your browser at localhost:3000.
-<br> ![Enjoy!](./readme_images/bms.png)
+
+10. And that's it! You should now see the Buy My Stuff e-commerce app open in your browser at localhost:3000.
+![Enjoy!](./readme_images/bms.png)
 
 ### Requirements
 The following packages and programs are required for the app to work:
