@@ -3,7 +3,7 @@ import db from '../db/index';
 import decodeJWT from '../utils/decodeJWT';
 import { User, CartItem } from '../types';
 
-const cartRoutes = new Elysia({ prefix: '/cart' })
+const cartRouter = new Elysia({ prefix: '/cart' })
   // GET cart total
   .get('/total', async ({ headers, set }) => {
     const token = headers.authorization;
@@ -56,4 +56,4 @@ const cartRoutes = new Elysia({ prefix: '/cart' })
     }
   });
 
-export default cartRoutes;
+export default cartRouter;

@@ -4,7 +4,7 @@ import decodeJWT from '../utils/decodeJWT';
 import { v4 as uuidv4 } from 'uuid';
 import { Product, CartItem, User } from '../types';
 
-const productsRoutes = new Elysia({ prefix: '/products' })
+const productsRouter = new Elysia({ prefix: '/products' })
   // GET all products
   .get('/', async ({ set }) => {
     try {
@@ -131,4 +131,4 @@ const productsRoutes = new Elysia({ prefix: '/products' })
     }
   });
 
-export default productsRoutes;
+export default productsRouter;

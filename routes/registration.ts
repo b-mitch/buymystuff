@@ -26,7 +26,7 @@ const isValidPassword = (password: string): boolean => {
   return password.length >= 5 && password.length <= 20;
 };
 
-const registerRoutes = new Elysia({ prefix: '/register' })
+const registerRouter = new Elysia({ prefix: '/register' })
   .post('/', async ({ body, set }) => {
     // Type the body
     const { first, last, email, username, password } = body as any;
@@ -99,4 +99,4 @@ const registerRoutes = new Elysia({ prefix: '/register' })
     }
   });
 
-export default registerRoutes;
+export default registerRouter;

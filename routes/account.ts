@@ -27,7 +27,7 @@ const isValidPassword = (password: string): boolean => {
   return password.length >= 5 && password.length <= 20;
 };
 
-const accountRoutes = new Elysia({ prefix: '/account' })
+const accountRouter = new Elysia({ prefix: '/account' })
   // GET account details - requires authentication
   .get('/', async ({ headers, set }) => {
     try {
@@ -144,4 +144,4 @@ const accountRoutes = new Elysia({ prefix: '/account' })
     }
   });
 
-export default accountRoutes;
+export default accountRouter;

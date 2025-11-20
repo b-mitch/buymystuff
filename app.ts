@@ -8,13 +8,13 @@ import db from './db/index';
 import { User } from './types';
 
 // Import route handlers
-import registerRoutes from './routes/registration';
-import loginRoutes from './routes/login';
-import productsRoutes from './routes/products';
-import accountRoutes from './routes/account';
-import cartRoutes from './routes/cart';
-import checkoutRoutes from './routes/checkout';
-import ordersRoutes from './routes/orders';
+import registerRouter from './routes/registration';
+import loginRouter from './routes/login';
+import productsRouter from './routes/products';
+import accountRouter from './routes/account';
+import cartRouter from './routes/cart';
+import checkoutRouter from './routes/checkout';
+import ordersRouter from './routes/orders';
 
 dotenv.config();
 
@@ -55,13 +55,13 @@ const app = new Elysia()
     },
   }))
   // Register routes
-  .use(registerRoutes)
-  .use(loginRoutes)
-  .use(productsRoutes)
-  .use(accountRoutes)
-  .use(cartRoutes)
-  .use(checkoutRoutes)
-  .use(ordersRoutes)
+  .use(registerRouter)
+  .use(loginRouter)
+  .use(productsRouter)
+  .use(accountRouter)
+  .use(cartRouter)
+  .use(checkoutRouter)
+  .use(ordersRouter)
   // Home route
   .get('/home', () => {
     return 'This is the home page';

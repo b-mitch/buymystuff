@@ -10,7 +10,7 @@ const isValidPassword = (password: string): boolean => {
   return password.length <= 20;
 };
 
-const loginRoutes = new Elysia({ prefix: '/login' })
+const loginRouter = new Elysia({ prefix: '/login' })
   .post('/', async ({ body, set, cookie, setSession }) => {
     const { username, password } = body as any;
 
@@ -82,4 +82,4 @@ const loginRoutes = new Elysia({ prefix: '/login' })
     }
   });
 
-export default loginRoutes;
+export default loginRouter;

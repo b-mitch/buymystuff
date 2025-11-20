@@ -3,7 +3,7 @@ import db from '../db/index';
 import decodeJWT from '../utils/decodeJWT';
 import { User } from '../types';
 
-const ordersRoutes = new Elysia({ prefix: '/orders' })
+const ordersRouter = new Elysia({ prefix: '/orders' })
   // GET all orders for user
   .get('/', async ({ headers, set }) => {
     const token = headers.authorization;
@@ -26,4 +26,4 @@ const ordersRoutes = new Elysia({ prefix: '/orders' })
     return results.rows;
   });
 
-export default ordersRoutes;
+export default ordersRouter;

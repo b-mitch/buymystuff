@@ -26,7 +26,7 @@ const nologinTotal = async (idArray: string[]): Promise<number> => {
   return total;
 };
 
-const checkoutRoutes = new Elysia({ prefix: '/checkout' })
+const checkoutRouter = new Elysia({ prefix: '/checkout' })
   // PUT update products (reduce inventory)
   .put('/', async ({ body, headers, set }) => {
     const token = headers.authorization;
@@ -139,4 +139,4 @@ const checkoutRoutes = new Elysia({ prefix: '/checkout' })
     };
   });
 
-export default checkoutRoutes;
+export default checkoutRouter;
