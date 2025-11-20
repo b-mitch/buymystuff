@@ -100,10 +100,18 @@ const app = new Elysia()
       error: true, 
       message: error.message || 'Internal Server Error' 
     };
-  })
-  .listen(PORT);
+  });
 
-console.log(`Server listening on port ${PORT}`);
-console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+// Only start the server if this file is being run directly (not imported)
+if (import.meta.main) {
+  try {
+    app.listen(PORT);
+    console.log(`Server listening on port ${PORT}`);
+    console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
 
 export default app;
