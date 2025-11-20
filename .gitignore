@@ -6,3 +6,6 @@ dist
 
 # Frontend build
 view/build
+
+# Migration backup files
+app-express-backup.ts

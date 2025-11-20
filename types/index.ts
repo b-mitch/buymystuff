@@ -104,3 +104,38 @@ export interface CreateProductRequest {
 export interface JWTPayload {
   username: string;
 }
+
+// Session Data
+export interface SessionData {
+  authenticated: boolean;
+  user: {
+    id: string;
+    username: string;
+    password: string;
+  };
+}
+
+// Request body types
+export interface UpdateAccountDetailsRequest {
+  first?: string;
+  last?: string;
+  email?: string;
+  username?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+}
+
+export interface UpdatePasswordRequest {
+  currentPassword: string;
+  password: string;
+}
+
+export interface UpdateCartItemRequest {
+  amount: number;
+}
+
+export interface AddToCartRequest {
+  amount: number;
+}

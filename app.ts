@@ -1,14 +1,13 @@
-import express, { Request, Response } from 'express';
-import bodyParser from 'body-parser';
-import session from 'express-session';
-import logger from 'morgan';
+import { Elysia } from 'elysia';
+import { cors } from '@elysiajs/cors';
+import { cookie } from '@elysiajs/cookie';
+import { jwt } from '@elysiajs/jwt';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
 
 import db from './db/index';
+import { User, SessionData } from './types';
 
+// Import route handlers
 import registerRouter from './routes/registration';
 import loginRouter from './routes/login';
 import productsRouter from './routes/products';
@@ -17,73 +16,97 @@ import cartRouter from './routes/cart';
 import checkoutRouter from './routes/checkout';
 import ordersRouter from './routes/orders';
 
-import { User } from './types';
-
 dotenv.config();
 
-const app = express();
-const store = new session.MemoryStore();
-
 const PORT = process.env.PORT || 4000;
+const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default-secret-key-for-development';
 
-
-app.use(cookieParser());
-
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
+// Create Elysia app
+const app = new Elysia()
+  // CORS middleware
+  .use(cors({
+    origin: true,
+    credentials: true,
+  }))
+  // Cookie support
+  .use(cookie())
+  // JWT support for authentication
+  .use(jwt({
+    name: 'jwt',
+    secret: TOKEN_SECRET,
+  }))
+  // Logger middleware - simple request logging similar to Morgan
+  .onRequest((context) => {
+    const { request } = context;
+    console.log(`${request.method} ${new URL(request.url).pathname}`);
   })
-);
-app.use(logger('dev'));
-app.use(cors());
-app.use(helmet());
-
-app.use(
-  session({
-    secret: "secret-key",
-    cookie: { maxAge: 86400000, 
-    httpOnly: true, secure: false, sameSite: 'none', path: "/" },
-    resave: false,
-    saveUninitialized: false,
-    store
+  // Session store - using in-memory store similar to express-session
+  .decorate('sessionStore', new Map<string, SessionData>())
+  // Helper to get/set session
+  .derive((context) => ({
+    getSession: (sessionId: string): SessionData | undefined => {
+      return context.sessionStore.get(sessionId);
+    },
+    setSession: (sessionId: string, data: SessionData): void => {
+      context.sessionStore.set(sessionId, data);
+    },
+    destroySession: (sessionId: string): void => {
+      context.sessionStore.delete(sessionId);
+    },
+  }))
+  // Register routes
+  .use(registerRouter)
+  .use(loginRouter)
+  .use(productsRouter)
+  .use(accountRouter)
+  .use(cartRouter)
+  .use(checkoutRouter)
+  .use(ordersRouter)
+  // Home route
+  .get('/home', () => {
+    return 'This is the home page';
   })
-);
-
-app.use('/register', registerRouter);
-app.use('/login', loginRouter);
-app.use('/products', productsRouter);
-app.use('/account', accountRouter);
-app.use('/cart', cartRouter);
-app.use('/checkout', checkoutRouter);
-app.use('/orders', ordersRouter);
-
-
-
-app.get('/home', (req: Request, res: Response) => {
-  res.send('This is the home page');
-});
-
-app.get('/', (req: Request, res: Response) => {
-  db.query<User>('SELECT * FROM users', (error, results) => {
-    if (error) {
+  // Root route - get all users
+  .get('/', async () => {
+    try {
+      const results = await db.query<User>('SELECT * FROM users');
+      console.log(results.rows);
+      return results.rows;
+    } catch (error) {
       console.log('error');
       throw error;
     }
-    console.log(results.rows);
-    res.status(200).json(results.rows);
-  });
-});
-
-app.get('/logout', (req: Request, res: Response) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.log('error destroying session');
+  })
+  // Logout route
+  .get('/logout', ({ cookie, destroySession, redirect }) => {
+    const sessionId = cookie.sessionId;
+    if (sessionId) {
+      destroySession(sessionId.value as string);
     }
+    // Redirect to home page
+    return redirect('/');
+  })
+  // Error handler
+  .onError(({ error, code }) => {
+    console.error('Error:', error);
+    
+    if (code === 'NOT_FOUND') {
+      return { error: true, message: 'Not Found' };
+    }
+    
+    return { 
+      error: true, 
+      message: (error as Error).message || 'Internal Server Error' 
+    };
   });
-  res.redirect("/");
+
+// Start server
+app.listen({
+  port: PORT,
+  hostname: 'localhost',
 });
 
-app.listen(PORT, () => {
-  console.log('Server listening on port ' + PORT);
-});
+console.log(`Server listening on port ${PORT}`);
+console.log(`🦊 Elysia is running at localhost:${PORT}`);
+
+export default app;
