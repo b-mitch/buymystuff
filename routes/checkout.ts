@@ -83,9 +83,11 @@ const checkoutRouter = new Elysia({ prefix: '/checkout' })
       products = results.rows;
     } else {
       console.log(idArray);
-      for (const item of idArray) {
-        const results = await db.query<{ id: string; price: string; amount: number }>('SELECT products.id, products.price, carts.amount FROM carts, products WHERE carts.id = $1 AND products.id=carts.product_id', [item]);
-        products.push(results.rows[0]);
+      if (idArray) {
+        for (const item of idArray) {
+          const results = await db.query<{ id: string; price: string; amount: number }>('SELECT products.id, products.price, carts.amount FROM carts, products WHERE carts.id = $1 AND products.id=carts.product_id', [item]);
+          products.push(results.rows[0]);
+        }
       }
     }
 

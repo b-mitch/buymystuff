@@ -3,7 +3,7 @@ import db from '../db/index';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import generateToken from '../utils/generateToken';
-import { User } from '../types';
+import { User, LoginRequest, SessionData } from '../types';
 
 // Password validation function
 const isValidPassword = (password: string): boolean => {
