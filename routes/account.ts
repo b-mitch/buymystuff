@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import validator from 'validator';
 import authenticateToken from '../utils/auth';
 import decodeJWT from '../utils/decodeJWT';
-import { User } from '../types';
+import { User, UpdateAccountDetailsRequest, UpdatePasswordRequest } from '../types';
 
 const passwordHasher = async (password: string, saltRounds: number): Promise<string | null> => {
   try {
@@ -38,12 +38,13 @@ const accountRouter = new Elysia({ prefix: '/account' })
       const results = await db.query<User>('SELECT * FROM users WHERE username = $1', [username]);
       set.status = 200;
       return results.rows[0];
-    } catch (error: any) {
-      if (error.message === 'Unauthorized') {
+    } catch (error) {
+      const err = error as Error;
+      if (err.message === 'Unauthorized') {
         set.status = 401;
         return { error: true, message: 'Unauthorized' };
       }
-      if (error.message === 'Forbidden') {
+      if (err.message === 'Forbidden') {
         set.status = 403;
         return { error: true, message: 'Forbidden' };
       }
@@ -58,7 +59,7 @@ const accountRouter = new Elysia({ prefix: '/account' })
     const selectObject = await db.query<User>('SELECT id FROM users WHERE username = $1', [user]);
     const id = selectObject.rows[0].id;
 
-    let { first, last, email, username, address, city, state, zip } = body as any;
+    let { first, last, email, username, address, city, state, zip } = body as UpdateAccountDetailsRequest;
 
     // Validate email if provided
     if (email && !isEmail(email)) {
@@ -66,7 +67,7 @@ const accountRouter = new Elysia({ prefix: '/account' })
       return { errors: [{ field: 'email', message: 'Invalid email format' }] };
     }
 
-    let results: any;
+    let results;
     try {
       if (first) {
         first = validator.escape(first);
@@ -102,13 +103,13 @@ const accountRouter = new Elysia({ prefix: '/account' })
       }
       set.status = 200;
       return results.rows[0];
-    } catch (err: any) {
-      return err.stack;
+    } catch (err) {
+      return (err as Error).stack;
     }
   })
   // PUT update password
   .put('/password', async ({ body, headers, set }) => {
-    const { currentPassword, password } = body as any;
+    const { currentPassword, password } = body as UpdatePasswordRequest;
 
     // Validate password length
     if (!isValidPassword(password)) {

@@ -5,7 +5,7 @@ import { jwt } from '@elysiajs/jwt';
 import dotenv from 'dotenv';
 
 import db from './db/index';
-import { User } from './types';
+import { User, SessionData } from './types';
 
 // Import route handlers
 import registerRouter from './routes/registration';
@@ -41,16 +41,16 @@ const app = new Elysia()
     console.log(`${request.method} ${new URL(request.url).pathname}`);
   })
   // Session store - using in-memory store similar to express-session
-  .decorate('sessionStore', new Map<string, any>())
+  .decorate('sessionStore', new Map<string, SessionData>())
   // Helper to get/set session
   .derive((context) => ({
-    getSession: (sessionId: string) => {
+    getSession: (sessionId: string): SessionData | undefined => {
       return context.sessionStore.get(sessionId);
     },
-    setSession: (sessionId: string, data: any) => {
+    setSession: (sessionId: string, data: SessionData): void => {
       context.sessionStore.set(sessionId, data);
     },
-    destroySession: (sessionId: string) => {
+    destroySession: (sessionId: string): void => {
       context.sessionStore.delete(sessionId);
     },
   }))

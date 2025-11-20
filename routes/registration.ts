@@ -3,7 +3,7 @@ import db from '../db/index';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import generateToken from '../utils/generateToken';
-import { User } from '../types';
+import { User, RegisterRequest } from '../types';
 
 const passwordHasher = async (password: string, saltRounds: number): Promise<string | null> => {
   try {
@@ -29,7 +29,7 @@ const isValidPassword = (password: string): boolean => {
 const registerRouter = new Elysia({ prefix: '/register' })
   .post('/', async ({ body, set }) => {
     // Type the body
-    const { first, last, email, username, password } = body as any;
+    const { first, last, email, username, password } = body as RegisterRequest;
 
     // Validate required fields
     if (!first || !last || !email || !username || !password) {
@@ -93,9 +93,9 @@ const registerRouter = new Elysia({ prefix: '/register' })
       
       set.status = 200;
       return { error: false, token, message: "User created" };
-    } catch (err: any) {
+    } catch (err) {
       set.status = 500;
-      return { message: err.message };
+      return { message: (err as Error).message };
     }
   });
 

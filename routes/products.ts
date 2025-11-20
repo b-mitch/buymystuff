@@ -2,7 +2,7 @@ import { Elysia } from 'elysia';
 import db from '../db/index';
 import decodeJWT from '../utils/decodeJWT';
 import { v4 as uuidv4 } from 'uuid';
-import { Product, CartItem, User } from '../types';
+import { Product, CartItem, User, CreateProductRequest, AddToCartRequest } from '../types';
 
 const productsRouter = new Elysia({ prefix: '/products' })
   // GET all products
@@ -18,7 +18,7 @@ const productsRouter = new Elysia({ prefix: '/products' })
   })
   // POST new product
   .post('/', async ({ body, set }) => {
-    const { name, category, price, inventory } = body as any;
+    const { name, category, price, inventory } = body as CreateProductRequest;
     const id = uuidv4();
     const text = 'INSERT INTO products (id, name, category, price, inventory) VALUES($1, $2, $3, $4, $5) RETURNING *';
     const values = [id, name, category, price, inventory];
@@ -79,7 +79,7 @@ const productsRouter = new Elysia({ prefix: '/products' })
   // POST add product to cart
   .post('/:product', async ({ params, body, headers, set }) => {
     const { product: name } = params;
-    const { amount } = body as any;
+    const { amount } = body as AddToCartRequest;
     
     let userID: string | undefined;
     const token = headers.authorization;

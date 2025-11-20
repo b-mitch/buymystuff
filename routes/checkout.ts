@@ -2,7 +2,7 @@ import { Elysia } from 'elysia';
 import db from '../db/index';
 import decodeJWT from '../utils/decodeJWT';
 import Stripe from 'stripe';
-import { User, Order, Product } from '../types';
+import { User, Order, Product, CheckoutRequest } from '../types';
 
 const stripe = new Stripe('sk_test_51MpCyhDoFFCpZ0bnGFzsp5fR5mWc7Zi6wN5HadQs99Iwwi6VGCHbZQJD4FPqNk6QrI8cQzxUl1XfMXIU5Q5KyuBa00Cgy3yrXJ', {
   apiVersion: '2022-11-15',
@@ -40,7 +40,7 @@ const checkoutRouter = new Elysia({ prefix: '/checkout' })
       const results = await db.query<{ product_id: string; amount: number }>('SELECT product_id, amount FROM carts WHERE user_id = $1', [userID]);
       products = results.rows;
     } else {
-      const { idArray } = body as any;
+      const { idArray } = body as { idArray: string[] };
       for (const item of idArray) {
         const results = await db.query<{ product_id: string; amount: number }>('SELECT product_id, amount FROM carts WHERE carts.id = $1', [item]);
         products.push(results.rows[0]);
@@ -58,7 +58,7 @@ const checkoutRouter = new Elysia({ prefix: '/checkout' })
   })
   // POST create order
   .post('/', async ({ body, headers, set }) => {
-    const { first, last, email, address, city, state, zip, idArray } = body as any;
+    const { first, last, email, address, city, state, zip, idArray } = body as CheckoutRequest;
 
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const id = "id" + Math.random().toString(16).slice(2);
@@ -123,7 +123,7 @@ const checkoutRouter = new Elysia({ prefix: '/checkout' })
       userID = selectObject.rows[0].id;
     }
 
-    const idArray = body as any;
+    const idArray = body as string[];
 
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({

@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 import db from '../db/index';
 import decodeJWT from '../utils/decodeJWT';
-import { User, CartItem } from '../types';
+import { User, CartItem, UpdateCartItemRequest } from '../types';
 
 const cartRouter = new Elysia({ prefix: '/cart' })
   // GET cart total
@@ -30,7 +30,7 @@ const cartRouter = new Elysia({ prefix: '/cart' })
   // PUT update cart item amount
   .put('/:id', async ({ params, body, set }) => {
     const { id } = params;
-    const { amount } = body as any;
+    const { amount } = body as UpdateCartItemRequest;
     const numAmount = Number(amount);
     
     try {

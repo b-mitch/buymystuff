@@ -13,9 +13,9 @@ const isValidPassword = (password: string): boolean => {
 const loginRouter = new Elysia({ prefix: '/login' })
   .post('/', async (context) => {
     const { body, set, cookie } = context;
-    const { username, password } = body as any;
+    const { username, password } = body as LoginRequest;
     // @ts-ignore - setSession is added via derive in app.ts
-    const setSession = (context as any).setSession;
+    const setSession = context.setSession as (sessionId: string, data: SessionData) => void;
 
     // Check for required fields
     if (!username || !password) {
@@ -79,9 +79,9 @@ const loginRouter = new Elysia({ prefix: '/login' })
       const token = generateToken({ username: sanitizedUsername });
       set.status = 200;
       return { error: false, token, message: "Logged in sucessfully" };
-    } catch (err: any) {
+    } catch (err) {
       set.status = 500;
-      return { message: err.message };
+      return { message: (err as Error).message };
     }
   });
 
