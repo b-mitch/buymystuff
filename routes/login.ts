@@ -58,14 +58,14 @@ const loginRouter = new Elysia({ prefix: '/login' })
       
       // Create session ID and store session data
       const sessionId = Math.random().toString(36).substring(7);
-      cookie.sessionId = {
+      cookie.sessionId.set({
         value: sessionId,
         httpOnly: true,
         secure: false,
         sameSite: 'none',
         path: "/",
         maxAge: 86400000 / 1000, // Convert to seconds for cookie
-      };
+      });
       
       setSession(sessionId, {
         authenticated: true,
