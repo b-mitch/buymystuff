@@ -88,6 +88,9 @@ const checkoutRouter = new Elysia({ prefix: '/checkout' })
           const results = await db.query<{ id: string; price: string; amount: number }>('SELECT products.id, products.price, carts.amount FROM carts, products WHERE carts.id = $1 AND products.id=carts.product_id', [item]);
           products.push(results.rows[0]);
         }
+      } else {
+        set.status = 400;
+        return { error: true, message: "idArray is required for non-logged-in checkout" };
       }
     }
 
