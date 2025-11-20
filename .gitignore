@@ -1,3 +1,11 @@
-*/node_modules
+**/node_modules
 
 .env
+
+dist
+
+# Frontend build
+view/build
+
+# Migration backup files
+app-express-backup.ts
