@@ -78,18 +78,16 @@ const app = new Elysia()
     }
   })
   // Logout route
-  .get('/logout', (context) => {
-    const sessionId = context.cookie.sessionId;
+  .get('/logout', ({ cookie, destroySession, redirect }) => {
+    const sessionId = cookie.sessionId;
     if (sessionId) {
-      context.destroySession(sessionId);
+      destroySession(sessionId.value);
     }
-    // Elysia redirect
-    context.set.redirect = '/';
-    return;
+    // Redirect to home page
+    return redirect('/');
   })
   // Error handler
-  .onError((context) => {
-    const { error, code } = context;
+  .onError(({ error, code }) => {
     console.error('Error:', error);
     
     if (code === 'NOT_FOUND') {
@@ -98,7 +96,7 @@ const app = new Elysia()
     
     return { 
       error: true, 
-      message: error.message || 'Internal Server Error' 
+      message: (error as Error).message || 'Internal Server Error' 
     };
   });
 
